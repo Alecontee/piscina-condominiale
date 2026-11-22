@@ -2220,7 +2220,12 @@ $('#login-email').addEventListener('submit', async ev => {
   btn.disabled = true; loginMsg('Invio in corso…');
   const { error } = await S.sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
   btn.disabled = false;
-  if (error) return loginMsg(error.status === 429 ? 'Hai chiesto troppe email in poco tempo: aspetta qualche minuto e riprova.' : 'Non riesco a mandare l\'email. Controlla l\'indirizzo e riprova.', true);
+  if (error) {
+    const m = String(error.message || '');
+    return loginMsg(error.status === 429 || /rate limit/i.test(m) ? 'Hai chiesto troppe email in poco tempo: aspetta qualche minuto e riprova.'
+      : /not authorized/i.test(m) ? 'Il servizio email del sito non è ancora attivo per questo indirizzo: l\'amministratore deve configurare l\'invio delle email in Supabase.'
+      : 'Non riesco a mandare l\'email. Controlla l\'indirizzo e riprova.' + (m ? ' Dettaglio: ' + m : ''), true);
+  }
   S.lgEmail = email; lsSet('piscina-email', email); mostraLogin('codice');
 });
 $('#login-codice').addEventListener('submit', async ev => {
