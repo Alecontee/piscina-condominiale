@@ -2351,9 +2351,15 @@ async function boot() {
   }
   S.sb = window.supabase.createClient(conf.url, conf.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' } });
   S.lgEmail = lsGet('piscina-email') || ''; $('#lg-email').value = S.lgEmail;
+  const hp = new URLSearchParams(location.hash.slice(1)), qp = new URLSearchParams(location.search);
+  const linkErr = hp.get('error_description') || hp.get('error') || qp.get('error_description') || qp.get('error');
   const { data: { session } } = await S.sb.auth.getSession();
-  if (location.hash.includes('access_token') || location.hash.includes('error=')) history.replaceState(null, '', location.pathname + location.search);
-  if (!session) { mostraLogin('email'); return; }
+  if (location.hash.includes('access_token') || location.hash.includes('error=')) history.replaceState(null, '', location.pathname);
+  if (!session) {
+    mostraLogin('email');
+    if (linkErr) loginMsg(/expired|invalid|denied/i.test(linkErr) ? 'Il link è scaduto o è già stato usato. Chiedi una nuova email qui sotto e usa il codice che contiene: vale solo l\'ultima email ricevuta.' : 'Accesso non riuscito: ' + linkErr, true);
+    return;
+  }
   const email = (session.user.email || '').toLowerCase();
   const { data: ut, error: ue } = await S.sb.from('utenti').select('*').eq('email', email).maybeSingle();
   if (ue) { mostraLogin('email'); loginMsg('Non riesco a verificare il tuo accesso. Controlla la connessione e riprova.', true); return; }
