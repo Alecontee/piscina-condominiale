@@ -1,0 +1,2381 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Piscina Condominiale</title>
+<meta name="description" content="Il sito della piscina del condominio: qualità dell'acqua, orari, meteo e ingressi.">
+<meta name="theme-color" content="#0e1d31">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: barra laterale blu notte fissa a sinistra (in basso su telefono), contenuto a riquadri "bento" su fondo grigio perla */
+:root {
+  --bg: #eef1f5;
+  --surface: #ffffff;
+  --surface-2: #f4f6f9;
+  --fg: #142033;
+  --muted: #5e6a7c;
+  --line: #dde3eb;
+  --accent: #24548a;
+  --accent-2: #3d74b3;
+  --accent-fg: #ffffff;
+  --accent-soft: #e3ecf6;
+  --ok: #1f7a55; --ok-soft: #e0f1e9;
+  --warn: #946200; --warn-soft: #f8efd9;
+  --bad: #b3362c; --bad-soft: #f9e4e1;
+  --shadow: 0 1px 2px rgba(20, 32, 51, .04), 0 10px 30px rgba(20, 32, 51, .06);
+  --side-bg: #0e1d31;
+  --side-bg-2: #13284380;
+  --side-fg: #dbe5f1;
+  --side-muted: #8b9cb3;
+  --side-active: #dbe7f5;
+  --side-active-fg: #0e1d31;
+  --on-hero: #ffffff;
+  --hero-deep: #0b1a2e;
+  --hero-mid: #1d4570;
+  --hero-light: #6f9fd1;
+  --sun: #d99a1e; --moon: #7f93bd; --cloud: #a5b1c2; --rain: #2f6fb8; --snow: #7d9db3;
+  --font-display: "Urbanist", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r: 18px;
+  --r-sm: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a111b; --surface: #111b28; --surface-2: #0d1621; --fg: #e3eaf3; --muted: #8f9db0; --line: #1f2c3c;
+    --accent: #8db4e2; --accent-2: #5f93cf; --accent-fg: #0a1626; --accent-soft: #162a42;
+    --ok: #6fd1a2; --ok-soft: #12301f; --warn: #ecbb5c; --warn-soft: #33270f; --bad: #ff8f84; --bad-soft: #3b1c1a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .25);
+    --side-bg: #070d16; --side-active: #1c3352; --side-active-fg: #e3ecf7;
+    --sun: #f0c25a; --moon: #c3d0ea; --cloud: #7b8aa0; --rain: #7fb5ef; --snow: #cfe0ee;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a111b; --surface: #111b28; --surface-2: #0d1621; --fg: #e3eaf3; --muted: #8f9db0; --line: #1f2c3c;
+  --accent: #8db4e2; --accent-2: #5f93cf; --accent-fg: #0a1626; --accent-soft: #162a42;
+  --ok: #6fd1a2; --ok-soft: #12301f; --warn: #ecbb5c; --warn-soft: #33270f; --bad: #ff8f84; --bad-soft: #3b1c1a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .25);
+  --side-bg: #070d16; --side-active: #1c3352; --side-active-fg: #e3ecf7;
+  --sun: #f0c25a; --moon: #c3d0ea; --cloud: #7b8aa0; --rain: #7fb5ef; --snow: #cfe0ee;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+img { max-width: 100%; }
+body { margin: 0; padding-top: env(safe-area-inset-top, 0px); background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+h2 { font-size: clamp(1.6rem, 3.2vw, 2.1rem); font-weight: 800; }
+h3 { font-size: 1.15rem; }
+td, .tile-val { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+a { color: var(--accent); text-underline-offset: 2px; }
+
+/* Struttura: barra laterale + contenuto */
+.app { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 26px; padding: 26px 18px; color: var(--side-fg);
+  background: radial-gradient(120% 60% at 0% 0%, #1d3a5e 0%, transparent 60%), linear-gradient(180deg, var(--side-bg), #0a1626); }
+.side-brand { display: flex; align-items: center; gap: 12px; }
+.logo { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; flex: none; background: linear-gradient(145deg, #3d74b3, #1b3d66); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 16px rgba(0,0,0,.3); }
+.side-brand h1 { font-size: 1.12rem; color: #ffffff; font-weight: 700; }
+.side-brand .sub { display: block; font-size: .78rem; color: var(--side-muted); margin-top: 2px; }
+nav.tabs { display: flex; flex-direction: column; gap: 4px; }
+nav.tabs a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; color: var(--side-fg); text-decoration: none; font-weight: 600; font-size: .95rem; }
+nav.tabs a svg { width: 20px; height: 20px; flex: none; opacity: .85; }
+nav.tabs a:hover { background: rgba(255, 255, 255, .06); }
+nav.tabs a[aria-current="page"] { background: var(--side-active); color: var(--side-active-fg); }
+nav.tabs a[aria-current="page"] svg { opacity: 1; }
+nav.tabs a:focus-visible { outline: 2px solid #8db4e2; outline-offset: 2px; }
+.side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+.side-status { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .08); font-size: .85rem; }
+.side-status .row { display: flex; align-items: center; gap: 8px; }
+.role { font-size: .76rem; font-weight: 600; color: var(--side-muted); letter-spacing: .02em; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #a9b6c7; flex: none; }
+.dot.ok { background: #5fd39b; box-shadow: 0 0 0 4px rgba(95, 211, 155, .15); }
+.dot.warn { background: #f0c25a; } .dot.bad { background: #ff8a7f; }
+
+main.wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding-block: 30px 70px; padding-left: max(28px, env(safe-area-inset-left, 0px)); padding-right: max(28px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+section.tab { display: flex; flex-direction: column; gap: 20px; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.head p { margin: 6px 0 0; color: var(--muted); max-width: 65ch; }
+
+@media (max-width: 960px) {
+  .app { display: block; }
+  .side { position: static; height: auto; padding: 16px max(16px, env(safe-area-inset-left, 0px)) 14px; gap: 0; flex-direction: row; align-items: center; justify-content: space-between; }
+  .side-foot { margin: 0; }
+  .side-status { display: none; }
+  nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; flex-direction: row; justify-content: space-around; gap: 0;
+    padding: 6px max(6px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px));
+    background: rgba(10, 22, 38, .94); backdrop-filter: blur(14px); border-top: 1px solid rgba(255, 255, 255, .08); }
+  nav.tabs a { flex-direction: column; gap: 3px; padding: 6px 4px; font-size: .66rem; flex: 1 1 0; min-width: 0; text-align: center; border-radius: 10px; }
+  nav.tabs a span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  main.wrap { padding-block: 20px calc(96px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  body.r-viewer main.wrap { padding-bottom: 40px; }
+}
+body.r-viewer nav.tabs { display: none; }
+
+/* Superfici */
+.panel, .tile, .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.panel > h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sub-h { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; display: flex; align-items: center; gap: 8px; }
+
+.banner { border-radius: var(--r-sm); padding: 12px 16px; font-size: .92rem; }
+.banner.warn { background: var(--warn-soft); color: var(--warn); }
+.banner.bad { background: var(--bad-soft); color: var(--bad); }
+.banner.info { background: var(--accent-soft); color: var(--fg); }
+.closed { background: var(--bad-soft); color: var(--bad); border-radius: var(--r); padding: 16px 20px; display: flex; flex-direction: column; gap: 2px; }
+.closed strong { font-family: var(--font-display); font-size: 1.45rem; font-weight: 800; }
+.notice { white-space: pre-line; }
+
+/* Hero */
+.hero { position: relative; border-radius: 26px; overflow: hidden; min-height: 300px; display: flex; align-items: flex-end; color: var(--on-hero); isolation: isolate; box-shadow: 0 20px 50px rgba(11, 26, 46, .25);
+  background:
+    radial-gradient(70% 90% at 85% 0%, rgba(141, 180, 226, .55), transparent 60%),
+    radial-gradient(60% 70% at 10% 100%, rgba(61, 116, 179, .6), transparent 70%),
+    linear-gradient(160deg, var(--hero-mid) 0%, var(--hero-deep) 75%); }
+.hero::before { content: ""; position: absolute; inset: -20%; z-index: -1; opacity: .5;
+  background: repeating-radial-gradient(ellipse at 30% 120%, transparent 0 22px, rgba(255,255,255,.06) 22px 24px); }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(90deg, transparent 0 calc(16.66% - 1px), rgba(255,255,255,.07) calc(16.66% - 1px) 16.66%); }
+@media (prefers-reduced-motion: no-preference) { .hero:not(.has-img)::before { animation: onde 18s ease-in-out infinite alternate; } }
+@keyframes onde { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-4%, 3%, 0) scale(1.08); } }
+.hero.has-img::before { inset: 0; opacity: 1; animation: none; background: linear-gradient(180deg, rgba(8, 18, 32, .05) 25%, rgba(8, 18, 32, .85) 100%); }
+.hero.has-img::after { display: none; }
+.hero img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; z-index: -2; }
+.hero-in { padding: 30px 30px 28px; display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.hero-date { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; opacity: .85; }
+.hero h2 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; line-height: .98; letter-spacing: -.02em; color: var(--on-hero); }
+.hero-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: rgba(255, 255, 255, .12); color: var(--on-hero); font-weight: 600; font-size: .86rem; border: 1px solid rgba(255, 255, 255, .22); backdrop-filter: blur(10px); }
+.chip .dot { width: 8px; height: 8px; background: #d7e2ef; }
+.chip.ok .dot { background: #6fe0a8; } .chip.warn .dot { background: #ffcf6a; } .chip.bad .dot { background: #ff958a; }
+.hero-tools { position: absolute; top: 16px; right: 16px; }
+.hero-tools button { background: rgba(255, 255, 255, .14); color: var(--on-hero); border-color: rgba(255, 255, 255, .3); backdrop-filter: blur(10px); }
+@media (max-width: 560px) { .hero { min-height: 250px; border-radius: 22px; } .hero-in { padding: 22px 18px 20px; } .hero-tools { display: none; } }
+
+/* Bento della Home */
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
+.c-water { grid-column: span 7; } .c-pres { grid-column: span 5; }
+.c-meteo, .c-regole { grid-column: span 12; }
+.c-orari { grid-column: span 5; align-self: start; } .c-utili { grid-column: span 7; }
+@media (max-width: 1100px) { .c-orari, .c-utili { grid-column: span 12; } }
+@media (max-width: 900px) { .c-water, .c-pres { grid-column: span 12; } }
+.lbl { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.tile-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tile-val { font-family: var(--font-display); font-size: 2.3rem; font-weight: 700; line-height: 1; }
+.tile-val small { font-size: 1rem; color: var(--muted); font-weight: 600; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.verdict { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; line-height: 1.1; letter-spacing: -.01em; }
+.verdict.ok { color: var(--ok); } .verdict.warn { color: var(--warn); } .verdict.bad { color: var(--bad); }
+
+/* Indicatori dei parametri: barra con zona di riferimento e valore */
+.gauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.gauge { border-radius: 14px; padding: 14px; background: var(--surface-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.g-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.gauge .k { font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.gauge .v { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.gauge .v small { font-size: .8rem; color: var(--muted); font-weight: 600; }
+.gauge.ok .v { color: var(--ok); } .gauge.warn .v { color: var(--warn); } .gauge.bad .v { color: var(--bad); }
+.g-track { position: relative; height: 8px; border-radius: 999px; background: var(--line); }
+.g-zone { position: absolute; top: 0; bottom: 0; border-radius: 999px; background: color-mix(in srgb, var(--accent-2) 45%, transparent); }
+.g-dot { position: absolute; top: 50%; width: 16px; height: 16px; margin-left: -8px; transform: translateY(-50%); border-radius: 50%; background: var(--surface); border: 4px solid var(--accent); box-shadow: 0 2px 6px rgba(20, 32, 51, .25); }
+.gauge.ok .g-dot { border-color: var(--ok); } .gauge.warn .g-dot { border-color: var(--warn); } .gauge.bad .g-dot { border-color: var(--bad); }
+.gauge .ref { font-size: .76rem; color: var(--muted); }
+
+/* Anello presenze */
+.ring-wrap { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.ring { position: relative; width: 150px; height: 150px; flex: none; }
+.ring svg { width: 100%; height: 100%; display: block; }
+.ring-bg { fill: none; stroke: var(--surface-2); stroke-width: 10; }
+.ring-fg { fill: none; stroke: var(--accent-2); stroke-width: 10; stroke-linecap: round; transition: stroke-dasharray .6s ease; }
+.ring-fg.warn { stroke: var(--warn); } .ring-fg.bad { stroke: var(--bad); }
+.ring-c { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring-c b { font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.ring-c span { font-size: .8rem; color: var(--muted); }
+.ring-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.ring-info b { font-family: var(--font-display); font-size: 1.3rem; }
+
+/* Moduli */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px 16px; align-items: start; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.wide { grid-column: 1 / -1; }
+.field > label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.hint { font-size: .8rem; color: var(--muted); display: flex; gap: 6px; align-items: center; min-height: 1.4em; flex-wrap: wrap; }
+input, select, textarea { font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; width: 100%; min-width: 0; transition: border-color .15s, box-shadow .15s; }
+textarea { min-height: 80px; resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--accent-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 22%, transparent); }
+.check { display: flex; align-items: center; gap: 8px; font-size: .92rem; cursor: pointer; }
+.check input { width: auto; accent-color: var(--accent); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.form-actions { grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+button { font: inherit; font-weight: 700; font-size: .88rem; border-radius: 12px; padding: 10px 16px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; white-space: nowrap; transition: transform .12s, border-color .15s, background .15s, box-shadow .15s; }
+button:hover { border-color: var(--accent-2); }
+button:active { transform: translateY(1px); }
+button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+button.primary { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--accent-fg); border-color: transparent; box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 30%, transparent); }
+button.primary:hover { filter: brightness(1.06); }
+button.go { background: var(--ok); color: var(--surface); border-color: var(--ok); }
+button.ghost { background: transparent; border-color: transparent; color: var(--muted); padding: 6px 10px; }
+button.ghost:hover { color: var(--fg); background: var(--surface-2); }
+button.danger:hover, button.armed { color: var(--bad); border-color: var(--bad); }
+button.armed { background: var(--bad-soft); }
+button.sm { padding: 6px 12px; font-size: .8rem; border-radius: 10px; }
+button:disabled { opacity: .45; cursor: not-allowed; filter: none; transform: none; }
+
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.neutral { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th { text-align: left; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; background: var(--surface-2); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+td.r, th.r { text-align: right; }
+td.v-ok { color: var(--ok); } td.v-warn { color: var(--warn); font-weight: 700; } td.v-bad { color: var(--bad); font-weight: 700; background: var(--bad-soft); }
+.empty { padding: 24px 14px; text-align: center; color: var(--muted); font-size: .92rem; }
+
+.meter { height: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.meter > span { display: block; height: 100%; background: var(--accent-2); }
+.alerts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.alerts li { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+.alerts li.bad { background: var(--bad-soft); border-color: transparent; } .alerts li.warn { background: var(--warn-soft); border-color: transparent; }
+.avvisi { display: flex; flex-direction: column; gap: 10px; }
+.avviso { display: flex; gap: 14px; align-items: flex-start; padding: 14px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.avviso::before { content: ""; width: 10px; height: 10px; margin-top: 6px; border-radius: 50%; background: var(--accent-2); flex: none; box-shadow: 0 0 0 5px var(--accent-soft); }
+.avviso.importante { background: var(--warn-soft); border-color: transparent; box-shadow: none; }
+.avviso.importante::before { background: var(--warn); box-shadow: 0 0 0 5px color-mix(in srgb, var(--warn) 18%, transparent); }
+.avviso.scaduto { opacity: .55; }
+.avviso .when { font-size: .78rem; color: var(--muted); }
+
+.prod-box { grid-column: 1 / -1; border: 1px dashed var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: var(--surface-2); }
+.prod-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.prod-row input, .prod-row select { background: var(--surface); }
+@media (max-width: 520px) { .prod-row { grid-template-columns: 1fr 1fr; } .prod-row input[data-k="prodotto"] { grid-column: 1 / -1; } }
+.sugg { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: .88rem; }
+.sugg li { padding: 8px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
+.sugg li.bad { background: var(--bad-soft); border-color: transparent; color: var(--bad); } .sugg li.warn { background: var(--warn-soft); border-color: transparent; } .sugg li.ok { background: var(--ok-soft); border-color: transparent; }
+.consumi { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.consumo { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; background: var(--surface-2); }
+.consumo b { font-family: var(--font-display); font-size: 1.2rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.seg a { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; text-decoration: none; color: var(--muted); border-radius: 12px; min-width: 0; }
+.seg a b { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--fg); }
+.seg a span { font-size: .82rem; }
+.seg a:hover { background: var(--surface-2); }
+.seg a[aria-current="page"] { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: color-mix(in srgb, var(--accent-fg) 80%, transparent); }
+.seg a[aria-current="page"] b { color: var(--accent-fg); }
+.seg a:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+.sub { display: flex; flex-direction: column; gap: 20px; }
+
+.scala { display: flex; flex-direction: column; gap: 12px; }
+.scala-h { display: flex; align-items: baseline; gap: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.scala-h h3 { font-size: 1.35rem; font-weight: 800; }
+.fam { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.fam.sosp { border-color: var(--bad); }
+.fam-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.fam-h .who { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; min-width: 0; }
+.int { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; color: var(--accent); }
+.fam-h strong { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+.fam table { font-size: .88rem; }
+.fam .note { padding: 10px 18px; font-size: .85rem; color: var(--muted); border-top: 1px solid var(--line); }
+.membro-row { display: grid; grid-template-columns: 2fr 1.3fr 1.3fr auto; gap: 8px; align-items: end; padding: 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+.membro-row .checks { grid-column: 1 / -1; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+@media (max-width: 720px) { .membro-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .membro-row { grid-template-columns: 1fr; } }
+
+.two { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+.search-big { font-size: 1.1rem; padding: 14px 16px; border-radius: 14px; }
+.res { display: flex; flex-direction: column; gap: 8px; }
+.res-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.res-item.ok { border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); } .res-item.warn { border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); } .res-item.bad { border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); background: color-mix(in srgb, var(--bad-soft) 50%, var(--surface)); }
+.res-item .name { font-weight: 700; }
+.res-item .meta { font-size: .82rem; color: var(--muted); }
+.res-item .why { grid-column: 1 / -1; font-size: .84rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.res-item .act { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+@media (max-width: 520px) { .res-item { grid-template-columns: 1fr; } .res-item .act { justify-content: flex-start; } }
+.inside { display: flex; flex-direction: column; gap: 6px; }
+.inside-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.inside-row .meta { font-size: .8rem; color: var(--muted); }
+
+.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.roles > div { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--surface-2); font-size: .88rem; display: flex; flex-direction: column; gap: 4px; }
+.roles b { font-family: var(--font-display); font-size: 1.05rem; }
+
+.orari { display: flex; flex-direction: column; gap: 8px; }
+.orari-row { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+.orari-row span { font-size: .86rem; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.orari-row b { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.orari-row.today { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent-2) 40%, transparent); }
+.orari-row.today span { color: var(--fg); }
+
+.wx { flex: none; display: block; }
+.wx-now { display: flex; align-items: center; gap: 14px 20px; flex-wrap: wrap; }
+.wx-temp { font-family: var(--font-display); font-size: 3.2rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.wx-desc { font-weight: 700; font-size: 1.05rem; }
+.wx-hours { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.wx-h { flex: 1 0 64px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px; border-radius: 14px; background: var(--surface-2); }
+.wx-h { max-width: 120px; }
+.wx-h.now { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent-2); }
+.wx-h.past { opacity: .45; }
+.wx-temp small { font-size: .9rem; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+.wx-h b, .wx-d b { font-variant-numeric: tabular-nums; }
+.wx-rain { font-size: .72rem; color: var(--rain); min-height: 1.1em; font-weight: 700; }
+.wx-days { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.wx-d { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; padding: 12px 6px; border-radius: 14px; border: 1px solid var(--line); min-width: 0; }
+.wx-d .d { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.ideale { font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ok); }
+
+.utili { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px 28px; }
+.utili > div { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+ul.contatti, ul.portare { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+ul.contatti li { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+ul.contatti li.sos { border-color: transparent; background: var(--bad-soft); }
+ul.contatti li.sos .num { color: var(--bad); }
+ul.contatti .num { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; text-decoration: none; user-select: all; }
+ul.portare li { display: flex; gap: 12px; align-items: center; padding: 4px 0; }
+ul.portare li::before { content: ""; width: 18px; height: 18px; border: 2px solid var(--accent-2); border-radius: 6px; flex: none; }
+.scan { background: linear-gradient(180deg, var(--surface), var(--accent-soft)); }
+.scan-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.scan-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 18px; border-radius: 14px; }
+.scan-btn svg { width: 20px; height: 20px; flex: none; }
+.res-item.big { padding: 18px 20px; }
+.res-item.big .name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; }
+.tessere-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.tessera { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tessera img { width: 100%; height: auto; display: block; border-radius: 14px; box-shadow: 0 10px 24px rgba(11, 26, 46, .22); }
+.tessera > .actions { justify-content: space-between; }
+ol.rules { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+ol.rules li::marker { color: var(--accent-2); font-weight: 700; }
+.img-prev img { width: 100%; aspect-ratio: 16 / 6; object-fit: cover; border-radius: 14px; border: 1px solid var(--line); display: block; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: #0e1d31; color: #eef3f9; padding: 12px 18px; border-radius: 14px; font-size: .92rem; font-weight: 600; z-index: 60; max-width: calc(100% - 32px); box-shadow: 0 12px 30px rgba(0, 0, 0, .3); }
+.toast.bad { background: var(--bad); color: #ffffff; }
+@media (max-width: 960px) { .toast { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); } body.r-viewer .toast { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); } }
+
+/* Permessi: .st = operatori e amministratore, .ad = solo amministratore */
+body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+/* Accesso */
+.login { min-height: 100vh; display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)) 40px max(16px, env(safe-area-inset-right, 0px));
+  background: radial-gradient(80% 60% at 80% 0%, rgba(141, 180, 226, .35), transparent 60%), linear-gradient(160deg, #1d4570, #0b1a2e 70%); }
+.login-card { width: 100%; max-width: 420px; background: var(--surface); border-radius: 24px; padding: 30px 26px; box-shadow: 0 30px 70px rgba(0, 0, 0, .35); display: flex; flex-direction: column; gap: 16px; }
+.login-card h1 { font-size: 1.7rem; font-weight: 800; }
+.login-card p { margin: 0; color: var(--muted); }
+.login-card form { display: flex; flex-direction: column; gap: 12px; }
+.login-card .codice { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .3em; text-align: center; font-weight: 700; }
+.err { color: var(--bad); font-weight: 600; }
+.side-user { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .82rem; color: var(--side-fg); min-width: 0; }
+.side-user span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-user button { background: rgba(255, 255, 255, .08); color: var(--side-fg); border-color: rgba(255, 255, 255, .15); padding: 5px 10px; font-size: .78rem; }
+@media (max-width: 960px) { .side-user span { display: none; } }
+/* Lettura QR dal vivo */
+.scanner { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 20px; background: rgba(5, 12, 22, .92); }
+.scanner-box { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 14px; align-items: center; color: #eef3f9; text-align: center; }
+.sc-view { position: relative; width: 100%; aspect-ratio: 3 / 4; max-height: 70vh; border-radius: 22px; overflow: hidden; background: #000; }
+.sc-view video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sc-frame { position: absolute; inset: 18%; border: 3px solid rgba(255, 255, 255, .9); border-radius: 18px; box-shadow: 0 0 0 999px rgba(0, 0, 0, .35); }
+.scanner .actions { justify-content: center; }
+.scanner button { background: rgba(255, 255, 255, .12); color: #ffffff; border-color: rgba(255, 255, 255, .3); }
+</style>
+</head>
+<body>
+
+<div class="login" id="login" hidden>
+  <div class="login-card">
+    <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 8c1.5 0 1.5-1.2 3-1.2S7.5 8 9 8s1.5-1.2 3-1.2S13.5 8 15 8s1.5-1.2 3-1.2S19.5 8 21 8"/><path d="M3 13c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".75"/><path d="M3 18c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".5"/></svg></div>
+    <h1 id="login-nome">Piscina condominiale</h1>
+    <form id="login-email" autocomplete="on" hidden>
+      <p>Entra con l'email che hai comunicato all'amministratore. Ti mandiamo un link e un codice: non serve nessuna password.</p>
+      <div class="field"><label for="lg-email">La tua email</label><input type="email" id="lg-email" autocomplete="email" inputmode="email" required></div>
+      <button class="primary" type="submit">Mandami il link</button>
+    </form>
+    <form id="login-codice" autocomplete="off" hidden>
+      <p>Abbiamo scritto a <b id="lg-dest"></b>. Apri il link nell'email da questo dispositivo, oppure scrivi qui il codice che trovi nel messaggio.</p>
+      <div class="field"><label for="lg-codice">Codice</label><input id="lg-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
+      <button class="primary" type="submit">Entra</button>
+      <button class="ghost" type="button" data-act="lg-indietro">Usa un'altra email</button>
+    </form>
+    <div id="login-no" hidden>
+      <p>L'indirizzo <b id="lg-chi"></b> non è tra le persone invitate. Chiedi all'amministratore del condominio di aggiungerti, poi riprova.</p>
+      <div class="actions" style="margin-top:12px"><button data-act="esci">Entra con un'altra email</button></div>
+    </div>
+    <div id="login-msg" class="small muted"></div>
+    <a class="small" href="informativa.html">Informativa sulla privacy</a>
+  </div>
+</div>
+<div class="app" id="app" hidden>
+<aside class="side">
+  <div class="side-brand">
+    <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 8c1.5 0 1.5-1.2 3-1.2S7.5 8 9 8s1.5-1.2 3-1.2S13.5 8 15 8s1.5-1.2 3-1.2S19.5 8 21 8"/><path d="M3 13c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".75"/><path d="M3 18c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".5"/></svg></div>
+    <div><h1 id="pool-name">Piscina condominiale</h1><span class="sub">Il sito della piscina</span></div>
+  </div>
+  <nav class="tabs" aria-label="Sezioni">
+      <a href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4.5v-6h-5v6H5A1.5 1.5 0 0 1 3.5 19z"/></svg><span>Home</span></a>
+      <a href="#bacheca" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5v3a1 1 0 0 0 1 1h2l5.5 4V5.5L7 9.5H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6M18.8 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Bacheca</span></a>
+      <a href="#manutenzione" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5s6 6.3 6 10.7a6 6 0 0 1-12 0C6 9.8 12 3.5 12 3.5z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.5"/></svg><span>Manutenzione</span></a>
+      <a href="#condomini" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.6.4 4.5 2.6 4.5 5.8"/></svg><span>Condomini</span></a>
+      <a href="#ingressi" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="10" height="17" rx="1.2"/><path d="M15 5.5h3.5v15H15"/><circle cx="12" cy="12" r=".9" fill="currentColor"/></svg><span>Ingressi</span></a>
+      <a href="#impostazioni" class="ad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg><span>Impostazioni</span></a>
+  </nav>
+  <div class="side-foot">
+    <div class="side-status" id="side-status"></div>
+    <span class="role" id="role-lbl">Accesso in verifica…</span>
+    <div class="side-user"><span id="user-lbl"></span><button type="button" data-act="esci">Esci</button></div>
+    <a class="role" href="informativa.html" style="color:var(--side-muted)">Informativa privacy</a>
+  </div>
+</aside>
+
+<main class="wrap">
+  <div id="banner" class="banner info" hidden></div>
+
+  <!-- HOME (visibile a tutti) -->
+  <section class="tab" id="tab-home">
+    <div class="hero" id="hero">
+      <img id="hero-img" alt="" hidden>
+      <div class="hero-tools ad"><button class="sm" data-go="impostazioni">Cambia immagine</button></div>
+      <div class="hero-in">
+        <span class="hero-date" id="home-date">—</span>
+        <h2 id="hero-name">Piscina condominiale</h2>
+        <div class="hero-chips" id="hero-chips"></div>
+      </div>
+    </div>
+    <div id="home-closed" class="closed" hidden></div>
+    <div class="avvisi" id="home-allerta" hidden></div>
+    <div class="avvisi" id="home-avvisi" hidden></div>
+    <div class="bento">
+      <div class="card c-water" id="home-water"><div class="muted">Caricamento dati…</div></div>
+      <div class="card c-pres" id="home-pres"><div class="muted">Caricamento…</div></div>
+      <div class="card c-meteo" id="home-meteo"><div class="muted">Caricamento meteo…</div></div>
+      <div class="card c-orari" id="home-info"><div class="muted">Caricamento…</div></div>
+      <div class="card c-regole" id="home-tessere" hidden></div>
+      <div class="card c-utili" id="home-utili">
+        <h3>Informazioni utili</h3>
+        <div class="utili">
+          <div><span class="lbl">Contatti</span><ul class="contatti" id="home-contatti"></ul></div>
+          <div><span class="lbl">Cosa portare in piscina</span><ul class="portare" id="home-portare"></ul></div>
+        </div>
+      </div>
+      <div class="card c-regole" id="home-regole" hidden>
+        <h3>Regolamento della piscina</h3>
+        <ol class="rules" id="home-regole-list"></ol>
+      </div>
+    </div>
+    <div class="panel st">
+      <div class="head">
+        <h3>Per gli operatori <span class="tag">Riservato</span></h3>
+        <div class="actions">
+          <button class="primary sm" data-go="ordinaria">Nuova misurazione</button>
+          <button class="sm" data-go="ingressi">Registra ingresso</button>
+          <button class="sm" data-go="bacheca">Pubblica un avviso</button>
+        </div>
+      </div>
+      <div class="tiles" id="home-staff-tiles"></div>
+      <span class="lbl">Da controllare</span>
+      <ul class="alerts" id="home-alerts"><li>Caricamento…</li></ul>
+    </div>
+  </section>
+
+  <!-- MANUTENZIONE: ordinaria + straordinaria -->
+  <section class="tab" id="tab-manutenzione" hidden>
+    <div class="head">
+      <div>
+        <h2>Manutenzione</h2>
+        <p>Tutto il lavoro sulla piscina in un posto: le misure quotidiane dell'acqua con i prodotti aggiunti, e gli interventi straordinari.</p>
+      </div>
+    </div>
+    <div class="tiles" id="mn-sum"></div>
+    <nav class="seg" aria-label="Tipo di manutenzione">
+      <a href="#ordinaria" id="seg-ordinaria"><b>Ordinaria</b><span>Misure dell'acqua e prodotti aggiunti</span></a>
+      <a href="#straordinaria" id="seg-straordinaria"><b>Straordinaria</b><span>Riparazioni, ditte e lavori stagionali</span></a>
+    </nav>
+
+    <div class="sub" id="sub-ordinaria">
+    <div class="panel">
+      <h3>Nuova misurazione</h3>
+      <form class="grid" id="or-form" autocomplete="off">
+        <div class="field"><label for="or-ts">Data e ora</label><input type="datetime-local" id="or-ts" required></div>
+        <div class="field"><label for="or-ph">pH</label><input type="number" id="or-ph" step="0.01" min="0" max="14" inputmode="decimal" required><div class="hint" id="or-ph-h"></div></div>
+        <div class="field"><label for="or-cl">Cloro libero (mg/l)</label><input type="number" id="or-cl" step="0.01" min="0" max="20" inputmode="decimal" required><div class="hint" id="or-cl-h"></div></div>
+        <div class="field"><label for="or-cc">Cloro combinato (mg/l)</label><input type="number" id="or-cc" step="0.01" min="0" max="20" inputmode="decimal" placeholder="facoltativo"><div class="hint" id="or-cc-h"></div></div>
+        <div class="field"><label for="or-ta">Temp. acqua (°C)</label><input type="number" id="or-ta" step="0.1" min="0" max="50" inputmode="decimal" required><div class="hint" id="or-ta-h"></div></div>
+        <div class="field"><label for="or-tr">Temp. aria (°C)</label><input type="number" id="or-tr" step="0.1" min="-20" max="60" inputmode="decimal" required><div class="hint" id="or-tr-h">Solo registrazione</div></div>
+        <div class="field"><label for="or-op">Operatore</label><input type="text" id="or-op" maxlength="60" placeholder="Nome di chi misura"></div>
+
+        <div class="prod-box">
+          <div class="sub-h">Aggiunta prodotti <span class="small muted" style="font-family:var(--font-body);font-weight:400">cloro, correttori pH e altri trattamenti</span></div>
+          <ul class="sugg" id="or-sugg"></ul>
+          <div id="or-prod" style="display:flex;flex-direction:column;gap:8px"></div>
+          <div class="actions"><button type="button" class="sm" data-act="prod-add">Aggiungi prodotto</button></div>
+        </div>
+
+        <div class="field wide"><label for="or-note">Note</label><input type="text" id="or-note" maxlength="300" placeholder="Es. controlavaggio filtro, pulizia skimmer, acqua torbida"></div>
+        <div class="form-actions"><button class="primary" type="submit">Salva misurazione</button></div>
+      </form>
+      <datalist id="prodotti">
+        <option value="Cloro granulare"></option>
+        <option value="Cloro in pastiglie (tricloro)"></option>
+        <option value="Ipoclorito di sodio liquido"></option>
+        <option value="Clorazione shock"></option>
+        <option value="Correttore pH− (riduttore)"></option>
+        <option value="Correttore pH+ (incrementatore)"></option>
+        <option value="Flocculante"></option>
+        <option value="Antialghe"></option>
+        <option value="Stabilizzante (acido cianurico)"></option>
+      </datalist>
+    </div>
+    <div class="panel">
+      <div class="head"><h3>Prodotti usati negli ultimi 30 giorni</h3></div>
+      <div class="consumi" id="or-consumi"><div class="empty">Caricamento…</div></div>
+    </div>
+    <div class="panel">
+      <div class="head">
+        <h3>Storico misurazioni</h3>
+        <div class="actions">
+          <select id="or-range" aria-label="Periodo">
+            <option value="7">Ultimi 7 giorni</option>
+            <option value="30" selected>Ultimi 30 giorni</option>
+            <option value="0">Tutto</option>
+          </select>
+          <button class="exp" data-act="export-letture" hidden>Esporta CSV</button>
+        </div>
+      </div>
+      <div class="tbl-wrap" id="or-list"><div class="empty">Caricamento…</div></div>
+    </div>
+    </div>
+
+    <div class="sub" id="sub-straordinaria" hidden>
+    <div class="panel">
+      <h3 id="st-title">Nuovo intervento</h3>
+      <form class="grid" id="st-form" autocomplete="off">
+        <input type="hidden" id="st-id">
+        <div class="field"><label for="st-data">Data</label><input type="date" id="st-data" required></div>
+        <div class="field" style="grid-column: span 2"><label for="st-voce">Voce</label><input type="text" id="st-voce" list="st-voci" maxlength="120" required placeholder="Scrivi o scegli dall'elenco"></div>
+        <div class="field"><label for="st-cat">Categoria</label><input type="text" id="st-cat" list="st-cats" maxlength="60" placeholder="Es. Filtrazione"></div>
+        <div class="field"><label for="st-stato">Stato</label>
+          <select id="st-stato"><option value="da_fare">Da fare</option><option value="in_corso">In corso</option><option value="completato">Completato</option></select></div>
+        <div class="field"><label for="st-ditta">Ditta / tecnico</label><input type="text" id="st-ditta" maxlength="100"></div>
+        <div class="field"><label for="st-costo">Costo (€)</label><input type="number" id="st-costo" min="0" step="0.01" inputmode="decimal"></div>
+        <div class="field wide"><label for="st-desc">Descrizione</label><textarea id="st-desc" maxlength="1500" placeholder="Cosa è stato fatto o cosa va fatto"></textarea></div>
+        <div class="form-actions">
+          <button class="primary" type="submit" id="st-submit">Aggiungi intervento</button>
+          <button type="button" id="st-cancel" hidden>Annulla modifica</button>
+        </div>
+      </form>
+      <datalist id="st-voci">
+        <option value="Sostituzione sabbia/vetro del filtro"></option>
+        <option value="Riparazione o sostituzione pompa"></option>
+        <option value="Pulizia di fondo vasca"></option>
+        <option value="Svuotamento e riempimento vasca"></option>
+        <option value="Sostituzione piastrelle / mosaico"></option>
+        <option value="Controllo impianto elettrico e illuminazione"></option>
+        <option value="Taratura sonde e pompe dosatrici"></option>
+        <option value="Analisi di laboratorio dell'acqua"></option>
+        <option value="Revisione scaletta e corrimano"></option>
+        <option value="Copertura invernale / svernamento"></option>
+        <option value="Riapertura stagionale"></option>
+        <option value="Sostituzione cassetta di primo soccorso"></option>
+      </datalist>
+      <datalist id="st-cats">
+        <option value="Filtrazione"></option><option value="Pompe e dosaggio"></option><option value="Impianto elettrico"></option>
+        <option value="Vasca e struttura"></option><option value="Pulizia"></option><option value="Analisi"></option>
+        <option value="Sicurezza"></option><option value="Stagionale"></option><option value="Altro"></option>
+      </datalist>
+    </div>
+    <div class="panel">
+      <div class="head">
+        <h3>Interventi</h3>
+        <div class="actions">
+          <select id="st-filtro" aria-label="Filtra per stato">
+            <option value="aperti">Da fare e in corso</option>
+            <option value="tutti">Tutti</option>
+            <option value="completato">Completati</option>
+          </select>
+          <button class="exp" data-act="export-int" hidden>Esporta CSV</button>
+        </div>
+      </div>
+      <div id="st-sum" class="small muted"></div>
+      <div class="tbl-wrap" id="st-list"><div class="empty">Caricamento…</div></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- CONDOMINI -->
+  <section class="tab" id="tab-condomini" hidden>
+    <div class="head">
+      <div>
+        <h2>Condomini</h2>
+        <p>Elenco per scala, appartamento e famiglia. Per ogni componente del nucleo decidi chi può entrare in piscina. <span class="st" id="con-ro-note">Solo l'amministratore modifica l'elenco.</span></p>
+      </div>
+      <div class="actions ad"><button data-act="tes-tutte">Tutte le tessere</button><button class="primary" data-act="fam-new">Nuova famiglia</button></div>
+    </div>
+    <div class="panel" id="fam-editor" hidden></div>
+    <div class="panel" id="tessere-panel" hidden></div>
+    <div class="actions">
+      <input type="search" id="con-q" placeholder="Cerca per nome, cognome o interno" style="flex: 1 1 240px">
+      <select id="con-scala" aria-label="Scala" style="flex: 0 1 180px"><option value="">Tutte le scale</option></select>
+    </div>
+    <div id="con-sum" class="small muted"></div>
+    <div id="con-list" style="display:flex;flex-direction:column;gap:22px"><div class="empty">Caricamento…</div></div>
+  </section>
+
+  <!-- INGRESSI -->
+  <section class="tab" id="tab-ingressi" hidden>
+    <div class="head">
+      <div>
+        <h2>Controllo ingressi</h2>
+        <p>Leggi la tessera o cerca la persona per nome: vedi subito se può entrare e registri ingresso e uscita. Gli accessi negati restano nel registro.</p>
+      </div>
+    </div>
+    <div class="panel scan">
+      <div class="scan-row">
+        <div class="field" style="flex:1 1 280px"><label for="tes-code">Controllo tessera</label>
+          <input id="tes-code" class="search-big" placeholder="Leggi il QR o scrivi il codice, es. K7F-3QX" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
+        <button class="primary scan-btn" data-act="tes-foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M8 8h3v3H8zM13 13h3v3h-3zM13 8h3M8 16h3"/></svg><span>Inquadra con la fotocamera</span></button>
+        <input type="file" id="tes-file" accept="image/*" capture="environment" hidden>
+      </div>
+      <div id="tes-res"></div>
+      <p class="small muted" style="margin:0">Premi «Inquadra» e punta la fotocamera del telefono o del computer sulla tessera: il controllo parte da solo. Funziona anche con un lettore QR collegato al computer, o scrivendo il codice.</p>
+    </div>
+    <div class="two">
+      <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+        <div class="panel">
+          <input type="search" id="acc-q" class="search-big" placeholder="Nome, cognome, scala o interno…" autocomplete="off">
+          <div id="acc-cap" class="small"></div>
+          <div class="res" id="acc-res"><div class="empty">Scrivi almeno 2 lettere per cercare un condomino.</div></div>
+        </div>
+        <div class="panel">
+          <h3>Ingresso ospite</h3>
+          <form class="grid" id="osp-form" autocomplete="off">
+            <div class="field"><label for="osp-nome">Nome ospite</label><input type="text" id="osp-nome" maxlength="80" required></div>
+            <div class="field"><label for="osp-fam">Famiglia ospitante</label><select id="osp-fam" required></select></div>
+            <div class="form-actions"><button class="primary" type="submit">Registra ospite</button><span class="small muted" id="osp-hint"></span></div>
+          </form>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="head"><h3>In piscina ora</h3><button class="sm" data-act="acc-all-out">Chiusura: tutti fuori</button></div>
+        <div class="inside" id="acc-dentro"><div class="empty">Nessuno.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="head">
+        <h3>Registro di oggi</h3>
+        <button class="exp" data-act="export-acc" hidden>Esporta CSV</button>
+      </div>
+      <div class="tbl-wrap" id="acc-log"><div class="empty">Nessun movimento registrato oggi.</div></div>
+    </div>
+  </section>
+
+  <!-- BACHECA (operatori) -->
+  <section class="tab" id="tab-bacheca" hidden>
+    <div class="head">
+      <div>
+        <h2>Bacheca</h2>
+        <p>Quello che pubblichi qui compare nella Home dei condomini: apertura, orari, avvisi e regolamento.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Apertura e orari</h3>
+      <form class="grid" id="ba-form" autocomplete="off">
+        <div class="field"><label for="ba-stato">Stato della piscina</label><select id="ba-stato"><option value="aperta">Aperta secondo orario</option><option value="chiusa">Chiusa fino a nuovo avviso</option></select></div>
+        <div class="field" style="grid-column: span 2"><label for="ba-motivo">Motivo della chiusura</label><input id="ba-motivo" maxlength="160" placeholder="Es. trattamento shock dell'acqua"></div>
+        <div class="field wide"><span class="lbl">Orario continuato</span></div>
+        <div class="field"><label for="ba-f-da">Lun–ven: apertura</label><input type="time" id="ba-f-da"></div>
+        <div class="field"><label for="ba-f-a">Lun–ven: chiusura</label><input type="time" id="ba-f-a"></div>
+        <div class="field"><label for="ba-w-da">Sab–dom: apertura</label><input type="time" id="ba-w-da"></div>
+        <div class="field"><label for="ba-w-a">Sab–dom: chiusura</label><input type="time" id="ba-w-a"></div>
+        <div class="field wide"><div><label class="check"><input type="checkbox" id="ba-festivi" checked> Nei giorni festivi vale l'orario del sabato e della domenica</label></div></div>
+        <div class="field wide"><span class="lbl">Chiusure e stagione</span></div>
+        <div class="field"><label for="ba-riposo">Giorno di chiusura</label><select id="ba-riposo"><option value="">Nessuno</option><option value="1">Lunedì</option><option value="2">Martedì</option><option value="3">Mercoledì</option><option value="4">Giovedì</option><option value="5">Venerdì</option><option value="6">Sabato</option><option value="0">Domenica</option></select></div>
+        <div class="field"><label for="ba-s1">Inizio stagione</label><input type="date" id="ba-s1"></div>
+        <div class="field"><label for="ba-s2">Fine stagione</label><input type="date" id="ba-s2"></div>
+        <div class="form-actions"><button class="primary" type="submit">Pubblica orari</button><span class="small muted">Lascia vuoti apertura e chiusura se in quei giorni la piscina è chiusa.</span></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h3>Avvisi</h3>
+      <form class="grid" id="av-form" autocomplete="off">
+        <div class="field wide"><label for="av-testo">Testo dell'avviso</label><textarea id="av-testo" maxlength="600" required placeholder="Es. Sabato la piscina apre alle 15:00 per la pulizia del fondo."></textarea></div>
+        <div class="field"><label for="av-tipo">Tipo</label><select id="av-tipo"><option value="info">Informazione</option><option value="importante">Importante</option></select></div>
+        <div class="field"><label for="av-scad">Visibile fino al</label><input type="date" id="av-scad"><div class="hint">Facoltativo: dopo questa data sparisce dalla Home</div></div>
+        <div class="form-actions"><button class="primary" type="submit">Pubblica avviso</button></div>
+      </form>
+      <div id="av-list" class="avvisi"><div class="empty">Caricamento…</div></div>
+    </div>
+    <div class="panel">
+      <h3>Regolamento</h3>
+      <form id="re-form" style="display:flex;flex-direction:column;gap:10px" autocomplete="off">
+        <div class="field"><label for="re-testo">Una regola per riga</label><textarea id="re-testo" rows="8" maxlength="4000" placeholder="Doccia obbligatoria prima di entrare in vasca"></textarea></div>
+        <div class="actions"><button class="primary" type="submit">Salva regolamento</button><button type="button" data-act="re-modello">Usa un modello</button></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h3>Informazioni utili</h3>
+      <form class="grid" id="in-form" autocomplete="off">
+        <div class="field" style="grid-column: span 2"><label for="in-contatti">Contatti, uno per riga</label><textarea id="in-contatti" rows="5" maxlength="1500" placeholder="Custode: 333 123 4567&#10;Amministratore: 02 123 4567"></textarea><div class="hint">Scrivi nome o ruolo, due punti, numero. Il 112 compare sempre.</div></div>
+        <div class="field" style="grid-column: span 2"><label for="in-portare">Cosa portare, una voce per riga</label><textarea id="in-portare" rows="5" maxlength="1000" placeholder="Cuffia&#10;Ciabatte"></textarea><div class="hint">Se lo lasci vuoto la Home mostra un elenco di base.</div></div>
+        <div class="form-actions"><button class="primary" type="submit">Salva informazioni</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- IMPOSTAZIONI (amministratore) -->
+  <section class="tab" id="tab-impostazioni" hidden>
+    <div class="head">
+      <div>
+        <h2>Impostazioni</h2>
+        <p>Limiti predefiniti secondo l'Accordo Stato-Regioni del 16/01/2003 (acqua in vasca). Verifica sempre il regolamento della tua ASL e del condominio.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Immagine della Home</h3>
+      <div class="img-prev" id="img-prev"></div>
+      <div class="actions">
+        <input type="file" id="img-file" accept="image/*" hidden>
+        <button class="primary" data-act="img-pick" id="img-pick">Carica immagine</button>
+        <label class="check" for="img-pos" style="gap:6px">Inquadratura
+          <select id="img-pos" style="width:auto"><option value="top">In alto</option><option value="center">Al centro</option><option value="bottom">In basso</option></select></label>
+        <button class="danger" data-act="img-del" id="img-del" hidden>Rimuovi immagine</button>
+      </div>
+      <p class="small muted" style="margin:0" id="img-note">Meglio una foto orizzontale della piscina, larga almeno 1600 pixel. Le immagini grandi vengono ridotte automaticamente.</p>
+    </div>
+    <div class="panel">
+      <div class="head"><h3>Persone invitate</h3><button type="button" class="sm" data-act="copia-link">Copia l'indirizzo del sito</button></div>
+      <p class="small muted" style="margin:0">Può entrare solo chi è in questo elenco, con il link o il codice che riceve via email. <b>Condomini</b>: vedono solo la Home. <b>Operatori</b>: Bacheca, Manutenzione, Ingressi e consultazione dei condomini. <b>Amministratori</b>: tutto. Dopo averli aggiunti, manda alle persone l'indirizzo del sito.</p>
+      <form class="grid" id="inv-form" autocomplete="off">
+        <div class="field" style="grid-column: span 2"><label for="inv-email">Email, anche più di una</label><textarea id="inv-email" rows="2" required placeholder="mario.rossi@email.it"></textarea><div class="hint">Separa gli indirizzi con un a capo o una virgola.</div></div>
+        <div class="field"><label for="inv-nome">Nome</label><input id="inv-nome" maxlength="80" placeholder="Facoltativo"></div>
+        <div class="field"><label for="inv-ruolo">Ruolo</label><select id="inv-ruolo"><option value="condomino">Condomino</option><option value="operatore">Operatore</option><option value="admin">Amministratore</option></select></div>
+        <div class="field"><label for="inv-fam">Famiglia</label><select id="inv-fam"></select><div class="hint">Il condomino vedrà le tessere della sua famiglia nella Home.</div></div>
+        <div class="form-actions"><button class="primary" type="submit">Aggiungi</button></div>
+      </form>
+      <div class="actions"><input type="search" id="inv-q" placeholder="Cerca per email o nome" style="flex:1 1 220px"><span class="small muted" id="inv-sum"></span></div>
+      <div class="tbl-wrap" id="inv-list"><div class="empty">Caricamento…</div></div>
+    </div>
+    <div class="panel">
+      <form class="grid" id="imp-form" autocomplete="off">
+        <div class="field wide"><span class="lbl">Generale</span></div>
+        <div class="field" style="grid-column: span 2"><label for="imp-nome">Nome della piscina</label><input type="text" id="imp-nome" maxlength="80"></div>
+        <div class="field"><label for="imp-cap">Capienza massima (persone)</label><input type="number" id="imp-cap" min="1" step="1"></div>
+        <div class="field"><label for="imp-ore">Avviso se nessuna misura da (ore)</label><input type="number" id="imp-ore" min="1" step="1"></div>
+        <div class="field"><label for="imp-eta">Minori accompagnati sotto i (anni)</label><input type="number" id="imp-eta" min="0" max="18" step="1"></div>
+        <div class="field"><label for="imp-osp">Ospiti al giorno per famiglia</label><input type="number" id="imp-osp" min="0" step="1"></div>
+
+        <div class="field wide"><span class="lbl">Limiti dell'acqua</span></div>
+        <div class="field"><label for="imp-phmin">pH minimo</label><input type="number" id="imp-phmin" step="0.1"></div>
+        <div class="field"><label for="imp-phmax">pH massimo</label><input type="number" id="imp-phmax" step="0.1"></div>
+        <div class="field"><label for="imp-clmin">Cloro libero min (mg/l)</label><input type="number" id="imp-clmin" step="0.05"></div>
+        <div class="field"><label for="imp-clmax">Cloro libero max (mg/l)</label><input type="number" id="imp-clmax" step="0.05"></div>
+        <div class="field"><label for="imp-ccmax">Cloro combinato max (mg/l)</label><input type="number" id="imp-ccmax" step="0.05"></div>
+        <div class="field"><label for="imp-tamin">Temp. acqua min (°C)</label><input type="number" id="imp-tamin" step="0.5"></div>
+        <div class="field"><label for="imp-tamax">Temp. acqua max (°C)</label><input type="number" id="imp-tamax" step="0.5"></div>
+        <div class="form-actions"><button class="primary" type="submit">Salva impostazioni</button><button type="button" id="imp-reset">Ripristina limiti predefiniti</button></div>
+      </form>
+    </div>
+    <div class="panel" id="esempi-panel" hidden>
+      <h3>Dati di esempio</h3>
+      <p class="small muted" style="margin:0" id="esempi-txt"></p>
+      <div class="actions"><button class="danger" data-act="del-esempi">Elimina i dati di esempio</button></div>
+    </div>
+  </section>
+</main>
+</div>
+<div class="scanner" id="scanner" hidden>
+  <div class="scanner-box">
+    <div class="sc-view"><video id="sc-video" playsinline muted></video><div class="sc-frame" aria-hidden="true"></div></div>
+    <p id="sc-msg">Avvio della fotocamera…</p>
+    <div class="actions"><button type="button" data-act="sc-chiudi">Chiudi</button><button type="button" data-act="sc-foto">Usa una foto</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+(() => {
+'use strict';
+const DEFAULT_CFG = { nome: 'Piscina condominiale', capienza: 30, oreMax: 12, phMin: 6.5, phMax: 7.5, clMin: 0.7, clMax: 1.5, ccMax: 0.4, taMin: 24, taMax: 30, etaAccomp: 14, maxOspiti: 2 };
+const STATI = { da_fare: 'Da fare', in_corso: 'In corso', completato: 'Completato' };
+const UNITA = ['kg', 'g', 'l', 'ml', 'pastiglie'];
+/* scheda → livello minimo: viewer < staff < admin */
+const TABS = { home: 'viewer', bacheca: 'staff', manutenzione: 'staff', condomini: 'staff', ingressi: 'staff', impostazioni: 'admin' };
+const RANK = { viewer: 0, staff: 1, admin: 2 };
+const ROLE_LBL = { viewer: 'Condomino · sola consultazione', staff: 'Operatore', admin: 'Amministratore' };
+
+const S = { utenti: null, utente: null, sb: null, info: {}, sub: 'ordinaria', db: null, dl: null, assets: null, bacheca: {}, avvisi: [], regole: '', cfgRaw: {}, imgBroken: false, role: 'viewer', roleSure: false, letture: [], interventi: [], famiglie: [], accessi: { entries: [] }, pres: null, accDay: null, unsubAcc: null, cfg: { ...DEFAULT_CFG }, loaded: {}, need: [], ready: false, editFam: null };
+const isStaff = () => RANK[S.role] >= 1, isAdmin = () => S.role === 'admin';
+
+/* ---------- utilità ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = n => String(n).padStart(2, '0');
+const dayKey = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const localInput = (d = new Date()) => `${dayKey(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const isNum = v => v !== null && v !== undefined && v !== '' && !isNaN(v);
+const numOrNull = s => (s === '' || s == null || isNaN(+s)) ? null : +s;
+const fmt = (v, d = 1) => isNum(v) ? Number(v).toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
+const fmtQ = v => Number(v).toLocaleString('it-IT', { maximumFractionDigits: 2 });
+const fmtDT = iso => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }); };
+const fmtD = s => s ? new Date(s + 'T00:00').toLocaleDateString('it-IT') : '—';
+const fmtT = iso => iso ? new Date(iso).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '—';
+const eur = v => Number(v || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const cmpNat = (a, b) => String(a || '').localeCompare(String(b || ''), 'it', { numeric: true, sensitivity: 'base' });
+const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+const unitLabel = f => `Sc. ${f.scala} · Int. ${f.interno}`;
+const prodText = l => (l.prodotti || []).map(p => `${p.prodotto} ${fmtQ(p.qta)} ${p.unita}`).join(', ');
+
+function age(n) {
+  if (!n) return null;
+  const b = new Date(n + 'T00:00'), t = new Date();
+  if (isNaN(b)) return null;
+  let a = t.getFullYear() - b.getFullYear();
+  if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) a--;
+  return a;
+}
+
+let toastT;
+function toast(msg, kind = '') {
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast ' + kind; t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3400);
+}
+function banner(kind, html) {
+  const b = $('#banner');
+  if (!html) { b.hidden = true; return; }
+  b.className = 'banner ' + kind; b.innerHTML = html; b.hidden = false;
+}
+function errMsg(e) {
+  switch (e && e.code) {
+    case 'invalid_argument': return 'Salvataggio rifiutato: il tuo accesso non permette questa modifica.';
+    case 'quota_exceeded': return 'Archivio pieno: elimina le voci più vecchie e riprova.';
+    case 'resource_exhausted': return 'Troppe operazioni ravvicinate: attendi qualche secondo e riprova.';
+    case 'revoked': return 'L\'accesso ai dati è stato revocato.';
+    default: return 'Impossibile salvare adesso. Controlla la connessione e riprova.';
+  }
+}
+async function guard(promise, okMsg) {
+  try { await promise; if (okMsg) toast(okMsg); return true; }
+  catch (e) {
+    toast(errMsg(e), 'bad');
+    if (e && e.code === 'invalid_argument' && !S.roleSure && S.role !== 'viewer') { S.role = 'viewer'; S.roleSure = true; applyRole(); }
+    return false;
+  }
+}
+function needDb() {
+  if (!S.db) { toast('Archivio non raggiungibile: controlla la connessione e riprova.', 'bad'); return false; }
+  return true;
+}
+/* conferma a due clic (i dialoghi del browser non sono disponibili) */
+function armed(btn) {
+  if (btn.dataset.armed) return true;
+  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = 'Conferma'; btn.classList.add('armed');
+  setTimeout(() => { if (btn.isConnected && btn.dataset.armed) { btn.textContent = old; delete btn.dataset.armed; btn.classList.remove('armed'); } }, 3500);
+  return false;
+}
+
+/* ---------- valutazione parametri ---------- */
+function band(v, min, max) {
+  if (!isNum(v)) return null; v = +v;
+  if (v < min || v > max) return 'bad';
+  const m = (max - min) * 0.1;
+  return (v < min + m || v > max - m) ? 'warn' : 'ok';
+}
+const ccBand = v => isNum(v) ? (+v > S.cfg.ccMax ? 'bad' : (+v > S.cfg.ccMax * 0.75 ? 'warn' : 'ok')) : null;
+function evalL(l) {
+  const c = S.cfg;
+  return { ph: band(l.ph, c.phMin, c.phMax), cl: band(l.cloro, c.clMin, c.clMax), cc: ccBand(l.cloroComb), ta: band(l.tAcqua, c.taMin, c.taMax) };
+}
+const worst = a => a.includes('bad') ? 'bad' : a.includes('warn') ? 'warn' : a.includes('ok') ? 'ok' : null;
+const LV = { ok: 'Nei limiti', warn: 'Vicino al limite', bad: 'Fuori limite' };
+const pill = (lvl, txt) => `<span class="pill ${lvl || 'neutral'}">${esc(txt ?? (LV[lvl] || '—'))}</span>`;
+
+/* suggerimenti di trattamento in base ai valori */
+function suggerimenti(v) {
+  const c = S.cfg, out = [];
+  if (isNum(v.ph)) {
+    if (+v.ph > c.phMax) out.push(['bad', 'pH alto: aggiungi correttore pH− (riduttore). Con pH alto il cloro funziona molto meno.']);
+    else if (+v.ph < c.phMin) out.push(['bad', 'pH basso: aggiungi correttore pH+ (incrementatore). Acqua acida irrita occhi e pelle.']);
+    else if (band(v.ph, c.phMin, c.phMax) === 'warn') out.push(['warn', 'pH vicino al limite: valuta una piccola correzione e ricontrolla più tardi.']);
+  }
+  if (isNum(v.cloro)) {
+    if (+v.cloro < c.clMin) out.push(['bad', 'Cloro libero basso: aggiungi cloro. Correggi prima il pH, poi il cloro.']);
+    else if (+v.cloro > c.clMax) out.push(['bad', 'Cloro libero alto: sospendi il dosaggio e attendi che scenda prima di far entrare i bagnanti.']);
+  }
+  if (isNum(v.cloroComb) && +v.cloroComb > c.ccMax) out.push(['bad', 'Cloro combinato alto: serve una clorazione shock o un rinnovo parziale dell\'acqua.']);
+  if (isNum(v.tAcqua) && band(v.tAcqua, c.taMin, c.taMax) === 'bad') out.push(['warn', 'Temperatura dell\'acqua fuori dall\'intervallo di riferimento.']);
+  if (!out.length && isNum(v.ph) && isNum(v.cloro)) out.push(['ok', 'Valori nei limiti: nessuna correzione necessaria.']);
+  return out;
+}
+
+/* ---------- regole di accesso alla piscina ---------- */
+function eligibility(fam, m) {
+  const c = S.cfg;
+  if (fam.sospesa) return { lvl: 'bad', label: 'Accesso negato', why: 'Famiglia sospesa' + (fam.motivoSosp ? ': ' + fam.motivoSosp : '') };
+  if (!m.autorizzato) return { lvl: 'bad', label: 'Non autorizzato', why: m.note ? m.note : 'Componente non abilitato all\'accesso' };
+  const a = age(m.nascita);
+  if (m.soloAccomp || (a !== null && a < c.etaAccomp)) return { lvl: 'warn', label: 'Solo accompagnato', why: a !== null && a < c.etaAccomp ? `Minore (${a} anni): entra solo con un adulto` : 'Entra solo con un adulto responsabile' };
+  return { lvl: 'ok', label: 'Può entrare', why: '' };
+}
+const presenti = () => (S.accessi.entries || []).filter(e => e.esito !== 'negato' && !e.uscita);
+function presCount() {
+  if (isStaff() && S.loaded.accessi) return presenti().length;
+  return S.pres && S.pres.data === dayKey() ? (S.pres.presenti || 0) : 0;
+}
+
+/* ---------- navigazione e permessi ---------- */
+function route() {
+  let h = location.hash.slice(1), sub = null;
+  if (h === 'ordinaria' || h === 'straordinaria') { sub = h; h = 'manutenzione'; }
+  return { t: TABS[h] && RANK[S.role] >= RANK[TABS[h]] ? h : 'home', sub };
+}
+function showTab() {
+  const { t, sub } = route();
+  if (sub) S.sub = sub;
+  Object.keys(TABS).forEach(id => { $('#tab-' + id).hidden = id !== t; });
+  $$('nav.tabs a').forEach(a => { if (a.getAttribute('href') === '#' + t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  ['ordinaria', 'straordinaria'].forEach(k => {
+    $('#sub-' + k).hidden = S.sub !== k;
+    if (S.sub === k) $('#seg-' + k).setAttribute('aria-current', 'page'); else $('#seg-' + k).removeAttribute('aria-current');
+  });
+  if (t === 'ingressi' && matchMedia('(pointer: fine)').matches) setTimeout(() => $('#tes-code').focus({ preventScroll: true }), 50);
+  if (t === 'manutenzione' && S.sub === 'ordinaria') { if (!$('#or-ts').value) $('#or-ts').value = localInput(); fillAria(); }
+}
+window.addEventListener('hashchange', showTab);
+function applyRole() {
+  document.body.classList.remove('r-viewer', 'r-staff', 'r-admin');
+  document.body.classList.add('r-' + S.role);
+  $('#role-lbl').textContent = 'Accesso: ' + ROLE_LBL[S.role];
+  $('#con-ro-note').hidden = isAdmin();
+  showTab(); renderAll();
+}
+
+/* ---------- render ---------- */
+function renderAll() {
+  renderHeader(); renderHome(); renderManSum(); renderImgPanel(); renderLetture(); renderConsumi(); renderOrHints(); renderInterventi(); renderCondomini(); renderIngressi(); renderEsempi();
+}
+function renderHeader() {
+  $('#pool-name').textContent = S.cfg.nome || DEFAULT_CFG.nome;
+  $('#home-date').textContent = new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function gauge(k, v, unit, lvl, ref, sc) {
+  let bar = '';
+  if (sc && isNum(sc[4])) {
+    const [lo, hi, mn, mx, val] = sc, p = x => Math.max(0, Math.min(100, (x - lo) / (hi - lo) * 100));
+    bar = `<div class="g-track" title="${esc(ref)}"><span class="g-zone" style="left:${p(mn).toFixed(1)}%;width:${(p(mx) - p(mn)).toFixed(1)}%"></span><span class="g-dot" style="left:${p(+val).toFixed(1)}%"></span></div>`;
+  }
+  return `<div class="gauge ${lvl || ''}"><div class="g-top"><span class="k">${k}</span><span class="v">${v}${unit ? `<small> ${unit}</small>` : ''}</span></div>${bar}<span class="ref">${ref}</span></div>`;
+}
+const GIORNI = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+const toMin = t => { if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return null; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+function fasce(o) { o = o || {}; const coppie = ('da' in o || 'a' in o) ? [[o.da, o.a]] : [[o.m1, o.m2], [o.p1, o.p2]]; return coppie.map(([a, z]) => [toMin(a), toMin(z), a, z]).filter(x => x[0] !== null && x[1] !== null && x[1] > x[0]); }
+const orariText = o => fasce(o).map(x => `${x[2]}–${x[3]}`).join(' e ');
+const hasRiposo = b => b.riposo !== undefined && b.riposo !== null && b.riposo !== '';
+const haOrari = b => fasce(b.fer).length > 0 || fasce(b.we).length > 0;
+function pasqua(y) {
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const n = h + l - 7 * m + 114; return new Date(y, Math.floor(n / 31) - 1, (n % 31) + 1);
+}
+function festivo(d) {
+  const md = pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  if (['01-01', '01-06', '04-25', '05-01', '06-02', '08-15', '11-01', '12-08', '12-25', '12-26'].includes(md)) return true;
+  const p = pasqua(d.getFullYear()); p.setDate(p.getDate() + 1);
+  return dayKey(p) === dayKey(d);
+}
+const orarioWeekend = (d, b) => d.getDay() === 0 || d.getDay() === 6 || (b.festivi !== false && festivo(d));
+const fasceDel = (b, d) => fasce(orarioWeekend(d, b) ? b.we : b.fer);
+const cap1 = t => t.charAt(0).toUpperCase() + t.slice(1);
+function prossimaApertura(b, now) {
+  for (let i = 1; i <= 7; i++) {
+    const d = new Date(now); d.setDate(d.getDate() + i);
+    if (b.s2 && dayKey(d) > b.s2) return '';
+    if (hasRiposo(b) && +b.riposo === d.getDay()) continue;
+    const f = fasceDel(b, d);
+    if (f.length) return (i === 1 ? 'Domani' : cap1(GIORNI[d.getDay()])) + ' dalle ' + f[0][2];
+  }
+  return '';
+}
+function apertura(b = S.bacheca) {
+  const now = new Date(), today = dayKey(now);
+  if (b.stato === 'chiusa') return { lvl: 'bad', label: 'Chiusa', detail: b.motivo || 'Fino a nuovo avviso', open: false };
+  if (b.s1 && today < b.s1) return { lvl: 'neutral', label: 'Fuori stagione', detail: 'Apre il ' + fmtD(b.s1), open: false };
+  if (b.s2 && today > b.s2) return { lvl: 'neutral', label: 'Stagione conclusa', detail: '', open: false };
+  if (!haOrari(b)) return { lvl: 'neutral', label: 'Orari da definire', detail: '', open: null };
+  if (hasRiposo(b) && +b.riposo === now.getDay()) return { lvl: 'neutral', label: 'Chiusa oggi', detail: prossimaApertura(b, now), open: false };
+  const f = fasceDel(b, now);
+  if (!f.length) return { lvl: 'neutral', label: 'Chiusa oggi', detail: prossimaApertura(b, now), open: false };
+  const m = now.getHours() * 60 + now.getMinutes();
+  const cur = f.find(x => m >= x[0] && m < x[1]);
+  if (cur) return { lvl: 'ok', label: 'Aperta ora', detail: 'Chiude alle ' + cur[3], open: true };
+  const next = f.find(x => m < x[0]);
+  if (next) return { lvl: 'warn', label: 'Chiusa ora', detail: 'Riapre alle ' + next[2], open: false };
+  return { lvl: 'neutral', label: 'Chiusa per oggi', detail: prossimaApertura(b, now), open: false };
+}
+function waterState() {
+  const last = S.letture[0];
+  if (!last) return null;
+  const e = evalL(last), lvl = worst([e.ph, e.cl, e.cc, e.ta]);
+  const stale = (Date.now() - new Date(last.ts)) / 36e5 > S.cfg.oreMax;
+  const v = stale ? ['warn', 'Misura non aggiornata'] : lvl === 'ok' ? ['ok', 'Acqua nei parametri'] : lvl === 'warn' ? ['warn', 'Acqua nei parametri, valori sotto controllo'] : ['bad', 'Parametri fuori norma: trattamento in corso'];
+  return { last, e, lvl: v[0], text: v[1] };
+}
+function avvisiAttivi() {
+  const t = dayKey();
+  return S.avvisi.filter(a => !a.scadenza || a.scadenza >= t).sort((a, b) => (b.tipo === 'importante') - (a.tipo === 'importante') || cmpNat(b.data, a.data));
+}
+function avvisoHtml(a, edit) {
+  const exp = a.scadenza && a.scadenza < dayKey();
+  return `<div class="avviso ${a.tipo === 'importante' ? 'importante' : ''} ${exp ? 'scaduto' : ''}">
+    <div style="flex:1;min-width:0"><div class="when">${a.tipo === 'importante' ? '<strong>Importante</strong> · ' : ''}${fmtDT(a.data)}${a.scadenza ? (exp ? ' · scaduto il ' : ' · fino al ') + fmtD(a.scadenza) : ''}${a.esempio ? ' <span class="tag">Esempio</span>' : ''}</div>
+    <div class="notice">${esc(a.testo)}</div></div>
+    ${edit ? `<button class="ghost sm danger" data-act="av-del" data-id="${esc(a.id)}">Elimina</button>` : ''}</div>`;
+}
+function renderHero() {
+  const im = S.cfg.immagine, img = $('#hero-img'), hero = $('#hero');
+  if (im && im.url && !S.imgBroken) {
+    if (img.getAttribute('src') !== im.url) img.src = im.url;
+    img.style.objectPosition = 'center ' + (im.pos || 'center'); img.hidden = false; hero.classList.add('has-img');
+  } else { img.hidden = true; hero.classList.remove('has-img'); }
+  $('#hero-name').textContent = S.cfg.nome || DEFAULT_CFG.nome;
+  const a = apertura(), w = S.loaded.letture ? waterState() : null;
+  const chips = [`<span class="chip ${a.lvl}"><span class="dot"></span>${esc(a.label)}${a.detail ? ' · ' + esc(a.detail) : ''}</span>`];
+  if (w) chips.push(`<span class="chip ${w.lvl}"><span class="dot"></span>${esc(w.text)}</span>`);
+  if (a.open) chips.push(`<span class="chip neutral"><span class="dot"></span>${presCount()} / ${S.cfg.capienza} in piscina</span>`);
+  if (meteoOggi()) { const r = S.meteo.riepilogo || {}; chips.push(`<span class="chip neutral"><span class="dot"></span>Oggi ${r.min === r.max ? r.max + '°' : r.min + '°–' + r.max + '°'} · ${esc(meteoInfo(r.simbolo).txt)}</span>`); }
+  $('#hero-chips').innerHTML = chips.join('');
+  $('#side-status').innerHTML = `<div class="row"><span class="dot ${a.lvl}"></span><b>${esc(a.label)}</b></div>${a.detail ? `<span style="color:var(--side-muted)">${esc(a.detail)}</span>` : ''}${w ? `<div class="row"><span class="dot ${w.lvl}"></span>${esc(w.text)}</div>` : ''}`;
+}
+/* meteo: aggiornato da un'attività programmata in pubblico/meteo */
+function meteoInfo(code) {
+  const c = String(code || ''), notte = /_night$/.test(c), b = c.replace(/_(day|night|polartwilight)$/, '');
+  const forza = (base) => b.includes('heavy') ? base + ' forte' : b.includes('light') ? base + ' debole' : base;
+  if (b.includes('thunder')) return { k: 'temporale', txt: 'Temporale' };
+  if (b.includes('sleet')) return { k: 'neve', txt: 'Nevischio' };
+  if (b.includes('snow')) return { k: 'neve', txt: forza('Neve') };
+  if (b.includes('rain')) return { k: 'pioggia', txt: b.includes('showers') ? (b.includes('heavy') ? 'Rovesci forti' : b.includes('light') ? 'Deboli rovesci' : 'Rovesci') : forza('Pioggia') };
+  if (b === 'fog') return { k: 'nebbia', txt: 'Nebbia' };
+  if (b === 'cloudy') return { k: 'nuvole', txt: 'Nuvoloso' };
+  if (b === 'fair') return { k: notte ? 'lunanuvole' : 'solenuvole', txt: 'Poco nuvoloso' };
+  if (b === 'partlycloudy') return { k: notte ? 'lunanuvole' : 'solenuvole', txt: 'Parzialmente nuvoloso' };
+  if (b === 'clearsky') return { k: notte ? 'luna' : 'sole', txt: notte ? 'Sereno' : 'Soleggiato' };
+  return { k: 'nuvole', txt: '—' };
+}
+function icona(k, size = 32) {
+  const cloud = '<path d="M10 25h13.5a5.5 5.5 0 0 0 .6-11 7.5 7.5 0 0 0-14.3 2.4A4.3 4.3 0 0 0 10 25z" fill="var(--cloud)"/>';
+  const up = '<g transform="translate(0 -5)">' + cloud + '</g>';
+  const sun = (cx, cy, r) => '<g stroke="var(--sun)" stroke-width="2" stroke-linecap="round">' + [0, 45, 90, 135, 180, 225, 270, 315].map(a => {
+    const t = a * Math.PI / 180; return `<line x1="${(cx + Math.cos(t) * (r + 2.5)).toFixed(1)}" y1="${(cy + Math.sin(t) * (r + 2.5)).toFixed(1)}" x2="${(cx + Math.cos(t) * (r + 5)).toFixed(1)}" y2="${(cy + Math.sin(t) * (r + 5)).toFixed(1)}"/>`;
+  }).join('') + `</g><circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--sun)"/>`;
+  const moon = (cx, cy, r) => `<path d="M${cx} ${cy - r}a${r} ${r} 0 1 0 ${r} ${r * 1.55}a${r * 0.8} ${r * 0.8} 0 0 1 -${r} -${r * 1.55}z" fill="var(--moon)"/>`;
+  const lines = (col, pts) => `<g stroke="var(${col})" stroke-width="2" stroke-linecap="round">${pts.map(p => `<line x1="${p[0]}" y1="${p[1]}" x2="${p[2]}" y2="${p[3]}"/>`).join('')}</g>`;
+  const inner = {
+    sole: sun(16, 16, 6),
+    luna: moon(15, 16, 9),
+    solenuvole: sun(12, 11, 4.5) + cloud,
+    lunanuvole: moon(12, 10, 6) + cloud,
+    nuvole: cloud,
+    pioggia: up + lines('--rain', [[12, 24, 10.5, 28], [17, 24, 15.5, 28], [22, 24, 20.5, 28]]),
+    temporale: up + '<path d="M17.5 20.5l-4.5 6h3.2l-1.7 4.5 5.6-7h-3.3l1.7-3.5z" fill="var(--sun)"/>',
+    neve: up + '<g fill="var(--snow)"><circle cx="12" cy="25.5" r="1.5"/><circle cx="17" cy="28" r="1.5"/><circle cx="22" cy="25.5" r="1.5"/></g>',
+    nebbia: lines('--cloud', [[6, 11, 26, 11], [4, 16, 24, 16], [8, 21, 28, 21]])
+  }[k] || cloud;
+  return `<svg class="wx" width="${size}" height="${size}" viewBox="0 0 32 32" aria-hidden="true">${inner}</svg>`;
+}
+/* meteo: le previsioni del giorno arrivano ogni mattina di apertura in pubblico/meteo */
+const meteoOggi = () => !!(S.meteo && S.meteo.data === dayKey() && Array.isArray(S.meteo.ore) && S.meteo.ore.length);
+function giorniHtml(m) {
+  const prossimi = ((m && m.giorni) || []).filter(g => g.data > dayKey());
+  if (!prossimi.length) return '';
+  return `<span class="lbl">Prossimi giorni</span><div class="wx-days">${prossimi.map(g => { const x = meteoInfo(g.simbolo), d = new Date(g.data + 'T12:00'); return `<div class="wx-d"><span class="d">${d.toLocaleDateString('it-IT', { weekday: 'short' })} ${d.getDate()}</span>${icona(x.k, 34)}<span class="small">${esc(x.txt)}</span><b>${g.min}° / ${g.max}°</b>${giornataIdeale(g) ? '<span class="ideale">Giornata da piscina</span>' : ''}${g.pioggia > 0 ? `<span class="wx-rain">${fmtQ(g.pioggia)} mm</span>` : ''}</div>`; }).join('')}</div>`;
+}
+function renderMeteo() {
+  const box = $('#home-meteo'), m = S.meteo;
+  if (!S.loaded.meteo) return;
+  if (!meteoOggi()) {
+    const a = apertura();
+    const msg = a.open === null ? 'Le previsioni ora per ora compaiono nei giorni di apertura, quando gli orari sono pubblicati in Bacheca.'
+      : a.open === false && a.label !== 'Chiusa ora' && a.label !== 'Chiusa per oggi' ? 'Oggi la piscina è chiusa: le previsioni ora per ora compaiono nei giorni di apertura.'
+      : 'Le previsioni di oggi arrivano all\'inizio della giornata.';
+    box.innerHTML = `<div class="head"><h3>Meteo</h3>${m && m.luogo ? `<span class="small muted">${esc(m.luogo)}</span>` : ''}</div><div class="empty">${msg}</div>${giorniHtml(m)}`;
+    return;
+  }
+  const r = m.riepilogo || {}, i = meteoInfo(r.simbolo), now = Date.now();
+  box.innerHTML = `<div class="head"><h3>Meteo di oggi a ${esc(m.luogo)}</h3><span class="small muted">Previsioni delle ${fmtT(m.aggiornato)} · fonte ${esc(m.fonte || 'MET Norway')}</span></div>
+    <div class="wx-now">${icona(i.k, 64)}
+      <div><div class="wx-temp">${r.max}°<small> max</small></div><div class="wx-desc">${esc(i.txt)} · minima ${r.min}°</div></div>
+      <div class="small muted">Apertura ${esc(m.apertura.da)}–${esc(m.apertura.a)}<br>${r.pioggia > 0 ? 'Pioggia prevista: ' + fmtQ(r.pioggia) + ' mm' : 'Niente pioggia prevista'}${r.ventoMax >= 20 ? '<br>Vento fino a ' + r.ventoMax + ' km/h' : ''}</div></div>
+    <span class="lbl">Ora per ora durante l'apertura</span>
+    <div class="wx-hours">${m.ore.map(h => { const x = meteoInfo(h.simbolo), t = new Date(h.t).getTime(), cur = now >= t && now < t + 36e5, past = now >= t + 36e5;
+      return `<div class="wx-h ${cur ? 'now' : ''} ${past ? 'past' : ''}" title="${esc(x.txt)}"><span class="small muted">${cur ? 'Adesso' : fmtT(h.t)}</span>${icona(x.k, 28)}<b>${Math.round(h.temp)}°</b><span class="wx-rain">${h.pioggia > 0 ? fmtQ(h.pioggia) + ' mm' : ''}</span></div>`; }).join('')}</div>
+    ${giorniHtml(m)}`;
+}
+function oreProssime(n) {
+  if (!meteoOggi()) return [];
+  const now = Date.now();
+  return S.meteo.ore.filter(h => { const t = new Date(h.t).getTime(); return t > now - 36e5 && t < now + n * 36e5; });
+}
+function allertaMeteo() {
+  const ore = oreProssime(8);
+  const tuono = ore.find(h => /thunder/.test(h.simbolo));
+  if (tuono) return { lvl: 'bad', txt: `Temporale previsto verso le ${fmtT(tuono.t)}. Ai primi tuoni o lampi si esce subito dall'acqua.` };
+  const forte = ore.find(h => /heavy/.test(h.simbolo) || h.pioggia >= 4);
+  if (forte) return { lvl: 'warn', txt: `Pioggia forte prevista verso le ${fmtT(forte.t)}.` };
+  const pioggia = ore.find(h => h.pioggia >= 0.3 || /rain|sleet|snow/.test(h.simbolo));
+  if (pioggia) return { lvl: 'info', txt: `Possibile pioggia verso le ${fmtT(pioggia.t)}.` };
+  return null;
+}
+function consigliMeteo() {
+  const out = [];
+  if (!meteoOggi()) return out;
+  const m = S.meteo, r = m.riepilogo || {}, ore = oreProssime(12), dom = (m.giorni || []).find(g => g.data > dayKey());
+  const oreSole = m.ore.filter(h => /clearsky|fair/.test(h.simbolo)).length;
+  const pioggia = ore.reduce((t, h) => t + (+h.pioggia || 0), 0);
+  if (ore.some(h => /thunder/.test(h.simbolo))) out.push(['bad', 'Temporale previsto: tieni pronta la chiusura della vasca e fai uscire i bagnanti ai primi tuoni.']);
+  if (r.max >= 28) out.push(['warn', `Oggi fino a ${r.max}°: il cloro si consuma più in fretta, ricontrollalo nel pomeriggio.`]);
+  else if (oreSole >= 6 && r.max >= 22) out.push(['warn', 'Molte ore di sole: i raggi UV consumano il cloro, ricontrollalo nel pomeriggio.']);
+  if (pioggia >= 3) out.push(['warn', `Pioggia nelle prossime ore (${fmtQ(pioggia)} mm): dopo controlla pH e cloro, la pioggia li abbassa.`]);
+  else if (dom && dom.pioggia >= 5) out.push(['ok', `Domani pioggia (${fmtQ(dom.pioggia)} mm): programma un controllo di pH e cloro dopo.`]);
+  if (r.ventoMax >= 30) out.push(['warn', `Vento fino a ${r.ventoMax} km/h: svuota più spesso i cestelli degli skimmer.`]);
+  return out;
+}
+const giornataIdeale = g => g.max >= 26 && g.pioggia < 0.5 && /clearsky|fair|partlycloudy/.test(g.simbolo);
+/* temperatura dell'aria proposta dal meteo nel modulo di misurazione */
+function fillAria() {
+  const el = $('#or-tr'), h = $('#or-tr-h'), now = Date.now();
+  let best = null;
+  (meteoOggi() ? S.meteo.ore : []).forEach(o => { const d = Math.abs(new Date(o.t).getTime() + 18e5 - now); if (d <= 54e5 && (!best || d < best.d)) best = { o, d }; });
+  if (best && (el.value === '' || S.ariaAuto)) {
+    el.value = best.o.temp; S.ariaAuto = true;
+    h.textContent = `Prevista dal meteo per le ${fmtT(best.o.t)}: puoi correggerla`;
+  } else if (!S.ariaAuto) h.textContent = best ? 'Inserita a mano' : 'Inseriscila a mano';
+}
+function renderHome() {
+  const c = S.cfg, b = S.bacheca, a = apertura();
+  renderHero();
+  const cl = $('#home-closed');
+  if (b.stato === 'chiusa') { cl.innerHTML = `<strong>Piscina chiusa</strong><span class="notice">${esc(b.motivo || 'Ingressi sospesi fino a nuovo avviso.')}</span>`; cl.hidden = false; }
+  else cl.hidden = true;
+
+  const av = avvisiAttivi(), ah = $('#home-avvisi');
+  ah.hidden = !av.length;
+  ah.innerHTML = av.map(x => avvisoHtml(x, false)).join('');
+
+  // acqua
+  const w = $('#home-water'), ws = waterState();
+  if (!S.loaded.letture) w.innerHTML = '<div class="muted">Caricamento dati…</div>';
+  else if (!ws) w.innerHTML = `<div class="tile-top"><span class="lbl">Qualità dell'acqua</span></div><div class="verdict">Nessuna misurazione</div><div class="muted small">I valori appariranno qui appena un operatore registra la prima misura.</div>`;
+  else {
+    const { last, e } = ws;
+    w.innerHTML = `<div class="tile-top"><span class="lbl">Qualità dell'acqua</span><span class="small muted">Ultima misura ${fmtDT(last.ts)}</span></div>
+      <div class="verdict ${ws.lvl}">${ws.text}</div>
+      <div class="gauges">
+        ${gauge('pH', fmt(last.ph, 2), '', e.ph, `rif. ${fmt(c.phMin)}–${fmt(c.phMax)}`, [c.phMin - .8, c.phMax + .8, c.phMin, c.phMax, last.ph])}
+        ${gauge('Cloro libero', fmt(last.cloro, 2), 'mg/l', e.cl, `rif. ${fmt(c.clMin, 2)}–${fmt(c.clMax, 2)}`, [0, c.clMax * 1.7, c.clMin, c.clMax, last.cloro])}
+        ${gauge('Acqua', fmt(last.tAcqua), '°C', e.ta, `rif. ${fmt(c.taMin, 0)}–${fmt(c.taMax, 0)} °C`, [c.taMin - 8, c.taMax + 6, c.taMin, c.taMax, last.tAcqua])}
+        ${gauge('Aria', fmt(last.tAria), '°C', null, 'temperatura esterna')}
+      </div>`;
+  }
+
+  // presenze
+  const pres = presCount(), cap = c.capienza || 1, pct = Math.min(100, Math.round(pres / cap * 100));
+  const pl = pres >= cap ? 'bad' : pct >= 85 ? 'warn' : '';
+  const libero = Math.max(0, cap - pres);
+  const presPill = a.open === false ? pill('neutral', 'Chiusa') : pl ? pill(pl, pl === 'bad' ? 'Al completo' : 'Quasi piena') : pill('ok', 'Posti liberi');
+  const C = 2 * Math.PI * 42;
+  $('#home-pres').innerHTML = `<div class="tile-top"><span class="lbl">In piscina ora</span>${presPill}</div>
+    <div class="ring-wrap">
+      <div class="ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42"/><circle class="ring-fg ${pl}" style="opacity:${pres ? 1 : 0}" cx="50" cy="50" r="42" stroke-dasharray="${(C * pct / 100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg>
+        <div class="ring-c"><b>${pres}</b><span>su ${cap}</span></div></div>
+      <div class="ring-info"><b>${a.open === false ? esc(a.label) : `${libero} post${libero === 1 ? 'o libero' : 'i liberi'}`}</b>
+        <span class="small muted">${a.open === false ? esc(a.detail || '') : `Occupazione al ${pct}%`}</span></div>
+    </div>`;
+
+  // orari
+  const oggiWe = orarioWeekend(new Date(), b), fe = orariText(b.fer), we = orariText(b.we);
+  const row = (lbl, txt, today) => `<div class="orari-row ${today ? 'today' : ''}"><span>${lbl}${today ? ' <span class="tag">Oggi</span>' : ''}</span><b>${esc(txt || 'Chiusa')}</b></div>`;
+  const note = [hasRiposo(b) ? 'Chiusa ogni ' + GIORNI[+b.riposo] : '', b.s1 || b.s2 ? `Stagione${b.s1 ? ' dal ' + fmtD(b.s1) : ''}${b.s2 ? ' al ' + fmtD(b.s2) : ''}` : ''].filter(Boolean).join(' · ');
+  $('#home-info').innerHTML = `<div class="tile-top"><span class="lbl">Orari</span>${pill(a.lvl, a.label)}</div>
+    ${haOrari(b) ? `<div class="orari">${row('Lunedì – venerdì', fe, !oggiWe)}${row(b.festivi !== false ? 'Sabato, domenica e festivi' : 'Sabato e domenica', we, oggiWe)}</div>` : '<div class="tile-val" style="font-size:1.35rem">Orari non ancora pubblicati</div>'}
+    ${note ? `<div class="small muted">${esc(note)}</div>` : ''}
+    <span class="small muted st">Modifica in <a href="#bacheca">Bacheca</a>.</span>`;
+
+  renderMeteo();
+
+  // informazioni utili
+  const righe = t => String(t || '').split('\n').map(x => x.trim()).filter(Boolean);
+  const contatti = righe(S.info.contatti).map(r => {
+    const m = r.match(/^(.*?)\s*(?::|–|—| - )\s*(\+?[\d][\d\s./-]{4,})\s*$/) || r.match(/^(.*?)\s+(\+?\d[\d\s./-]{4,})$/);
+    return m ? { nome: m[1], num: m[2].trim() } : { nome: r, num: '' };
+  });
+  const tel = n => n.replace(/[^\d+]/g, '');
+  $('#home-contatti').innerHTML = (contatti.length ? '' : '<li><span class="muted">I contatti del personale non sono ancora stati inseriti.</span></li>')
+    + contatti.map(c => `<li><span>${esc(c.nome)}</span>${c.num ? `<a class="num" href="tel:${esc(tel(c.num))}">${esc(c.num)}</a>` : ''}</li>`).join('')
+    + '<li class="sos"><span>Emergenze sanitarie e soccorso</span><a class="num" href="tel:112">112</a></li>';
+  const portare = righe(S.info.portare);
+  $('#home-portare').innerHTML = (portare.length ? portare : ['Cuffia', 'Ciabatte', 'Asciugamano o telo', 'Crema solare', 'Borraccia (niente vetro)']).map(p => `<li>${esc(p)}</li>`).join('');
+
+  // allerta meteo per le prossime ore
+  const al = allertaMeteo(), ae = $('#home-allerta');
+  ae.hidden = !al;
+  if (al) ae.innerHTML = `<div class="avviso ${al.lvl !== 'info' ? 'importante' : ''}"><div style="flex:1;min-width:0"><div class="when"><strong>Meteo</strong> · prossime ore</div><div class="notice">${esc(al.txt)}</div></div></div>`;
+
+  const regole = String(S.regole || '').split('\n').map(s => s.trim()).filter(Boolean);
+  $('#home-regole').hidden = !regole.length;
+  $('#home-regole-list').innerHTML = regole.map(r => `<li>${esc(r)}</li>`).join('');
+
+  if (isStaff()) renderStaffHome();
+}
+
+/* bacheca (operatori) */
+function fillBacheca() {
+  const b = S.bacheca, s = (id, v) => { $(id).value = v ?? ''; };
+  s('#ba-stato', b.stato || 'aperta'); s('#ba-motivo', b.motivo);
+  [['f', b.fer], ['w', b.we]].forEach(([p, o]) => { const f = fasce(o); s(`#ba-${p}-da`, f.length ? f[0][2] : ''); s(`#ba-${p}-a`, f.length ? f[f.length - 1][3] : ''); });
+  $('#ba-festivi').checked = b.festivi !== false;
+  s('#ba-riposo', hasRiposo(b) ? String(b.riposo) : ''); s('#ba-s1', b.s1); s('#ba-s2', b.s2);
+}
+function renderAvvisiList() {
+  const all = S.avvisi.slice().sort((a, b) => cmpNat(b.data, a.data));
+  $('#av-list').innerHTML = all.length ? all.map(a => avvisoHtml(a, true)).join('') : '<div class="empty">Nessun avviso pubblicato.</div>';
+}
+function modelloRegole() {
+  const c = S.cfg;
+  return [
+    'Doccia obbligatoria prima di entrare in vasca.',
+    'Cuffia obbligatoria in acqua.',
+    'Vietato portare oggetti di vetro e consumare cibo a bordo vasca.',
+    'Vietato correre sul bordo e tuffarsi.',
+    `I minori di ${c.etaAccomp} anni entrano solo accompagnati da un adulto.`,
+    `Ogni famiglia può portare al massimo ${c.maxOspiti} ospit${c.maxOspiti === 1 ? 'e' : 'i'} al giorno, da registrare all'ingresso.`,
+    'Rispettare gli orari di apertura e le indicazioni degli operatori.'
+  ].join('\n');
+}
+
+/* immagine della Home (amministratore) */
+function renderImgPanel() {
+  const im = S.cfg.immagine;
+  $('#img-prev').innerHTML = im && im.url
+    ? `<img src="${esc(im.url)}" alt="Immagine attuale della Home" style="object-position:center ${esc(im.pos || 'center')}">`
+    : '<div class="empty">Nessuna immagine: la Home mostra lo sfondo «acqua» predefinito.</div>';
+  $('#img-pos').value = (im && im.pos) || 'center';
+  $('#img-pos').disabled = !im;
+  $('#img-del').hidden = !im;
+  $('#img-pick').disabled = !S.assets;
+  if (!S.assets && S.db) $('#img-note').textContent = 'Solo l\'amministratore può caricare l\'immagine.';
+}
+async function shrink(file) {
+  if (file.type === 'image/svg+xml' || file.type === 'image/gif') return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 2400 / Math.max(bmp.width, bmp.height));
+    if (k === 1 && file.size < 3e6) return file;
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(bmp.width * k); cv.height = Math.round(bmp.height * k);
+    cv.getContext('2d').drawImage(bmp, 0, 0, cv.width, cv.height);
+    return await new Promise(res => cv.toBlob(b => res(b || file), 'image/jpeg', 0.86));
+  } catch { return file; }
+}
+function cfgWith(extra) { const base = { ...S.cfgRaw }; delete base.immagine; return { ...base, ...extra }; }
+async function uploadImage(file) {
+  if (!S.assets || !needDb()) return toast('Solo l\'amministratore può cambiare l\'immagine.', 'bad');
+  if (!file || !file.type.startsWith('image/')) return toast('Scegli un file immagine, per esempio JPG o PNG.', 'bad');
+  const btn = $('#img-pick'); btn.disabled = true; btn.textContent = 'Caricamento…';
+  try {
+    const r = await S.assets.upload(await shrink(file));
+    const old = S.cfg.immagine;
+    await S.db.doc('impostazioni/piscina').set(cfgWith({ immagine: { id: r.id, url: r.url, pos: (old && old.pos) || 'center' } }));
+    S.imgBroken = false;
+    if (old && old.id && old.id !== r.id) { try { await S.assets.delete(old.id); } catch {} }
+    toast('Immagine aggiornata');
+  } catch (e) {
+    toast(e && e.code === 'quota_exceeded' ? 'Spazio per le immagini esaurito.' : 'Caricamento non riuscito. Riprova con un\'immagine più leggera.', 'bad');
+  } finally { btn.disabled = !S.assets; btn.textContent = 'Carica immagine'; }
+}
+
+function renderStaffHome() {
+  const c = S.cfg, last = S.letture[0], alerts = [];
+  if (S.loaded.letture) {
+    if (!last) alerts.push(['warn', 'Nessuna misurazione registrata. <a href="#ordinaria">Inserisci la prima</a>.']);
+    else {
+      const hrs = (Date.now() - new Date(last.ts)) / 36e5;
+      if (hrs > c.oreMax) alerts.push(['warn', `Ultima misurazione ${Math.floor(hrs)} ore fa. <a href="#ordinaria">Registra una nuova misura</a>.`]);
+      suggerimenti(last).filter(s => s[0] !== 'ok').forEach(s => alerts.push(s));
+    }
+  }
+  if (S.bacheca.stato !== 'chiusa' && presCount() >= c.capienza) alerts.push(['bad', 'Capienza massima raggiunta: nuovi ingressi bloccati.']);
+  const apx = apertura();
+  if (apx.open === false && presCount() > 0) alerts.push(['bad', `${presCount()} person${presCount() === 1 ? 'a risulta' : 'e risultano'} in piscina a piscina chiusa. <a href="#ingressi">Controlla</a>`]);
+  consigliMeteo().filter(x => x[0] !== 'ok').forEach(([l, t]) => alerts.push([l, 'Meteo: ' + esc(t)]));
+  if (!haOrari(S.bacheca) && S.loaded.bacheca) alerts.push(['warn', 'Orari di apertura non pubblicati: i condomini non li vedono. <a href="#bacheca">Pubblica gli orari</a>']);
+  const aperti = S.interventi.filter(i => i.stato !== 'completato');
+  aperti.filter(i => i.stato === 'da_fare' && i.data && i.data < dayKey()).slice(0, 3)
+    .forEach(i => alerts.push(['warn', `Intervento in ritardo: <strong>${esc(i.voce)}</strong> (previsto ${fmtD(i.data)}). <a href="#straordinaria">Apri</a>`]));
+  let tot = 0, ok = 0; const sosp = S.famiglie.filter(f => f.sospesa).length;
+  S.famiglie.forEach(f => (f.membri || []).forEach(m => { tot++; if (eligibility(f, m).lvl !== 'bad') ok++; }));
+  if (sosp) alerts.push(['warn', `${sosp} famigli${sosp === 1 ? 'a sospesa' : 'e sospese'} dall'accesso. <a href="#condomini">Vedi elenco</a>`]);
+  const acc = S.accessi.entries || [];
+  const neg = acc.filter(x => x.esito === 'negato').length;
+  if (neg) alerts.push(['warn', `${neg} tentativ${neg === 1 ? 'o' : 'i'} di ingresso negat${neg === 1 ? 'o' : 'i'} oggi. <a href="#ingressi">Registro</a>`]);
+
+  $('#home-staff-tiles').innerHTML = `
+    <div class="tile"><span class="lbl">Ingressi di oggi</span><div class="tile-val">${acc.filter(x => x.esito !== 'negato').length}</div><div class="small muted">${neg} negati · ${acc.filter(x => x.esito === 'ospite').length} ospiti</div></div>
+    <div class="tile"><span class="lbl">Interventi aperti</span><div class="tile-val">${aperti.length}</div><div class="small muted">${aperti.filter(i => i.stato === 'da_fare').length} da fare · ${aperti.filter(i => i.stato === 'in_corso').length} in corso</div></div>
+    <div class="tile"><span class="lbl">Condomini abilitati</span><div class="tile-val">${ok}<small> / ${tot}</small></div><div class="small muted">${S.famiglie.length} famiglie${sosp ? ' · ' + sosp + ' sospese' : ''}</div></div>`;
+  const order = { bad: 0, warn: 1, ok: 2 };
+  alerts.sort((a, b) => order[a[0]] - order[b[0]]);
+  $('#home-alerts').innerHTML = !S.loaded.letture ? '<li>Caricamento…</li>'
+    : alerts.length ? alerts.map(([l, t]) => `<li class="${l}">${pill(l, l === 'bad' ? 'Urgente' : 'Attenzione')}<span>${t}</span></li>`).join('')
+    : `<li class="ok">${pill('ok', 'Tutto a posto')}<span>Nessuna anomalia rilevata.</span></li>`;
+}
+
+function renderManSum() {
+  const last = S.letture[0], d7 = Date.now() - 7 * 864e5;
+  let t1 = '<span class="lbl">Ultima misura</span><div class="tile-val" style="font-size:1.4rem">Nessuna</div><div class="small muted">Registra la prima misura qui sotto.</div>';
+  if (last) {
+    const e = evalL(last), w = worst([e.ph, e.cl, e.cc, e.ta]), hrs = Math.floor((Date.now() - new Date(last.ts)) / 36e5);
+    t1 = `<div class="tile-top"><span class="lbl">Ultima misura</span>${pill(w, w === 'ok' ? 'Regolare' : w === 'warn' ? 'Attenzione' : 'Fuori limite')}</div>
+      <div class="tile-val" style="font-size:1.4rem">${hrs < 1 ? 'Meno di un\'ora fa' : hrs < 48 ? hrs + ' ore fa' : Math.floor(hrs / 24) + ' giorni fa'}</div>
+      <div class="small muted">${fmtDT(last.ts)}${last.operatore ? ' · ' + esc(last.operatore) : ''}</div>`;
+  }
+  const rec = S.letture.filter(l => new Date(l.ts).getTime() >= d7);
+  const giorni = new Set(rec.map(l => dayKey(new Date(l.ts)))).size;
+  const aperti = S.interventi.filter(i => i.stato !== 'completato');
+  const ritardo = aperti.filter(i => i.stato === 'da_fare' && i.data && i.data < dayKey()).length;
+  $('#mn-sum').innerHTML = `<div class="tile">${t1}</div>
+    <div class="tile"><div class="tile-top"><span class="lbl">Ultimi 7 giorni</span>${giorni < 7 ? pill('warn', (7 - giorni) + ' giorn' + (7 - giorni === 1 ? 'o' : 'i') + ' senza misure') : pill('ok', 'Ogni giorno')}</div>
+      <div class="tile-val">${rec.length}<small> misure</small></div><div class="small muted">${rec.filter(l => (l.prodotti || []).length).length} con prodotti aggiunti</div></div>
+    <div class="tile"><div class="tile-top"><span class="lbl">Interventi aperti</span>${ritardo ? pill('bad', ritardo + ' in ritardo') : ''}</div>
+      <div class="tile-val">${aperti.length}</div><div class="small muted">${aperti.filter(i => i.stato === 'da_fare').length} da fare · ${aperti.filter(i => i.stato === 'in_corso').length} in corso</div></div>`;
+}
+function formValues() {
+  return { ph: $('#or-ph').value, cloro: $('#or-cl').value, cloroComb: $('#or-cc').value, tAcqua: $('#or-ta').value };
+}
+function renderOrHints() {
+  const c = S.cfg, v = formValues();
+  const set = (id, lvl, ref) => { $(id).innerHTML = `<span>Rif. ${ref}</span>${lvl ? pill(lvl) : ''}`; };
+  set('#or-ph-h', band(v.ph, c.phMin, c.phMax), `${fmt(c.phMin)}–${fmt(c.phMax)}`);
+  set('#or-cl-h', band(v.cloro, c.clMin, c.clMax), `${fmt(c.clMin, 2)}–${fmt(c.clMax, 2)}`);
+  set('#or-cc-h', ccBand(v.cloroComb), `≤ ${fmt(c.ccMax, 2)}`);
+  set('#or-ta-h', band(v.tAcqua, c.taMin, c.taMax), `${fmt(c.taMin, 0)}–${fmt(c.taMax, 0)} °C`);
+  const s = [...suggerimenti(v), ...consigliMeteo().map(([l, t]) => [l, 'Meteo: ' + t])];
+  $('#or-sugg').innerHTML = s.length ? s.map(([l, t]) => `<li class="${l}">${esc(t)}</li>`).join('') : '<li>Inserisci pH e cloro: qui compare cosa aggiungere.</li>';
+}
+function prodRow(p = {}) {
+  return `<div class="prod-row">
+    <input data-k="prodotto" list="prodotti" maxlength="60" placeholder="Prodotto (es. Cloro granulare)" value="${esc(p.prodotto || '')}" aria-label="Prodotto">
+    <input data-k="qta" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Quantità" value="${isNum(p.qta) ? p.qta : ''}" aria-label="Quantità">
+    <select data-k="unita" aria-label="Unità">${UNITA.map(u => `<option ${u === (p.unita || 'kg') ? 'selected' : ''}>${u}</option>`).join('')}</select>
+    <button type="button" class="ghost sm danger" data-act="prod-del">Rimuovi</button>
+  </div>`;
+}
+
+function renderLetture() {
+  const box = $('#or-list');
+  if (!S.loaded.letture) return;
+  const days = +$('#or-range').value;
+  const from = days ? Date.now() - days * 864e5 : 0;
+  const rows = S.letture.filter(l => new Date(l.ts).getTime() >= from);
+  if (!rows.length) { box.innerHTML = `<div class="empty">${S.letture.length ? 'Nessuna misurazione nel periodo scelto.' : 'Nessuna misurazione ancora. Usa il modulo qui sopra per inserire la prima.'}</div>`; return; }
+  box.innerHTML = `<table><thead><tr><th>Data e ora</th><th class="r">pH</th><th class="r">Cloro lib.</th><th class="r">Cloro comb.</th><th class="r">Acqua °C</th><th class="r">Aria °C</th><th>Esito</th><th>Prodotti aggiunti</th><th>Operatore</th><th>Note</th><th></th></tr></thead><tbody>
+  ${rows.map(l => { const e = evalL(l), w = worst([e.ph, e.cl, e.cc, e.ta]); return `<tr>
+    <td style="white-space:nowrap">${fmtDT(l.ts)}${l.esempio ? ' <span class="tag">Esempio</span>' : ''}</td>
+    <td class="r v-${e.ph}">${fmt(l.ph, 2)}</td><td class="r v-${e.cl}">${fmt(l.cloro, 2)}</td><td class="r v-${e.cc}">${fmt(l.cloroComb, 2)}</td>
+    <td class="r v-${e.ta}">${fmt(l.tAcqua)}</td><td class="r">${fmt(l.tAria)}</td>
+    <td>${pill(w, w === 'ok' ? 'Regolare' : w === 'warn' ? 'Attenzione' : 'Fuori limite')}</td>
+    <td class="small">${esc(prodText(l) || '—')}</td>
+    <td>${esc(l.operatore || '—')}</td><td class="small">${esc(l.note || '')}</td>
+    <td><button class="ghost sm danger" data-act="del-lettura" data-id="${esc(l.id)}">Elimina</button></td></tr>`; }).join('')}
+  </tbody></table>`;
+}
+function renderConsumi() {
+  const box = $('#or-consumi');
+  if (!S.loaded.letture) return;
+  const from = Date.now() - 30 * 864e5, tot = {};
+  S.letture.filter(l => new Date(l.ts).getTime() >= from).forEach(l => (l.prodotti || []).forEach(p => {
+    const k = p.prodotto + '|' + p.unita; tot[k] = (tot[k] || 0) + (+p.qta || 0);
+  }));
+  const keys = Object.keys(tot).sort((a, b) => cmpNat(a, b));
+  box.innerHTML = keys.length ? keys.map(k => { const [p, u] = k.split('|'); return `<div class="consumo"><span>${esc(p)}</span><b>${fmtQ(tot[k])} ${esc(u)}</b></div>`; }).join('')
+    : '<div class="empty" style="grid-column:1/-1">Nessun prodotto registrato negli ultimi 30 giorni. Aggiungili nella sezione «Aggiunta prodotti» della misurazione.</div>';
+}
+
+function renderInterventi() {
+  const box = $('#st-list');
+  if (!S.loaded.interventi) return;
+  const f = $('#st-filtro').value;
+  const rows = S.interventi.filter(i => f === 'tutti' ? true : f === 'aperti' ? i.stato !== 'completato' : i.stato === f)
+    .sort((a, b) => (a.stato === 'completato') - (b.stato === 'completato') || cmpNat(b.data, a.data));
+  const anno = String(new Date().getFullYear());
+  const spesa = S.interventi.filter(i => i.stato === 'completato' && String(i.data || '').startsWith(anno)).reduce((s, i) => s + (+i.costo || 0), 0);
+  const prev = S.interventi.filter(i => i.stato !== 'completato').reduce((s, i) => s + (+i.costo || 0), 0);
+  $('#st-sum').textContent = `Spesa ${anno} per interventi completati: ${eur(spesa)} · Previsto per interventi aperti: ${eur(prev)}`;
+  if (!rows.length) { box.innerHTML = `<div class="empty">${S.interventi.length ? 'Nessun intervento con questo filtro.' : 'Nessun intervento registrato. Aggiungi la prima voce con il modulo qui sopra.'}</div>`; return; }
+  box.innerHTML = `<table><thead><tr><th>Data</th><th>Voce</th><th>Categoria</th><th>Ditta</th><th class="r">Costo</th><th>Stato</th><th></th></tr></thead><tbody>
+  ${rows.map(i => `<tr>
+    <td>${fmtD(i.data)}</td>
+    <td><strong>${esc(i.voce)}</strong>${i.esempio ? ' <span class="tag">Esempio</span>' : ''}${i.descrizione ? `<div class="small muted">${esc(i.descrizione)}</div>` : ''}</td>
+    <td>${esc(i.categoria || '—')}</td><td>${esc(i.ditta || '—')}</td><td class="r">${isNum(i.costo) ? eur(i.costo) : '—'}</td>
+    <td><select data-act="int-stato" data-id="${esc(i.id)}" aria-label="Stato" style="width:auto;padding:4px 8px">${Object.entries(STATI).map(([k, v]) => `<option value="${k}" ${k === i.stato ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
+    <td style="white-space:nowrap"><button class="ghost sm" data-act="edit-int" data-id="${esc(i.id)}">Modifica</button><button class="ghost sm danger" data-act="del-int" data-id="${esc(i.id)}">Elimina</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function famMatches(f, q) {
+  if (!q) return true;
+  const hay = norm(`${f.cognome} scala ${f.scala} sc ${f.scala} interno ${f.interno} int ${f.interno} ${(f.membri || []).map(m => m.nome).join(' ')}`);
+  return norm(q).split(/\s+/).filter(Boolean).every(t => hay.includes(t));
+}
+function renderCondomini() {
+  const sel = $('#con-scala'), cur = sel.value;
+  const scale = [...new Set(S.famiglie.map(f => String(f.scala || '')))].sort(cmpNat);
+  sel.innerHTML = '<option value="">Tutte le scale</option>' + scale.map(s => `<option value="${esc(s)}" ${s === cur ? 'selected' : ''}>Scala ${esc(s)}</option>`).join('');
+  const box = $('#con-list');
+  if (!S.loaded.famiglie) return;
+  const q = $('#con-q').value.trim();
+  const fams = S.famiglie.filter(f => (!sel.value || String(f.scala) === sel.value) && famMatches(f, q))
+    .sort((a, b) => cmpNat(a.scala, b.scala) || cmpNat(a.interno, b.interno) || cmpNat(a.cognome, b.cognome));
+  const persone = S.famiglie.reduce((s, f) => s + (f.membri || []).length, 0);
+  $('#con-sum').textContent = `${S.famiglie.length} famiglie · ${persone} persone · ${scale.length} scale`;
+  if (!fams.length) { box.innerHTML = `<div class="empty">${S.famiglie.length ? 'Nessuna famiglia corrisponde alla ricerca.' : isAdmin() ? 'Nessuna famiglia registrata. Premi «Nuova famiglia» per aggiungere la prima, con scala, interno e componenti.' : 'Nessuna famiglia registrata. L\'elenco lo compila l\'amministratore.'}</div>`; return; }
+  const groups = {};
+  fams.forEach(f => (groups[f.scala] = groups[f.scala] || []).push(f));
+  box.innerHTML = Object.keys(groups).sort(cmpNat).map(s => `<div class="scala">
+    <div class="scala-h"><h3>Scala ${esc(s)}</h3><span class="small muted">${groups[s].length} appartament${groups[s].length === 1 ? 'o' : 'i'}</span></div>
+    ${groups[s].map(famCard).join('')}</div>`).join('');
+}
+function famCard(f) {
+  const membri = f.membri || [];
+  return `<div class="fam ${f.sospesa ? 'sosp' : ''}">
+    <div class="fam-h">
+      <div class="who"><span class="int">Int. ${esc(f.interno)}</span><strong>${esc(f.cognome)}</strong>${f.esempio ? '<span class="tag">Esempio</span>' : ''}
+        ${f.sospesa ? pill('bad', 'Sospesa') : pill('ok', 'Attiva')}${f.telefono ? `<span class="small muted">Tel. ${esc(f.telefono)}</span>` : ''}</div>
+      <div class="actions ad"><button class="sm" data-act="tes-fam" data-id="${esc(f.id)}">Tessere</button><button class="sm" data-act="fam-edit" data-id="${esc(f.id)}">Modifica</button><button class="sm ghost danger" data-act="fam-del" data-id="${esc(f.id)}">Elimina</button></div>
+    </div>
+    ${membri.length ? `<div style="overflow-x:auto"><table><thead><tr><th>Componente</th><th>Ruolo</th><th class="r">Età</th><th>Tessera</th><th>Accesso</th><th class="ad"></th></tr></thead><tbody>
+    ${membri.map(m => { const e = eligibility(f, m), a = age(m.nascita); return `<tr>
+      <td><strong>${esc(m.nome)}</strong>${m.note ? `<div class="small muted">${esc(m.note)}</div>` : ''}</td>
+      <td>${esc(m.ruolo || '—')}</td><td class="r">${a ?? '—'}</td>
+      <td class="small" style="white-space:nowrap">${m.codice ? esc(fmtCod(m.codice)) : '—'}</td>
+      <td title="${esc(e.why)}">${pill(e.lvl, e.label)}</td>
+      <td class="ad" style="text-align:right"><button class="ghost sm" data-act="toggle-auth" data-f="${esc(f.id)}" data-m="${esc(m.id)}">${m.autorizzato ? 'Blocca' : 'Autorizza'}</button></td></tr>`; }).join('')}
+    </tbody></table></div>` : '<div class="empty">Nessun componente inserito.</div>'}
+    ${f.note || (f.sospesa && f.motivoSosp) ? `<div class="note">${f.sospesa && f.motivoSosp ? '<strong>Motivo sospensione:</strong> ' + esc(f.motivoSosp) + '. ' : ''}${esc(f.note || '')}</div>` : ''}
+  </div>`;
+}
+
+/* editor famiglia (solo amministratore) */
+function membroRow(m = {}) {
+  const id = m.id || uid();
+  return `<div class="membro-row" data-mid="${esc(id)}">
+    <div class="field"><label>Nome e cognome</label><input data-k="nome" maxlength="80" value="${esc(m.nome || '')}"></div>
+    <div class="field"><label>Ruolo</label><input data-k="ruolo" list="ruoli" maxlength="40" value="${esc(m.ruolo || '')}" placeholder="Es. Figlio"></div>
+    <div class="field"><label>Data di nascita</label><input type="date" data-k="nascita" value="${esc(m.nascita || '')}"></div>
+    <button type="button" class="ghost sm danger" data-act="fe-del-membro">Rimuovi</button>
+    <div class="checks">
+      <label class="check"><input type="checkbox" data-k="autorizzato" ${m.autorizzato !== false ? 'checked' : ''}> Può entrare in piscina</label>
+      <label class="check"><input type="checkbox" data-k="soloAccomp" ${m.soloAccomp ? 'checked' : ''}> Solo se accompagnato</label>
+      <input data-k="note" maxlength="160" value="${esc(m.note || '')}" placeholder="Nota (es. motivo del blocco)" style="flex:1 1 220px">
+    </div>
+  </div>`;
+}
+function openFamEditor(f) {
+  if (!isAdmin()) return;
+  S.editFam = f ? f.id : null;
+  const ed = $('#fam-editor');
+  ed.innerHTML = `<h3>${f ? 'Modifica famiglia' : 'Nuova famiglia'}</h3>
+  <form class="grid" id="fe-form" autocomplete="off">
+    <div class="field"><label for="fe-scala">Scala</label><input id="fe-scala" maxlength="10" required value="${esc(f?.scala || '')}" placeholder="Es. A"></div>
+    <div class="field"><label for="fe-int">Interno / appartamento</label><input id="fe-int" maxlength="10" required value="${esc(f?.interno || '')}" placeholder="Es. 12"></div>
+    <div class="field"><label for="fe-cog">Famiglia (cognome)</label><input id="fe-cog" maxlength="80" required value="${esc(f?.cognome || '')}"></div>
+    <div class="field"><label for="fe-tel">Telefono di riferimento</label><input id="fe-tel" maxlength="30" value="${esc(f?.telefono || '')}"></div>
+    <div class="field" style="justify-content:flex-end"><label class="check"><input type="checkbox" id="fe-sosp" ${f?.sospesa ? 'checked' : ''}> Famiglia sospesa</label></div>
+    <div class="field" style="grid-column: span 2"><label for="fe-mot">Motivo sospensione</label><input id="fe-mot" maxlength="140" value="${esc(f?.motivoSosp || '')}" placeholder="Es. quote condominiali non saldate"></div>
+    <div class="field wide"><label for="fe-note">Note</label><input id="fe-note" maxlength="300" value="${esc(f?.note || '')}"></div>
+    <div class="field wide"><span class="lbl">Componenti del nucleo</span><div id="fe-membri" style="display:flex;flex-direction:column;gap:8px">${(f?.membri || []).map(membroRow).join('')}</div>
+      <div><button type="button" class="sm" data-act="fe-add-membro">Aggiungi componente</button></div></div>
+    <div class="form-actions"><button class="primary" type="submit">Salva famiglia</button><button type="button" data-act="fam-cancel">Annulla</button></div>
+  </form>
+  <datalist id="ruoli"><option value="Proprietario"></option><option value="Inquilino"></option><option value="Coniuge"></option><option value="Figlio"></option><option value="Figlia"></option><option value="Genitore"></option><option value="Altro familiare"></option></datalist>`;
+  if (!f) $('#fe-membri').insertAdjacentHTML('beforeend', membroRow());
+  ed.hidden = false;
+  ed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('#fe-scala').focus({ preventScroll: true });
+}
+async function saveFam(ev) {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const membri = $$('#fe-membri .membro-row').map(r => {
+    const g = k => r.querySelector(`[data-k="${k}"]`);
+    const vecchio = ((S.famiglie.find(x => x.id === S.editFam) || {}).membri || []).find(x => x.id === r.dataset.mid);
+    return { id: r.dataset.mid, codice: (vecchio && vecchio.codice) || '', nome: g('nome').value.trim(), ruolo: g('ruolo').value.trim(), nascita: g('nascita').value || '', autorizzato: g('autorizzato').checked, soloAccomp: g('soloAccomp').checked, note: g('note').value.trim() };
+  }).filter(m => m.nome);
+  const prev = S.famiglie.find(x => x.id === S.editFam);
+  const doc = { scala: $('#fe-scala').value.trim().toUpperCase(), interno: $('#fe-int').value.trim(), cognome: $('#fe-cog').value.trim(), telefono: $('#fe-tel').value.trim(), sospesa: $('#fe-sosp').checked, motivoSosp: $('#fe-mot').value.trim(), note: $('#fe-note').value.trim(), membri, aggiornato: new Date().toISOString() };
+  if (prev && prev.esempio) doc.esempio = true;
+  const id = S.editFam || uid();
+  if (await guard(S.db.collection('famiglie').doc(id).set(doc), 'Famiglia salvata')) closeFamEditor();
+}
+function closeFamEditor() { S.editFam = null; const ed = $('#fam-editor'); ed.hidden = true; ed.innerHTML = ''; }
+
+/* ingressi */
+function renderIngressi() {
+  if (!isStaff()) return;
+  const c = S.cfg, pres = presenti(), full = pres.length >= c.capienza;
+  const ap = apertura();
+  $('#acc-cap').innerHTML = S.bacheca.stato === 'chiusa'
+    ? `${pill('bad', 'Piscina chiusa')} <span style="color:var(--bad)">Gli ingressi sono sospesi. Riapri dalla Bacheca.</span>`
+    : ap.open === false ? `${pill('warn', ap.label)} <span style="color:var(--warn)">Fuori orario${ap.detail ? ' (' + esc(ap.detail.toLowerCase()) + ')' : ''}: registra solo ingressi autorizzati dall'amministratore.</span> ${pill('neutral', `${pres.length} / ${c.capienza} presenti`)}`
+    : `${pill(full ? 'bad' : pres.length / c.capienza >= .85 ? 'warn' : 'ok', `${pres.length} / ${c.capienza} presenti`)}${full ? ' <span style="color:var(--bad)">Capienza raggiunta: nuovi ingressi bloccati.</span>' : ''}`;
+  renderRicerca(); renderTes();
+  $('#acc-dentro').innerHTML = pres.length ? pres.slice().sort((a, b) => cmpNat(b.entrata, a.entrata)).map(e => `<div class="inside-row">
+    <div><div><strong>${esc(e.nome)}</strong>${e.esito === 'ospite' ? ' <span class="tag">Ospite</span>' : ''}${e.esito === 'accompagnato' ? ' <span class="tag">Accomp.</span>' : ''}</div>
+    <div class="meta">${esc(e.unita || '')} · dalle ${fmtT(e.entrata)}</div></div>
+    <button class="sm" data-act="acc-out" data-id="${esc(e.id)}">Uscita</button></div>`).join('')
+    : '<div class="empty">Nessuno in piscina.</div>';
+  const log = (S.accessi.entries || []).slice().sort((a, b) => cmpNat(b.entrata, a.entrata));
+  $('#acc-log').innerHTML = log.length ? `<table><thead><tr><th>Ora</th><th>Persona</th><th>Unità</th><th>Esito</th><th>Uscita</th></tr></thead><tbody>
+    ${log.map(e => `<tr><td>${fmtT(e.entrata)}</td><td>${esc(e.nome)}</td><td>${esc(e.unita || '')}</td>
+    <td>${e.esito === 'negato' ? pill('bad', 'Negato') + ` <span class="small muted">${esc(e.motivo || '')}</span>` : e.esito === 'ospite' ? pill('neutral', 'Ospite') : e.esito === 'accompagnato' ? pill('warn', 'Accompagnato') : pill('ok', 'Entrato')}</td>
+    <td>${e.esito === 'negato' ? '' : e.uscita ? fmtT(e.uscita) : '<strong>dentro</strong>'}</td></tr>`).join('')}</tbody></table>`
+    : '<div class="empty">Nessun movimento registrato oggi.</div>';
+  const fs = $('#osp-fam'), cur = fs.value;
+  fs.innerHTML = '<option value="">Scegli…</option>' + S.famiglie.slice().sort((a, b) => cmpNat(a.scala, b.scala) || cmpNat(a.interno, b.interno))
+    .map(f => `<option value="${esc(f.id)}" ${f.id === cur ? 'selected' : ''} ${f.sospesa ? 'disabled' : ''}>${esc(unitLabel(f))} — ${esc(f.cognome)}${f.sospesa ? ' (sospesa)' : ''}</option>`).join('');
+  renderOspHint();
+}
+function renderOspHint() {
+  const f = S.famiglie.find(x => x.id === $('#osp-fam').value);
+  if (!f) { $('#osp-hint').textContent = `Massimo ${S.cfg.maxOspiti} ospiti al giorno per famiglia.`; return; }
+  const n = (S.accessi.entries || []).filter(e => e.esito === 'ospite' && e.famigliaId === f.id).length;
+  $('#osp-hint').textContent = `Ospiti di oggi per ${f.cognome}: ${n} su ${S.cfg.maxOspiti}.`;
+}
+function renderRicerca() {
+  const q = $('#acc-q').value.trim(), box = $('#acc-res');
+  if (q.length < 2) { box.innerHTML = '<div class="empty">Scrivi almeno 2 lettere per cercare un condomino.</div>'; return; }
+  const checked = new Set($$('input[data-chk]:checked', box).map(i => i.dataset.chk));
+  const tokens = norm(q).split(/\s+/).filter(Boolean), out = [];
+  S.famiglie.forEach(f => (f.membri || []).forEach(m => {
+    const hay = norm(`${m.nome} ${f.cognome} scala ${f.scala} sc ${f.scala} interno ${f.interno} int ${f.interno}`);
+    if (tokens.every(t => hay.includes(t))) out.push([f, m]);
+  }));
+  if (!out.length) { box.innerHTML = `<div class="res-item bad"><div><div class="name">Nessun condomino trovato</div><div class="meta">«${esc(q)}» non è nell'elenco. Chi non è registrato non può entrare.</div></div></div>`; return; }
+  box.innerHTML = out.slice(0, 25).map(([f, m]) => resItem(f, m, checked)).join('') + (out.length > 25 ? `<div class="small muted">Altri ${out.length - 25} risultati: affina la ricerca.</div>` : '');
+}
+function resItem(f, m, checked, nota) {
+  const pres = presenti(), blocked = pres.length >= S.cfg.capienza || S.bacheca.stato === 'chiusa';
+  const e = eligibility(f, m), dentro = pres.find(x => x.membroId === m.id);
+  let act;
+  if (dentro) act = `<span class="small muted">Dentro dalle ${fmtT(dentro.entrata)}</span><button class="sm" data-act="acc-out" data-id="${esc(dentro.id)}">Uscita</button>`;
+  else if (e.lvl === 'bad') act = `<button class="sm" data-act="acc-neg" data-f="${esc(f.id)}" data-m="${esc(m.id)}">Registra tentativo</button>`;
+  else act = `<button class="${nota ? '' : 'sm '}go" data-act="acc-in" data-f="${esc(f.id)}" data-m="${esc(m.id)}" ${blocked ? 'disabled' : ''}>Registra ingresso</button>`;
+  return `<div class="res-item ${e.lvl} ${nota ? 'big' : ''}">
+    <div><div class="name">${esc(m.nome)}</div><div class="meta">${esc(unitLabel(f))} · Famiglia ${esc(f.cognome)}${m.ruolo ? ' · ' + esc(m.ruolo) : ''}${nota ? '<br>' + nota : ''}</div></div>
+    <div class="act">${act}</div>
+    <div class="why">${pill(e.lvl, e.label)}${e.why ? `<span>${esc(e.why)}</span>` : ''}
+      ${e.lvl === 'warn' && !dentro ? `<label class="check"><input type="checkbox" data-chk="${esc(m.id)}" ${checked.has(m.id) ? 'checked' : ''}> Accompagnato da un adulto</label>` : ''}</div>
+  </div>`;
+}
+
+/* ---------- tessere con QR ---------- */
+const LIB = {
+  qr: ['https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js', 'qrcode'],
+  scan: ['https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js', 'jsQR'],
+  pdf: ['https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', 'jspdf']
+};
+const libP = {};
+function loadLib(k) {
+  const [url, glob] = LIB[k];
+  if (window[glob]) return Promise.resolve(window[glob]);
+  return libP[k] || (libP[k] = new Promise((res, rej) => {
+    const sc = document.createElement('script'); sc.src = url; sc.async = true;
+    sc.onload = () => window[glob] ? res(window[glob]) : rej(new Error('lib'));
+    sc.onerror = () => { delete libP[k]; sc.remove(); rej(new Error('lib')); };
+    document.head.appendChild(sc);
+  }));
+}
+const ALFA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const fmtCod = c => c ? c.slice(0, 3) + '-' + c.slice(3) : '';
+const normCod = s => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const slug = s => norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'tessere';
+function nuovoCodice(extra) {
+  const usati = new Set([...S.famiglie.flatMap(f => (f.membri || []).map(m => m.codice)), ...extra]);
+  for (;;) {
+    const a = new Uint32Array(6); crypto.getRandomValues(a);
+    const c = Array.from(a, x => ALFA[x % ALFA.length]).join('');
+    if (!usati.has(c)) return c;
+  }
+}
+async function assicuraCodici(f, rigenera) {
+  const nuovi = [];
+  const membri = (f.membri || []).map(m => {
+    if (m.codice && m.id !== rigenera) return { ...m };
+    const c = nuovoCodice(nuovi); nuovi.push(c); return { ...m, codice: c };
+  });
+  if (!nuovi.length) return f;
+  await S.db.doc('famiglie/' + f.id).update({ membri });
+  return { ...f, membri };
+}
+const stagione = () => String(S.bacheca.s1 || S.bacheca.s2 || dayKey()).slice(0, 4);
+const accompagnato = m => { const a = age(m.nascita); return !!(m.soloAccomp || (a !== null && a < S.cfg.etaAccomp)); };
+function testoMax(g, t, w) { if (g.measureText(t).width <= w) return t; while (t.length > 1 && g.measureText(t + '…').width > w) t = t.slice(0, -1); return t + '…'; }
+async function disegnaTessera(f, m, perStampa) {
+  const qr = await loadLib('qr');
+  try { await document.fonts.ready; } catch {}
+  const W = 1004, H = 638, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const g = cv.getContext('2d'), disp = '"Urbanist", "Manrope", "Segoe UI", sans-serif';
+  const rr = (x, y, w, h, r) => { g.beginPath(); if (g.roundRect) g.roundRect(x, y, w, h, r); else g.rect(x, y, w, h); };
+  if (perStampa) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H); }
+  g.save(); rr(0, 0, W, H, perStampa ? 0 : 38); g.clip();
+  const bg = g.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#24548a'); bg.addColorStop(.55, '#13304f'); bg.addColorStop(1, '#0b1a2e');
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  const gl = g.createRadialGradient(W * .88, 0, 10, W * .88, 0, 520); gl.addColorStop(0, 'rgba(141,180,226,.42)'); gl.addColorStop(1, 'rgba(141,180,226,0)');
+  g.fillStyle = gl; g.fillRect(0, 0, W, H);
+  g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 3;
+  for (let k = 0; k < 5; k++) { g.beginPath(); for (let x = 0; x <= W; x += 8) { const y = 400 + k * 30 + Math.sin(x / 55 + k * .9) * 9; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }
+  // marchio
+  g.strokeStyle = '#ffffff'; g.lineWidth = 4; g.lineCap = 'round';
+  [0, 12, 24].forEach((dy, k) => { g.globalAlpha = 1 - k * .25; g.beginPath(); for (let x = 0; x <= 40; x += 2) { const y = 52 + dy + Math.sin(x / 6.4) * 4; x ? g.lineTo(56 + x, y) : g.moveTo(56 + x, y); } g.stroke(); });
+  g.globalAlpha = 1;
+  g.fillStyle = '#ffffff'; g.font = `700 25px ${disp}`; if ('letterSpacing' in g) g.letterSpacing = '3px';
+  g.fillText(testoMax(g, (S.cfg.nome || 'Piscina condominiale').toUpperCase(), 470), 114, 82);
+  g.textAlign = 'right'; g.fillStyle = 'rgba(255,255,255,.75)'; g.fillText('STAGIONE ' + stagione(), W - 56, 82); g.textAlign = 'left';
+  if ('letterSpacing' in g) g.letterSpacing = '0px';
+  // persona
+  let fs = 60; g.font = `800 ${fs}px ${disp}`;
+  while (g.measureText(m.nome).width > 540 && fs > 32) { fs -= 2; g.font = `800 ${fs}px ${disp}`; }
+  g.fillStyle = '#ffffff'; g.fillText(testoMax(g, m.nome, 560), 56, 250);
+  g.font = `600 30px ${disp}`; g.fillStyle = 'rgba(255,255,255,.82)';
+  g.fillText(testoMax(g, 'Famiglia ' + f.cognome, 560), 56, 304);
+  g.fillText(testoMax(g, `Scala ${f.scala} · Interno ${f.interno}`, 560), 56, 348);
+  // QR
+  const bx = 664, by = 116, bs = 284;
+  g.fillStyle = '#ffffff'; rr(bx, by, bs, bs, 24); g.fill();
+  const q = qr(0, 'M'); q.addData(m.codice); q.make();
+  const n = q.getModuleCount(), cell = Math.floor((bs - 40) / n), ox = bx + Math.round((bs - cell * n) / 2), oy = by + Math.round((bs - cell * n) / 2);
+  g.fillStyle = '#0e1d31';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) g.fillRect(ox + c * cell, oy + r * cell, cell, cell);
+  g.fillStyle = '#ffffff'; g.font = `800 36px ${disp}`; g.textAlign = 'center';
+  if ('letterSpacing' in g) g.letterSpacing = '4px';
+  g.fillText(fmtCod(m.codice), bx + bs / 2, by + bs + 52);
+  if ('letterSpacing' in g) g.letterSpacing = '0px';
+  g.textAlign = 'left';
+  // fascia
+  const acc = accompagnato(m);
+  g.fillStyle = acc ? '#e3ab34' : '#3d74b3'; g.fillRect(0, H - 84, W, 84);
+  g.fillStyle = acc ? '#2a1c00' : '#ffffff'; g.font = `800 27px ${disp}`;
+  if ('letterSpacing' in g) g.letterSpacing = '2px';
+  g.fillText(acc ? 'SOLO ACCOMPAGNATO DA UN ADULTO' : 'INGRESSO AUTONOMO', 56, H - 32);
+  g.textAlign = 'right'; g.font = `600 22px ${disp}`; g.fillText('TESSERA PERSONALE', W - 56, H - 33); g.textAlign = 'left';
+  if ('letterSpacing' in g) g.letterSpacing = '0px';
+  g.restore();
+  return cv;
+}
+/* pannello tessere (amministratore) */
+async function apriTessere(fams, titolo) {
+  if (!isAdmin() || !needDb()) return;
+  const panel = $('#tessere-panel');
+  panel.hidden = false; panel.innerHTML = '<div class="empty">Preparo le tessere…</div>';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  try {
+    const lista = [];
+    for (const f of fams) lista.push(await assicuraCodici(f));
+    S.tessere = { lista, titolo };
+    await renderTessere();
+  } catch (e) {
+    panel.innerHTML = `<div class="banner bad">${e && e.code ? esc(errMsg(e)) : 'Non riesco a preparare le tessere. Controlla la connessione e riprova.'}</div><div class="actions"><button data-act="tes-chiudi">Chiudi</button></div>`;
+  }
+}
+async function renderTessere() {
+  const panel = $('#tessere-panel'), t = S.tessere; if (!t) return;
+  const voci = t.lista.flatMap(f => (f.membri || []).map(m => [f, m]));
+  const imgs = [];
+  for (const [f, m] of voci) imgs.push((await disegnaTessera(f, m)).toDataURL('image/png'));
+  panel.innerHTML = `<div class="head"><h3>Tessere · ${esc(t.titolo)}</h3><div class="actions">${S.dl ? `<button class="primary" data-act="tes-pdf">Scarica PDF da stampare</button>` : ''}<button data-act="tes-chiudi">Chiudi</button></div></div>
+    <p class="small muted" style="margin:0">${voci.length} tessere in formato carta di credito (85 × 54 mm), 8 per foglio A4. Il QR contiene solo un codice: se una tessera si perde, premi «Rigenera» e quella vecchia smette subito di funzionare.</p>
+    ${voci.length ? `<div class="tessere-grid">${voci.map(([f, m], k) => `<div class="tessera"><img src="${imgs[k]}" alt="Tessera di ${esc(m.nome)}">
+      <div class="actions"><span class="small"><b>${esc(m.nome)}</b> · ${esc(fmtCod(m.codice))}</span><span class="actions">${S.dl ? `<button class="sm" data-act="tes-png" data-f="${esc(f.id)}" data-m="${esc(m.id)}">Salva immagine</button>` : ''}<button class="sm ghost danger" data-act="tes-rig" data-f="${esc(f.id)}" data-m="${esc(m.id)}">Rigenera</button></span></div></div>`).join('')}</div>`
+      : '<div class="empty">Nessun componente: aggiungi le persone del nucleo per creare le tessere.</div>'}`;
+}
+function tesTrova(fid, mid) { const f = S.tessere && S.tessere.lista.find(x => x.id === fid); return f ? [f, (f.membri || []).find(m => m.id === mid)] : [null, null]; }
+async function pdfTessere(btn) {
+  const t = S.tessere; if (!t || !S.dl) return;
+  btn.disabled = true; btn.textContent = 'Preparo il PDF…';
+  try {
+    const { jsPDF } = await loadLib('pdf');
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    let i = 0;
+    for (const f of t.lista) for (const m of (f.membri || [])) {
+      const k = i % 8; if (i && !k) doc.addPage();
+      if (!k) { doc.setFontSize(9); doc.setTextColor(90); doc.text(`${S.cfg.nome || 'Piscina condominiale'} - tessere stagione ${stagione()} - ${t.titolo}`, 15, 14); }
+      const x = 15 + (k % 2) * 95, y = 22 + Math.floor(k / 2) * 64;
+      doc.addImage((await disegnaTessera(f, m, true)).toDataURL('image/jpeg', .92), 'JPEG', x, y, 85, 54);
+      doc.setDrawColor(190); doc.setLineWidth(.1); doc.rect(x, y, 85, 54);
+      i++;
+    }
+    const r = await S.dl.save({ filename: `tessere-piscina-${slug(t.titolo)}.pdf`, data: doc.output('blob') });
+    if (r && r.status === 'saved') toast('PDF salvato');
+  } catch (e) { if (!e || e.code !== 'declined') toast('Non riesco a creare il PDF. Riprova tra poco.', 'bad'); }
+  finally { btn.disabled = false; btn.textContent = 'Scarica PDF da stampare'; }
+}
+/* controllo al cancello */
+function trovaCodice(code) {
+  for (const f of S.famiglie) for (const m of (f.membri || [])) if (m.codice && m.codice === code) return [f, m];
+  return null;
+}
+function controllaTessera(raw) {
+  const code = normCod(raw).slice(0, 6);
+  if (code.length < 6) { if (code) toast('Il codice della tessera ha 6 caratteri, per esempio K7F-3QX.', 'bad'); return; }
+  S.tes = { code, at: new Date().toISOString() };
+  renderTes();
+}
+function renderTes() {
+  const box = $('#tes-res'); if (!S.tes) { box.innerHTML = ''; return; }
+  const hit = trovaCodice(S.tes.code), quando = `Tessera ${esc(fmtCod(S.tes.code))} · letta alle ${fmtT(S.tes.at)}`;
+  if (!hit) { box.innerHTML = `<div class="res-item bad big"><div><div class="name">Tessera non valida</div><div class="meta">${quando}. Il codice non corrisponde a nessun condomino: forse la tessera è stata rigenerata.</div></div></div>`; return; }
+  const checked = new Set($$('input[data-chk]:checked', box).map(i => i.dataset.chk));
+  box.innerHTML = resItem(hit[0], hit[1], checked, quando);
+}
+async function leggiQR(file) {
+  const jsQR = await loadLib('scan');
+  const bmp = await createImageBitmap(file);
+  for (const max of [1000, 1600, 700]) {
+    const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const cv = document.createElement('canvas'); cv.width = Math.round(bmp.width * k); cv.height = Math.round(bmp.height * k);
+    const g = cv.getContext('2d', { willReadFrequently: true }); g.drawImage(bmp, 0, 0, cv.width, cv.height);
+    const r = jsQR(g.getImageData(0, 0, cv.width, cv.height).data, cv.width, cv.height, { inversionAttempts: 'attemptBoth' });
+    if (r && r.data) return r.data;
+  }
+  return null;
+}
+
+/* registro accessi: una scrittura alla volta, poi aggiorna il conteggio pubblico */
+let accChain = Promise.resolve();
+function checkDay() { if (S.db && isStaff() && S.accDay !== dayKey()) subAccessi(); }
+function mutateAccessi(fn, okMsg) {
+  if (!needDb()) return;
+  checkDay();
+  accChain = accChain.then(async () => {
+    const entries = JSON.parse(JSON.stringify(S.accessi.entries || []));
+    if (fn(entries) === false) return;
+    const ok = await guard(S.db.doc('accessi/' + S.accDay).set({ data: S.accDay, entries }), okMsg);
+    if (ok) {
+      const n = entries.filter(e => e.esito !== 'negato' && !e.uscita).length;
+      try { await S.db.doc('pubblico/presenze').set({ data: S.accDay, presenti: n, aggiornato: new Date().toISOString() }); } catch {}
+    }
+  });
+}
+function findMember(fid, mid) { const f = S.famiglie.find(x => x.id === fid); return f ? [f, (f.membri || []).find(m => m.id === mid)] : [null, null]; }
+
+/* impostazioni */
+function fillCfgForm(src = S.cfg) {
+  const c = src, s = (id, v) => { $(id).value = v ?? ''; };
+  s('#imp-nome', c.nome); s('#imp-cap', c.capienza); s('#imp-ore', c.oreMax); s('#imp-phmin', c.phMin); s('#imp-phmax', c.phMax);
+  s('#imp-clmin', c.clMin); s('#imp-clmax', c.clMax); s('#imp-ccmax', c.ccMax); s('#imp-tamin', c.taMin); s('#imp-tamax', c.taMax);
+  s('#imp-eta', c.etaAccomp); s('#imp-osp', c.maxOspiti);
+}
+function renderEsempi() {
+  const n = S.letture.filter(x => x.esempio).length + S.interventi.filter(x => x.esempio).length + S.famiglie.filter(x => x.esempio).length + S.avvisi.filter(x => x.esempio).length;
+  $('#esempi-panel').hidden = !n || !isAdmin();
+  $('#esempi-txt').textContent = `L'archivio contiene ${n} voci di prova contrassegnate «Esempio» (misurazioni, interventi, famiglie e avvisi inventati). Eliminale quando inizi a inserire i dati reali.`;
+}
+
+/* CSV */
+function csv(rows) { return '﻿' + rows.map(r => r.map(v => { const s = String(v ?? ''); return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(';')).join('\r\n'); }
+async function saveCsv(name, rows) {
+  if (!S.dl) return;
+  try { const r = await S.dl.save({ filename: name, data: new Blob([csv(rows)], { type: 'text/csv' }) }); if (r && r.status === 'saved') toast('File salvato'); }
+  catch (e) { if (e && e.code === 'unavailable') toast('Esportazione non disponibile qui.', 'bad'); }
+}
+const dec = v => isNum(v) ? String(v).replace('.', ',') : '';
+
+/* ---------- eventi ---------- */
+document.addEventListener('click', async ev => {
+  const go = ev.target.closest('[data-go]');
+  if (go) { location.hash = go.dataset.go; return; }
+  const b = ev.target.closest('button[data-act]');
+  if (!b) return;
+  const act = b.dataset.act, id = b.dataset.id;
+  switch (act) {
+    case 'tes-fam': { const f = S.famiglie.find(x => x.id === id); if (f) apriTessere([f], `Famiglia ${f.cognome}, ${unitLabel(f)}`); break; }
+    case 'tes-tutte': apriTessere(S.famiglie.slice().sort((a, c) => cmpNat(a.scala, c.scala) || cmpNat(a.interno, c.interno)), 'tutti i condomini'); break;
+    case 'tes-chiudi': S.tessere = null; $('#tessere-panel').hidden = true; $('#tessere-panel').innerHTML = ''; break;
+    case 'tes-pdf': pdfTessere(b); break;
+    case 'tes-png': {
+      const [f, m] = tesTrova(b.dataset.f, b.dataset.m); if (!m || !S.dl) return;
+      const cv = await disegnaTessera(f, m);
+      cv.toBlob(async blob => { try { const r = await S.dl.save({ filename: `tessera-${slug(m.nome)}.png`, data: blob }); if (r && r.status === 'saved') toast('Immagine salvata'); } catch (e) { if (!e || e.code !== 'declined') toast('Salvataggio non riuscito.', 'bad'); } }, 'image/png');
+      break;
+    }
+    case 'tes-rig': {
+      if (!armed(b)) return;
+      const [f, m] = tesTrova(b.dataset.f, b.dataset.m); if (!m) return;
+      try {
+        const nf = await assicuraCodici(f, m.id);
+        S.tessere.lista = S.tessere.lista.map(x => x.id === nf.id ? nf : x);
+        await renderTessere(); toast(`Nuovo codice per ${m.nome}: la tessera vecchia non vale più.`);
+      } catch (e) { toast(errMsg(e), 'bad'); }
+      break;
+    }
+    case 'tes-foto': apriScanner(); break;
+    case 'sc-chiudi': chiudiScanner(); break;
+    case 'sc-foto': chiudiScanner(); $('#tes-file').click(); break;
+    case 'esci': try { await S.sb.auth.signOut(); } catch {} location.reload(); break;
+    case 'lg-indietro': mostraLogin('email'); break;
+    case 'copia-link': { const url = location.origin + location.pathname; try { await navigator.clipboard.writeText(url); toast('Indirizzo copiato: ' + url); } catch { toast(url); } break; }
+    case 'inv-del': {
+      if (!armed(b)) return;
+      const { error } = await S.sb.from('utenti').delete().eq('email', id);
+      if (error) toast('Non riesco a rimuovere la persona.', 'bad'); else { toast('Persona rimossa: non può più entrare.'); caricaUtenti(); }
+      break;
+    }
+    case 'mia-tes': {
+      const t = S.mieTessere, m = t && t.membri.find(x => x.id === b.dataset.m); if (!m) return;
+      (await disegnaTessera(t.f, m)).toBlob(blob => scaricaFile.save({ filename: `tessera-${slug(m.nome)}.png`, data: blob }), 'image/png');
+      break;
+    }
+    case 'av-del': if (needDb() && armed(b)) guard(S.db.doc('avvisi/' + id).delete(), 'Avviso eliminato'); break;
+    case 're-modello': {
+      const ta = $('#re-testo');
+      if (ta.value.trim() && !armed(b)) return;
+      ta.value = modelloRegole(); ta.focus(); toast('Modello inserito: modificalo e premi «Salva regolamento».'); break;
+    }
+    case 'img-pick': $('#img-file').click(); break;
+    case 'img-del': {
+      if (!needDb() || !armed(b)) return;
+      const old = S.cfg.immagine;
+      if (await guard(S.db.doc('impostazioni/piscina').set(cfgWith({})), 'Immagine rimossa') && old && old.id && S.assets) { try { await S.assets.delete(old.id); } catch {} }
+      break;
+    }
+    case 'prod-add': $('#or-prod').insertAdjacentHTML('beforeend', prodRow()); $('#or-prod .prod-row:last-child input').focus(); break;
+    case 'prod-del': b.closest('.prod-row').remove(); break;
+    case 'del-lettura': if (needDb() && armed(b)) guard(S.db.doc('letture/' + id).delete(), 'Misurazione eliminata'); break;
+    case 'del-int': if (needDb() && armed(b)) guard(S.db.doc('interventi/' + id).delete(), 'Intervento eliminato'); break;
+    case 'edit-int': {
+      const i = S.interventi.find(x => x.id === id); if (!i) return;
+      $('#st-id').value = i.id; $('#st-data').value = i.data || ''; $('#st-voce').value = i.voce || ''; $('#st-cat').value = i.categoria || '';
+      $('#st-stato').value = i.stato || 'da_fare'; $('#st-ditta').value = i.ditta || ''; $('#st-costo').value = isNum(i.costo) ? i.costo : ''; $('#st-desc').value = i.descrizione || '';
+      $('#st-title').textContent = 'Modifica intervento'; $('#st-submit').textContent = 'Salva modifiche'; $('#st-cancel').hidden = false;
+      $('#st-form').scrollIntoView({ behavior: 'smooth', block: 'center' }); break;
+    }
+    case 'fam-new': openFamEditor(null); break;
+    case 'fam-edit': openFamEditor(S.famiglie.find(f => f.id === id)); break;
+    case 'fam-cancel': closeFamEditor(); break;
+    case 'fam-del': if (needDb() && armed(b)) { if (S.editFam === id) closeFamEditor(); guard(S.db.doc('famiglie/' + id).delete(), 'Famiglia eliminata'); } break;
+    case 'fe-add-membro': $('#fe-membri').insertAdjacentHTML('beforeend', membroRow()); $('#fe-membri .membro-row:last-child input').focus(); break;
+    case 'fe-del-membro': b.closest('.membro-row').remove(); break;
+    case 'toggle-auth': {
+      if (!needDb()) return;
+      const f = S.famiglie.find(x => x.id === b.dataset.f); if (!f) return;
+      const membri = (f.membri || []).map(m => m.id === b.dataset.m ? { ...m, autorizzato: !m.autorizzato } : { ...m });
+      const m = membri.find(x => x.id === b.dataset.m);
+      guard(S.db.doc('famiglie/' + f.id).update({ membri }), `${m.nome}: ${m.autorizzato ? 'autorizzato' : 'bloccato'}`); break;
+    }
+    case 'acc-in': {
+      const [f, m] = findMember(b.dataset.f, b.dataset.m); if (!m) return;
+      if (S.bacheca.stato === 'chiusa') return toast('La piscina è chiusa: ingressi sospesi.', 'bad');
+      const e = eligibility(f, m);
+      if (e.lvl === 'bad') return toast('Accesso non consentito: ' + e.why, 'bad');
+      if (e.lvl === 'warn') { const chk = b.closest('.res-item') && b.closest('.res-item').querySelector('input[data-chk]'); if (!chk || !chk.checked) return toast('Conferma che è accompagnato da un adulto.', 'bad'); }
+      mutateAccessi(entries => {
+        if (entries.some(x => x.membroId === m.id && x.esito !== 'negato' && !x.uscita)) { toast(m.nome + ' risulta già dentro.'); return false; }
+        if (entries.filter(x => x.esito !== 'negato' && !x.uscita).length >= S.cfg.capienza) { toast('Capienza massima raggiunta.', 'bad'); return false; }
+        entries.push({ id: uid(), membroId: m.id, famigliaId: f.id, nome: m.nome, unita: unitLabel(f), entrata: new Date().toISOString(), uscita: null, esito: e.lvl === 'warn' ? 'accompagnato' : 'ok' });
+      }, 'Ingresso registrato: ' + m.nome);
+      break;
+    }
+    case 'acc-neg': {
+      const [f, m] = findMember(b.dataset.f, b.dataset.m); if (!m) return;
+      const e = eligibility(f, m);
+      mutateAccessi(entries => { entries.push({ id: uid(), membroId: m.id, famigliaId: f.id, nome: m.nome, unita: unitLabel(f), entrata: new Date().toISOString(), uscita: null, esito: 'negato', motivo: e.why }); }, 'Tentativo negato registrato');
+      break;
+    }
+    case 'acc-out': mutateAccessi(entries => { const x = entries.find(e => e.id === id); if (!x || x.uscita) return false; x.uscita = new Date().toISOString(); }, 'Uscita registrata'); break;
+    case 'acc-all-out':
+      if (!presenti().length) return toast('Non c\'è nessuno in piscina.');
+      if (armed(b)) mutateAccessi(entries => { const t = new Date().toISOString(); entries.forEach(e => { if (e.esito !== 'negato' && !e.uscita) e.uscita = t; }); }, 'Uscita registrata per tutti');
+      break;
+    case 'export-letture':
+      saveCsv(`misurazioni-piscina-${dayKey()}.csv`, [['Data e ora', 'pH', 'Cloro libero mg/l', 'Cloro combinato mg/l', 'Temp acqua °C', 'Temp aria °C', 'Prodotti aggiunti', 'Operatore', 'Note'],
+        ...S.letture.map(l => [fmtDT(l.ts), dec(l.ph), dec(l.cloro), dec(l.cloroComb), dec(l.tAcqua), dec(l.tAria), prodText(l), l.operatore || '', l.note || ''])]); break;
+    case 'export-int':
+      saveCsv(`interventi-piscina-${dayKey()}.csv`, [['Data', 'Voce', 'Categoria', 'Stato', 'Ditta', 'Costo €', 'Descrizione'],
+        ...S.interventi.map(i => [fmtD(i.data), i.voce, i.categoria || '', STATI[i.stato] || '', i.ditta || '', dec(i.costo), i.descrizione || ''])]); break;
+    case 'export-acc':
+      saveCsv(`ingressi-piscina-${S.accDay || dayKey()}.csv`, [['Entrata', 'Uscita', 'Persona', 'Unità', 'Esito', 'Motivo'],
+        ...(S.accessi.entries || []).map(e => [fmtT(e.entrata), e.uscita ? fmtT(e.uscita) : '', e.nome, e.unita || '', e.esito, e.motivo || ''])]); break;
+    case 'del-esempi': {
+      if (!needDb() || !armed(b)) return;
+      const jobs = [...S.letture.filter(x => x.esempio).map(x => 'letture/' + x.id), ...S.interventi.filter(x => x.esempio).map(x => 'interventi/' + x.id), ...S.famiglie.filter(x => x.esempio).map(x => 'famiglie/' + x.id), ...S.avvisi.filter(x => x.esempio).map(x => 'avvisi/' + x.id)];
+      let ok = true;
+      for (const p of jobs) { try { await S.db.doc(p).delete(); } catch (e) { ok = false; toast(errMsg(e), 'bad'); break; } }
+      if (ok) toast('Dati di esempio eliminati');
+      break;
+    }
+  }
+});
+document.addEventListener('change', ev => {
+  const s = ev.target.closest('select[data-act="int-stato"]');
+  if (s && needDb()) guard(S.db.doc('interventi/' + s.dataset.id).update({ stato: s.value }), 'Stato aggiornato');
+});
+document.addEventListener('submit', ev => { if (ev.target.id === 'fe-form') saveFam(ev); });
+
+['#or-ph', '#or-cl', '#or-cc', '#or-ta'].forEach(s => $(s).addEventListener('input', renderOrHints));
+$('#or-tr').addEventListener('input', () => { S.ariaAuto = false; $('#or-tr-h').textContent = 'Inserita a mano'; });
+$('#or-range').addEventListener('change', renderLetture);
+$('#st-filtro').addEventListener('change', renderInterventi);
+$('#con-q').addEventListener('input', renderCondomini);
+$('#con-scala').addEventListener('change', renderCondomini);
+$('#acc-q').addEventListener('input', renderRicerca);
+$('#tes-code').addEventListener('input', ev => { const c = normCod(ev.target.value); if (c.length >= 6) { ev.target.value = ''; controllaTessera(c); } });
+$('#tes-code').addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); const v = ev.target.value; ev.target.value = ''; controllaTessera(v); } });
+$('#tes-file').addEventListener('change', async ev => {
+  const file = ev.target.files && ev.target.files[0]; ev.target.value = ''; if (!file) return;
+  const btn = $('[data-act="tes-foto"] span'); btn.textContent = 'Lettura del QR…';
+  try {
+    const code = await leggiQR(file);
+    if (code) controllaTessera(code);
+    else toast('Non trovo un QR nella foto: avvicinati alla tessera, evita i riflessi e riprova. Puoi anche scrivere il codice.', 'bad');
+  } catch { toast('Non riesco a leggere la foto. Riprova oppure scrivi il codice sotto il QR.', 'bad'); }
+  finally { btn.textContent = 'Inquadra con la fotocamera'; }
+});
+$('#osp-fam').addEventListener('change', renderOspHint);
+$('#or-op').value = lsGet('piscina-operatore') || '';
+
+$('#or-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const ts = new Date($('#or-ts').value);
+  const prodotti = $$('#or-prod .prod-row').map(r => ({
+    prodotto: r.querySelector('[data-k="prodotto"]').value.trim(),
+    qta: numOrNull(r.querySelector('[data-k="qta"]').value),
+    unita: r.querySelector('[data-k="unita"]').value
+  })).filter(p => p.prodotto && p.qta > 0);
+  const doc = { ts: isNaN(ts) ? new Date().toISOString() : ts.toISOString(), ph: numOrNull($('#or-ph').value), cloro: numOrNull($('#or-cl').value), cloroComb: numOrNull($('#or-cc').value), tAcqua: numOrNull($('#or-ta').value), tAria: numOrNull($('#or-tr').value), tAriaFonte: S.ariaAuto ? 'meteo' : 'manuale', prodotti, operatore: $('#or-op').value.trim(), note: $('#or-note').value.trim() };
+  lsSet('piscina-operatore', doc.operatore);
+  if (await guard(S.db.collection('letture').add(doc), 'Misurazione salvata')) {
+    if (worst(Object.values(evalL(doc))) === 'bad') toast('Salvata. Attenzione: ci sono valori fuori limite.', 'bad');
+    ['#or-ph', '#or-cl', '#or-cc', '#or-ta', '#or-tr', '#or-note'].forEach(s => { $(s).value = ''; });
+    $('#or-prod').innerHTML = prodRow();
+    $('#or-ts').value = localInput(); renderOrHints();
+    S.ariaAuto = false; fillAria();
+  }
+});
+
+function resetSt() {
+  $('#st-form').reset(); $('#st-id').value = ''; $('#st-data').value = dayKey();
+  $('#st-title').textContent = 'Nuovo intervento'; $('#st-submit').textContent = 'Aggiungi intervento'; $('#st-cancel').hidden = true;
+}
+$('#st-cancel').addEventListener('click', resetSt);
+$('#st-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const id = $('#st-id').value;
+  const prev = S.interventi.find(x => x.id === id);
+  const doc = { data: $('#st-data').value, voce: $('#st-voce').value.trim(), categoria: $('#st-cat').value.trim(), stato: $('#st-stato').value, ditta: $('#st-ditta').value.trim(), costo: numOrNull($('#st-costo').value), descrizione: $('#st-desc').value.trim(), aggiornato: new Date().toISOString() };
+  if (prev && prev.esempio) doc.esempio = true;
+  if (await guard(id ? S.db.doc('interventi/' + id).set(doc) : S.db.collection('interventi').add(doc), id ? 'Intervento aggiornato' : 'Intervento aggiunto')) resetSt();
+});
+
+$('#osp-form').addEventListener('submit', ev => {
+  ev.preventDefault();
+  const f = S.famiglie.find(x => x.id === $('#osp-fam').value), nome = $('#osp-nome').value.trim();
+  if (!f || !nome) return;
+  if (S.bacheca.stato === 'chiusa') return toast('La piscina è chiusa: ingressi sospesi.', 'bad');
+  if (f.sospesa) return toast('La famiglia ospitante è sospesa.', 'bad');
+  mutateAccessi(entries => {
+    if (entries.filter(e => e.esito === 'ospite' && e.famigliaId === f.id).length >= S.cfg.maxOspiti) { toast(`Limite di ${S.cfg.maxOspiti} ospiti raggiunto per ${f.cognome}.`, 'bad'); return false; }
+    if (entries.filter(x => x.esito !== 'negato' && !x.uscita).length >= S.cfg.capienza) { toast('Capienza massima raggiunta.', 'bad'); return false; }
+    entries.push({ id: uid(), membroId: null, famigliaId: f.id, nome: nome + ' (ospite ' + f.cognome + ')', unita: unitLabel(f), entrata: new Date().toISOString(), uscita: null, esito: 'ospite' });
+    $('#osp-nome').value = '';
+  }, 'Ospite registrato');
+});
+
+$('#img-file').addEventListener('change', ev => { const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; if (f) uploadImage(f); });
+$('#img-pos').addEventListener('change', ev => {
+  const im = S.cfg.immagine; if (!im || !needDb()) return;
+  guard(S.db.doc('impostazioni/piscina').set(cfgWith({ immagine: { ...im, pos: ev.target.value } })), 'Inquadratura aggiornata');
+});
+$('#ba-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const g = id => $(id).value;
+  const grp = p => ({ da: g(`#ba-${p}-da`), a: g(`#ba-${p}-a`) });
+  const doc = { stato: g('#ba-stato'), motivo: g('#ba-motivo').trim(), fer: grp('f'), we: grp('w'), festivi: $('#ba-festivi').checked, riposo: g('#ba-riposo'), s1: g('#ba-s1'), s2: g('#ba-s2'), aggiornato: new Date().toISOString() };
+  for (const [nome, o] of [['lunedì–venerdì', doc.fer], ['sabato e domenica', doc.we]]) {
+    if ((o.da && !o.a) || (!o.da && o.a)) return toast(`Orari ${nome}: indica sia l'apertura sia la chiusura.`, 'bad');
+    if (o.da && o.a <= o.da) return toast(`Orari ${nome}: la chiusura deve venire dopo l'apertura.`, 'bad');
+  }
+  if (doc.s1 && doc.s2 && doc.s2 < doc.s1) return toast('La fine della stagione deve venire dopo l\'inizio.', 'bad');
+  await guard(S.db.doc('pubblico/bacheca').set(doc), 'Orari pubblicati nella Home');
+});
+$('#in-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const pulisci = id => $(id).value.split('\n').map(r => r.trim()).filter(Boolean).join('\n');
+  await guard(S.db.doc('pubblico/info').set({ contatti: pulisci('#in-contatti'), portare: pulisci('#in-portare'), aggiornato: new Date().toISOString() }), 'Informazioni salvate nella Home');
+});
+$('#av-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const testo = $('#av-testo').value.trim(); if (!testo) return;
+  const doc = { testo, tipo: $('#av-tipo').value, scadenza: $('#av-scad').value || '', data: new Date().toISOString() };
+  if (await guard(S.db.collection('avvisi').add(doc), 'Avviso pubblicato nella Home')) { $('#av-form').reset(); }
+});
+$('#re-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const testo = $('#re-testo').value.split('\n').map(r => r.trim()).filter(Boolean).join('\n');
+  await guard(S.db.doc('pubblico/regolamento').set({ testo, aggiornato: new Date().toISOString() }), 'Regolamento salvato');
+});
+
+$('#imp-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if (!needDb()) return;
+  const n = (id, d) => { const v = numOrNull($(id).value); return v === null ? d : v; };
+  const D = DEFAULT_CFG;
+  const c = { nome: $('#imp-nome').value.trim() || D.nome,
+    capienza: Math.max(1, Math.round(n('#imp-cap', D.capienza))), oreMax: Math.max(1, n('#imp-ore', D.oreMax)),
+    phMin: n('#imp-phmin', D.phMin), phMax: n('#imp-phmax', D.phMax), clMin: n('#imp-clmin', D.clMin), clMax: n('#imp-clmax', D.clMax), ccMax: n('#imp-ccmax', D.ccMax),
+    taMin: n('#imp-tamin', D.taMin), taMax: n('#imp-tamax', D.taMax), etaAccomp: n('#imp-eta', D.etaAccomp), maxOspiti: Math.max(0, Math.round(n('#imp-osp', D.maxOspiti))) };
+  if (c.phMin >= c.phMax || c.clMin >= c.clMax || c.taMin >= c.taMax) return toast('Ogni valore minimo deve essere più basso del massimo.', 'bad');
+  if (S.cfgRaw.immagine) c.immagine = S.cfgRaw.immagine;
+  await guard(S.db.doc('impostazioni/piscina').set(c), 'Impostazioni salvate');
+});
+$('#imp-reset').addEventListener('click', () => {
+  const D = DEFAULT_CFG; fillCfgForm({ ...S.cfg, phMin: D.phMin, phMax: D.phMax, clMin: D.clMin, clMax: D.clMax, ccMax: D.ccMax, taMin: D.taMin, taMax: D.taMax });
+  toast('Limiti predefiniti inseriti: premi «Salva impostazioni» per confermare.');
+});
+
+/* ---------- archivio ---------- */
+function markLoaded(k, snap) {
+  if (!snap.metadata.fromCache) S.loaded[k] = true; else if (!S.loaded[k]) S.loaded[k] = 'cache';
+  if (!S.ready && S.need.every(x => S.loaded[x] === true)) { S.ready = true; clearTimeout(S.loadTimer); banner(); renderMieTessere(); }
+}
+function onDbErr(e) {
+  clearTimeout(S.loadTimer);
+  if (e && e.code === 'revoked') banner('bad', 'L\'accesso ai dati non è più disponibile per questa pagina.');
+  else banner('bad', 'Impossibile leggere l\'archivio. Ricarica la pagina tra qualche minuto.');
+}
+function subAccessi() {
+  if (S.unsubAcc) S.unsubAcc();
+  S.accDay = dayKey(); S.accessi = { entries: [] };
+  S.unsubAcc = S.db.doc('accessi/' + S.accDay).onSnapshot(s => { S.accessi = s.exists ? s.data() : { entries: [] }; markLoaded('accessi', s); renderIngressi(); renderHome(); }, onDbErr);
+}
+let staffSubs = false;
+function subscribeStaff() {
+  if (staffSubs || !S.db) return; staffSubs = true;
+  const db = S.db;
+  S.need.push('interventi', 'famiglie');
+  db.collection('interventi').onSnapshot(s => { S.interventi = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('interventi', s); renderManSum(); renderInterventi(); renderHome(); renderEsempi(); }, onDbErr);
+  db.collection('famiglie').onSnapshot(s => { S.famiglie = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('famiglie', s); renderCondomini(); renderIngressi(); renderHome(); renderEsempi(); renderUtenti(); }, onDbErr);
+  subAccessi();
+}
+/* ---------- archivio Supabase, con la stessa interfaccia usata dal resto del sito ---------- */
+function creaArchivio(sb) {
+  const cache = {}, carica = {}, ascolto = {};
+  const errore = e => {
+    const msg = (e && e.message) || '', c = (e && e.code) || '';
+    if (c === '42501' || /row-level security|permission denied/i.test(msg)) return { code: 'invalid_argument', message: msg };
+    if (c === 'PGRST301' || /JWT/i.test(msg)) return { code: 'revoked', message: msg };
+    return { code: 'unavailable', message: msg };
+  };
+  const notifica = t => (ascolto[t] || new Set()).forEach(fn => { try { fn(); } catch (err) { console.error(err); } });
+  async function caricaTabella(t) {
+    const { data, error } = await sb.from(t).select('id,dati');
+    if (error) throw errore(error);
+    cache[t] = new Map(data.map(r => [r.id, r.dati]));
+    notifica(t);
+  }
+  function assicura(t) {
+    if (!carica[t]) carica[t] = caricaTabella(t).catch(e => { delete carica[t]; throw e; });
+    return carica[t];
+  }
+  sb.channel('archivio').on('postgres_changes', { event: '*', schema: 'public' }, p => {
+    if (p.table === 'utenti') { if (S.onUtenti) S.onUtenti(); return; }
+    const t = p.table; if (!cache[t]) return;
+    if (p.eventType === 'DELETE') cache[t].delete(p.old.id); else cache[t].set(p.new.id, p.new.dati);
+    notifica(t);
+  }).subscribe();
+  const ricarica = () => Object.keys(cache).forEach(t => caricaTabella(t).catch(() => {}));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) ricarica(); });
+  setInterval(ricarica, 5 * 6e4);
+
+  const snap = (id, dati) => ({ id, exists: dati !== undefined, data: () => dati, metadata: { fromCache: false, hasPendingWrites: false } });
+  function ascolta(t, fn, err) {
+    (ascolto[t] = ascolto[t] || new Set()).add(fn);
+    assicura(t).then(fn).catch(e => { if (err) err(e); });
+    return () => ascolto[t].delete(fn);
+  }
+  function doc(path) {
+    const [t, id] = path.split('/');
+    const ref = {
+      id, path,
+      onSnapshot: (next, err) => ascolta(t, () => next(snap(id, cache[t].get(id))), err),
+      async get() { await assicura(t); return snap(id, cache[t].get(id)); },
+      async set(dati) {
+        const { error } = await sb.from(t).upsert({ id, dati });
+        if (error) throw errore(error);
+        if (cache[t]) { cache[t].set(id, dati); notifica(t); }
+      },
+      async update(parz) {
+        let base = cache[t] && cache[t].get(id);
+        if (base === undefined) {
+          const { data, error } = await sb.from(t).select('dati').eq('id', id).maybeSingle();
+          if (error) throw errore(error);
+          if (!data) throw { code: 'invalid_argument', message: 'Documento inesistente' };
+          base = data.dati;
+        }
+        return ref.set({ ...base, ...parz });
+      },
+      async delete() {
+        const { data, error } = await sb.from(t).delete().eq('id', id).select('id');
+        if (error) throw errore(error);
+        if (!data || !data.length) { if (cache[t] && cache[t].has(id)) throw { code: 'invalid_argument', message: 'Eliminazione non consentita' }; return; }
+        if (cache[t]) { cache[t].delete(id); notifica(t); }
+      }
+    };
+    return ref;
+  }
+  function query(t, campo, dir, n) {
+    return {
+      orderBy: (c, d = 'asc') => query(t, c, d, n),
+      limit: k => query(t, campo, dir, k),
+      where: () => query(t, campo, dir, n),
+      onSnapshot: (next, err) => ascolta(t, () => {
+        let docs = [...cache[t]].map(([id, d]) => snap(id, d));
+        if (campo) docs.sort((a, b) => { const x = a.data()[campo], y = b.data()[campo]; return (x < y ? -1 : x > y ? 1 : 0) * (dir === 'desc' ? -1 : 1); });
+        if (n) docs = docs.slice(0, n);
+        next({ docs, size: docs.length, empty: !docs.length, docChanges: () => [], metadata: { fromCache: false, hasPendingWrites: false } });
+      }, err),
+      doc: id => doc(t + '/' + (id || uid())),
+      async add(dati) { const r = doc(t + '/' + uid()); await r.set(dati); return r; }
+    };
+  }
+  return { doc, collection: t => query(t) };
+}
+/* file da scaricare: un normale download del browser */
+const scaricaFile = {
+  async save({ filename, data }) {
+    const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([data]));
+    const a = document.createElement('a'); a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    return { status: 'saved' };
+  }
+};
+/* immagine della Home nell'archivio file di Supabase */
+function archivioImmagini(sb) {
+  return {
+    async upload(blob) {
+      const ext = (blob.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg').replace('svg+xml', 'svg');
+      const path = `home/${uid()}.${ext}`;
+      const { error } = await sb.storage.from('immagini').upload(path, blob, { contentType: blob.type || 'image/jpeg', upsert: false });
+      if (error) throw { code: /quota|size/i.test(error.message) ? 'quota_exceeded' : 'unavailable', message: error.message };
+      return { id: path, url: sb.storage.from('immagini').getPublicUrl(path).data.publicUrl };
+    },
+    async delete(id) { await sb.storage.from('immagini').remove([id]); }
+  };
+}
+
+/* ---------- accesso con email ---------- */
+const RUOLI = { condomino: 'viewer', operatore: 'staff', admin: 'admin' };
+const RUOLO_TXT = { condomino: 'Condomino', operatore: 'Operatore', admin: 'Amministratore' };
+function mostraLogin(stato, extra) {
+  $('#app').hidden = true; $('#login').hidden = false;
+  $('#login-nome').textContent = (S.cfg && S.cfg.nome) || 'Piscina condominiale';
+  $('#login-email').hidden = stato !== 'email';
+  $('#login-codice').hidden = stato !== 'codice';
+  $('#login-no').hidden = stato !== 'no';
+  if (stato === 'no') $('#lg-chi').textContent = extra || '';
+  if (stato === 'email') setTimeout(() => $('#lg-email').focus(), 50);
+  if (stato === 'codice') { $('#lg-dest').textContent = S.lgEmail || ''; setTimeout(() => $('#lg-codice').focus(), 50); }
+  $('#login-msg').textContent = '';
+}
+const loginMsg = (t, bad) => { const m = $('#login-msg'); m.textContent = t; m.className = 'small ' + (bad ? 'err' : 'muted'); };
+$('#login-email').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const email = $('#lg-email').value.trim().toLowerCase(), btn = ev.target.querySelector('button');
+  if (!/^\S+@\S+\.\S+$/.test(email)) return loginMsg('Scrivi un indirizzo email valido.', true);
+  btn.disabled = true; loginMsg('Invio in corso…');
+  const { error } = await S.sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
+  btn.disabled = false;
+  if (error) return loginMsg(error.status === 429 ? 'Hai chiesto troppe email in poco tempo: aspetta qualche minuto e riprova.' : 'Non riesco a mandare l\'email. Controlla l\'indirizzo e riprova.', true);
+  S.lgEmail = email; lsSet('piscina-email', email); mostraLogin('codice');
+});
+$('#login-codice').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const token = $('#lg-codice').value.replace(/\D/g, ''), btn = ev.target.querySelector('button.primary');
+  if (token.length < 6) return loginMsg('Il codice è formato da almeno 6 cifre.', true);
+  btn.disabled = true; loginMsg('Verifica in corso…');
+  const { error } = await S.sb.auth.verifyOtp({ email: S.lgEmail, token, type: 'email' });
+  btn.disabled = false;
+  if (error) return loginMsg('Codice non valido o scaduto. Controlla l\'ultima email ricevuta, oppure chiedine una nuova.', true);
+  location.reload();
+});
+
+/* ---------- persone invitate (amministratore) ---------- */
+async function caricaUtenti() {
+  if (!isAdmin()) return;
+  const { data, error } = await S.sb.from('utenti').select('*').order('ruolo').order('email');
+  if (!error) { S.utenti = data; renderUtenti(); }
+}
+function renderUtenti() {
+  const box = $('#inv-list'); if (!box || !S.utenti) return;
+  const q = norm($('#inv-q').value), fams = S.famiglie.slice().sort((a, b) => cmpNat(a.scala, b.scala) || cmpNat(a.interno, b.interno));
+  const optFam = sel => '<option value="">Nessuna</option>' + fams.map(f => `<option value="${esc(f.id)}" ${f.id === sel ? 'selected' : ''}>${esc(unitLabel(f))} — ${esc(f.cognome)}</option>`).join('');
+  const lista = S.utenti.filter(u => !q || norm(u.email + ' ' + u.nome).includes(q));
+  const conta = r => S.utenti.filter(u => u.ruolo === r).length;
+  $('#inv-sum').textContent = `${S.utenti.length} persone: ${conta('condomino')} condomini, ${conta('operatore')} operatori, ${conta('admin')} amministratori`;
+  const famSel = $('#inv-fam'), cur = famSel.value; famSel.innerHTML = optFam(cur);
+  box.innerHTML = lista.length ? `<table><thead><tr><th>Email</th><th>Nome</th><th>Ruolo</th><th>Famiglia</th><th></th></tr></thead><tbody>${lista.map(u => {
+    const io = u.email === S.utente.email;
+    return `<tr><td>${esc(u.email)}${io ? ' <span class="tag">Tu</span>' : ''}</td><td>${esc(u.nome || '—')}</td>
+      <td><select data-utente="${esc(u.email)}" data-campo="ruolo" aria-label="Ruolo" style="width:auto;padding:6px 10px" ${io ? 'disabled' : ''}>${Object.entries(RUOLO_TXT).map(([k, v]) => `<option value="${k}" ${k === u.ruolo ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
+      <td><select data-utente="${esc(u.email)}" data-campo="famiglia_id" aria-label="Famiglia" style="width:auto;max-width:240px;padding:6px 10px">${optFam(u.famiglia_id)}</select></td>
+      <td>${io ? '' : `<button class="ghost sm danger" data-act="inv-del" data-id="${esc(u.email)}">Rimuovi</button>`}</td></tr>`; }).join('')}</tbody></table>`
+    : `<div class="empty">${S.utenti.length ? 'Nessuna persona corrisponde alla ricerca.' : 'Nessuna persona invitata.'}</div>`;
+}
+$('#inv-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const emails = [...new Set($('#inv-email').value.split(/[\s,;]+/).map(e => e.trim().toLowerCase()).filter(Boolean))];
+  const errate = emails.filter(e => !/^\S+@\S+\.\S+$/.test(e));
+  if (!emails.length) return;
+  if (errate.length) return toast('Indirizzi non validi: ' + errate.join(', '), 'bad');
+  const righe = emails.map(email => ({ email, nome: emails.length === 1 ? $('#inv-nome').value.trim() : '', ruolo: $('#inv-ruolo').value, famiglia_id: $('#inv-fam').value || null }));
+  const { error } = await S.sb.from('utenti').upsert(righe);
+  if (error) return toast('Invito non salvato: ' + (error.message || 'riprova.'), 'bad');
+  toast(emails.length === 1 ? 'Persona aggiunta. Mandale l\'indirizzo del sito.' : `${emails.length} persone aggiunte. Mandate loro l'indirizzo del sito.`);
+  $('#inv-email').value = ''; $('#inv-nome').value = '';
+  caricaUtenti();
+});
+document.addEventListener('change', async ev => {
+  const s = ev.target.closest('select[data-utente]'); if (!s) return;
+  const { error } = await S.sb.from('utenti').update({ [s.dataset.campo]: s.value || null }).eq('email', s.dataset.utente);
+  if (error) toast('Modifica non salvata.', 'bad'); else { toast('Aggiornato'); caricaUtenti(); }
+});
+$('#inv-q').addEventListener('input', renderUtenti);
+
+/* ---------- le tessere del condomino nella Home ---------- */
+async function renderMieTessere() {
+  const box = $('#home-tessere'); if (!box) return;
+  if (!S.utente || !S.utente.famiglia_id) { box.hidden = true; return; }
+  const { data } = await S.sb.rpc('mia_famiglia');
+  const f = data, membri = f && (f.membri || []).filter(m => m.codice);
+  if (!f) { box.hidden = true; return; }
+  box.hidden = false;
+  if (!membri.length) { box.innerHTML = '<h3>Le tue tessere</h3><div class="empty">Le tessere della tua famiglia non sono ancora pronte: le prepara l\'amministratore.</div>'; return; }
+  const imgs = [];
+  for (const m of membri) imgs.push((await disegnaTessera(f, m)).toDataURL('image/png'));
+  S.mieTessere = { f, membri };
+  box.innerHTML = `<div class="head"><h3>Le tue tessere</h3><span class="small muted">Mostrale all'ingresso, stampate o dal telefono</span></div>
+    <div class="tessere-grid">${membri.map((m, k) => `<div class="tessera"><img src="${imgs[k]}" alt="Tessera di ${esc(m.nome)}"><div class="actions"><span class="small"><b>${esc(m.nome)}</b></span><button class="sm" data-act="mia-tes" data-m="${esc(m.id)}">Salva sul telefono</button></div></div>`).join('')}</div>`;
+}
+
+/* ---------- lettura del QR con la fotocamera in diretta ---------- */
+async function apriScanner() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $('#tes-file').click(); return; }
+  $('#scanner').hidden = false; $('#sc-msg').textContent = 'Avvio della fotocamera…';
+  try {
+    S.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+    const v = $('#sc-video'); v.srcObject = S.stream; await v.play();
+    $('#sc-msg').textContent = 'Inquadra il QR della tessera dentro il riquadro';
+    let det = null;
+    try { if ('BarcodeDetector' in window && (await BarcodeDetector.getSupportedFormats()).includes('qr_code')) det = new BarcodeDetector({ formats: ['qr_code'] }); } catch {}
+    const jsQR = det ? null : await loadLib('scan');
+    const cv = document.createElement('canvas'), g = cv.getContext('2d', { willReadFrequently: true });
+    const giro = async () => {
+      if (!S.stream) return;
+      let code = null;
+      try {
+        if (v.readyState >= 2 && v.videoWidth) {
+          if (det) { const r = await det.detect(v); if (r.length) code = r[0].rawValue; }
+          else {
+            const k = Math.min(1, 720 / v.videoWidth); cv.width = Math.round(v.videoWidth * k); cv.height = Math.round(v.videoHeight * k);
+            g.drawImage(v, 0, 0, cv.width, cv.height);
+            const r = jsQR(g.getImageData(0, 0, cv.width, cv.height).data, cv.width, cv.height, { inversionAttempts: 'dontInvert' });
+            if (r) code = r.data;
+          }
+        }
+      } catch {}
+      if (code && normCod(code).length >= 6) { if (navigator.vibrate) navigator.vibrate(60); chiudiScanner(); controllaTessera(code); return; }
+      setTimeout(giro, 160);
+    };
+    giro();
+  } catch (e) {
+    $('#sc-msg').textContent = e && e.name === 'NotAllowedError'
+      ? 'Permesso per la fotocamera negato. Consentilo nelle impostazioni del browser, oppure usa una foto.'
+      : 'Fotocamera non disponibile su questo dispositivo: usa una foto o scrivi il codice.';
+  }
+}
+function chiudiScanner() {
+  if (S.stream) S.stream.getTracks().forEach(t => t.stop());
+  S.stream = null; $('#sc-video').srcObject = null; $('#scanner').hidden = true;
+}
+
+async function boot() {
+  $('#or-prod').innerHTML = prodRow();
+  resetSt();
+  $('#hero-img').addEventListener('error', () => { S.imgBroken = true; renderHero(); }); renderHeader(); applyRole();
+  S.dl = scaricaFile; $$('.exp').forEach(b => { b.hidden = false; });
+  const conf = window.PISCINA_CONFIG || {};
+  if (!window.supabase || !conf.url || !conf.anonKey || /INSERISCI/.test(conf.url + conf.anonKey)) {
+    $('#app').hidden = false;
+    banner('warn', 'Il sito non è ancora collegato all\'archivio: manca la configurazione di Supabase in config.js.');
+    S.loaded = { letture: true, interventi: true, famiglie: true, cfg: true, meteo: true }; fillCfgForm(); renderAll(); return;
+  }
+  S.sb = window.supabase.createClient(conf.url, conf.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' } });
+  S.lgEmail = lsGet('piscina-email') || ''; $('#lg-email').value = S.lgEmail;
+  const { data: { session } } = await S.sb.auth.getSession();
+  if (location.hash.includes('access_token') || location.hash.includes('error=')) history.replaceState(null, '', location.pathname + location.search);
+  if (!session) { mostraLogin('email'); return; }
+  const email = (session.user.email || '').toLowerCase();
+  const { data: ut, error: ue } = await S.sb.from('utenti').select('*').eq('email', email).maybeSingle();
+  if (ue) { mostraLogin('email'); loginMsg('Non riesco a verificare il tuo accesso. Controlla la connessione e riprova.', true); return; }
+  if (!ut) { mostraLogin('no', email); return; }
+  S.utente = ut; S.role = RUOLI[ut.ruolo] || 'viewer'; S.roleSure = true;
+  $('#login').hidden = true; $('#app').hidden = false;
+  $('#user-lbl').textContent = ut.nome || email;
+  S.sb.auth.onAuthStateChange(ev => { if (ev === 'SIGNED_OUT') location.reload(); });
+  const db = S.db = creaArchivio(S.sb);
+  if (isAdmin()) { S.assets = archivioImmagini(S.sb); S.onUtenti = caricaUtenti; caricaUtenti(); }
+  applyRole();
+  S.need = ['letture', 'cfg', 'pres', 'bacheca', 'regole', 'avvisi', 'meteo', 'info'];
+  S.loadTimer = setTimeout(() => { if (!S.ready) banner('warn', 'I dati non sono ancora raggiungibili. La pagina continua a riprovare da sola; quanto vedi potrebbe non essere aggiornato.'); }, 10000);
+  db.collection('letture').orderBy('ts', 'desc').limit(1000).onSnapshot(s => { S.letture = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('letture', s); renderManSum(); renderLetture(); renderConsumi(); renderHome(); renderEsempi(); }, onDbErr);
+  db.doc('impostazioni/piscina').onSnapshot(s => { S.cfgRaw = s.exists ? s.data() : {}; S.cfg = { ...DEFAULT_CFG, ...S.cfgRaw }; markLoaded('cfg', s); fillCfgForm(); renderAll(); }, onDbErr);
+  db.doc('pubblico/bacheca').onSnapshot(s => { S.bacheca = s.exists ? s.data() : {}; markLoaded('bacheca', s); fillBacheca(); renderHome(); renderIngressi(); }, onDbErr);
+  db.doc('pubblico/meteo').onSnapshot(s => { S.meteo = s.exists ? s.data() : null; markLoaded('meteo', s); renderHome(); fillAria(); renderOrHints(); }, onDbErr);
+  db.doc('pubblico/info').onSnapshot(s => { S.info = s.exists ? s.data() : {}; markLoaded('info', s);
+    ['contatti', 'portare'].forEach(k => { const el = $('#in-' + k); if (document.activeElement !== el) el.value = S.info[k] || ''; }); renderHome(); }, onDbErr);
+  db.doc('pubblico/regolamento').onSnapshot(s => { S.regole = s.exists ? (s.data().testo || '') : ''; markLoaded('regole', s); if (document.activeElement !== $('#re-testo')) $('#re-testo').value = S.regole; renderHome(); }, onDbErr);
+  db.collection('avvisi').onSnapshot(s => { S.avvisi = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('avvisi', s); renderAvvisiList(); renderHome(); renderEsempi(); }, onDbErr);
+  db.doc('pubblico/presenze').onSnapshot(s => { S.pres = s.exists ? s.data() : null; markLoaded('pres', s); renderHome(); }, onDbErr);
+  if (isStaff()) subscribeStaff();
+  setInterval(() => { checkDay(); renderHome(); }, 60000);
+}
+boot();
+})();
+</script>
+</body>
+</html>
