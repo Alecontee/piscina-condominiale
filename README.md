@@ -24,7 +24,7 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
    insert into public.utenti (email, nome, ruolo) values ('tua@email.it', 'Il tuo nome', 'admin');
    ```
 2. **Accesso via email** (*Authentication*):
-   - *URL Configuration*: Site URL = indirizzo del sito (es. `https://utente.github.io/piscina-condominiale/`), e lo stesso indirizzo in *Redirect URLs*.
+   - *URL Configuration*: Site URL = indirizzo del sito (`https://alecontee.github.io/piscina-condominiale/`), e lo stesso indirizzo in *Redirect URLs*.
    - *Emails → Templates*: per **Magic Link** e **Confirm signup** usa il testo di `supabase/email-accesso.html` (oggetto: «Accesso al sito della piscina»).
    - *Emails → SMTP Settings*: configura un servizio di invio (es. Brevo o Resend). Senza, Supabase manda email solo ai membri del progetto.
 3. **Configurazione del sito**: in `config.js` inserisci Project URL e chiave pubblica (anon / publishable).
