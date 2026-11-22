@@ -19,6 +19,7 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
 ## Installazione
 
 1. **Supabase**: crea un progetto (regione Central EU). In *SQL Editor* esegui `supabase/schema.sql`, poi aggiungi il primo amministratore:
+   Poi esegui `supabase/dati-iniziali.sql` (orari, regolamento e impostazioni già decisi) e aggiungi il primo amministratore:
    ```sql
    insert into public.utenti (email, nome, ruolo) values ('tua@email.it', 'Il tuo nome', 'admin');
    ```
