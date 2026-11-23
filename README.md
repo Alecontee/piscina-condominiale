@@ -4,7 +4,7 @@ Il sito della piscina del condominio: qualità dell'acqua, orari, meteo, avvisi,
 
 - **Sito**: pagina statica (`index.html`) pubblicata con GitHub Pages.
 - **Archivio e accessi**: Supabase (database Postgres con regole di accesso, login via email).
-- **Meteo**: ogni mattina della stagione, GitHub Actions legge le previsioni di MET Norway e le salva nell'archivio.
+- **Meteo**: il sito legge le previsioni dal vivo da Open-Meteo (gratuito, senza chiavi), ogni volta che viene aperto e poi ogni 30 minuti.
 
 ## Chi vede cosa
 
@@ -29,7 +29,6 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
    - *Emails → SMTP Settings*: configura un servizio di invio (es. Brevo o Resend). Senza, Supabase manda email solo ai membri del progetto.
 3. **Configurazione del sito**: in `config.js` inserisci Project URL e chiave pubblica (anon / publishable).
 4. **GitHub Pages**: *Settings → Pages → Deploy from a branch → main / (root)*.
-5. **Meteo**: *Settings → Secrets and variables → Actions*, aggiungi `SUPABASE_URL` e `SUPABASE_SERVICE_KEY` (chiave *service_role* o *secret*). Il lavoro `Meteo del giorno` parte da giugno a settembre; si può avviare a mano da *Actions*.
 
 ## File
 
@@ -37,5 +36,4 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
 - `config.js` – collegamento a Supabase
 - `supabase/schema.sql` – tabelle, regole di accesso, funzioni
 - `supabase/email-accesso.html` – testo dell'email di accesso
-- `meteo/` – lettura delle previsioni e aggiornamento dell'archivio
 - `informativa.html` – bozza dell'informativa privacy

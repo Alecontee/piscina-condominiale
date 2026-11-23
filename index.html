@@ -1109,19 +1109,99 @@ function giorniHtml(m) {
   if (!prossimi.length) return '';
   return `<span class="lbl">Prossimi giorni</span><div class="wx-days">${prossimi.map(g => { const x = meteoInfo(g.simbolo), d = new Date(g.data + 'T12:00'); return `<div class="wx-d"><span class="d">${d.toLocaleDateString('it-IT', { weekday: 'short' })} ${d.getDate()}</span>${icona(x.k, 34)}<span class="small">${esc(x.txt)}</span><b>${g.min}° / ${g.max}°</b>${giornataIdeale(g) ? '<span class="ideale">Giornata da piscina</span>' : ''}${g.pioggia > 0 ? `<span class="wx-rain">${fmtQ(g.pioggia)} mm</span>` : ''}</div>`; }).join('')}</div>`;
 }
+/* ---------- meteo dal vivo: il browser legge le previsioni da Open-Meteo ---------- */
+const METEO = { lat: 45.477, lon: 9.079, luogo: 'Seguro, Settimo Milanese' };
+function simboloDa(code, giorno) {
+  const n = giorno ? '_day' : '_night', c = +code;
+  if (c === 0) return 'clearsky' + n;
+  if (c === 1) return 'fair' + n;
+  if (c === 2) return 'partlycloudy' + n;
+  if (c === 3) return 'cloudy';
+  if (c === 45 || c === 48) return 'fog';
+  if ([51, 53, 55, 56, 57, 61].includes(c)) return 'lightrain';
+  if (c === 63) return 'rain';
+  if (c === 65) return 'heavyrain';
+  if (c === 66 || c === 67) return 'sleet';
+  if (c === 71) return 'lightsnow';
+  if (c === 73 || c === 77) return 'snow';
+  if (c === 75) return 'heavysnow';
+  if (c === 80) return 'lightrainshowers' + n;
+  if (c === 81) return 'rainshowers' + n;
+  if (c === 82) return 'heavyrainshowers' + n;
+  if (c === 85 || c === 86) return 'snowshowers' + n;
+  if (c === 95) return 'rainandthunder';
+  if (c >= 96) return 'heavyrainandthunder';
+  return 'cloudy';
+}
+async function scaricaMeteo() {
+  const u = 'https://api.open-meteo.com/v1/forecast?latitude=' + METEO.lat + '&longitude=' + METEO.lon
+    + '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day'
+    + '&hourly=temperature_2m,weather_code,precipitation,wind_speed_10m,is_day'
+    + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum'
+    + '&timezone=Europe%2FRome&timeformat=unixtime&forecast_days=6';
+  const r = await fetch(u);
+  if (!r.ok) throw new Error('meteo ' + r.status);
+  return r.json();
+}
+function costruisciMeteo() {
+  const raw = S.meteoRaw;
+  if (!raw || !raw.hourly) { S.meteo = null; return; }
+  const H = raw.hourly, D = raw.daily, C = raw.current || {}, now = new Date(), oggi = dayKey(now), b = S.bacheca || {};
+  const ore = H.time.map((t, i) => ({ t: new Date(t * 1000).toISOString(), temp: H.temperature_2m[i], simbolo: simboloDa(H.weather_code[i], H.is_day[i]), pioggia: H.precipitation[i] || 0, vento: Math.round(H.wind_speed_10m[i] || 0) }));
+  const f = fasceDel(b, now);
+  const chiusaOggi = b.stato === 'chiusa' || (b.s1 && oggi < b.s1) || (b.s2 && oggi > b.s2) || (hasRiposo(b) && +b.riposo === now.getDay()) || !f.length;
+  let oreOggi = [];
+  if (!chiusaOggi) {
+    const da = Math.floor(f[0][0] / 60), a = Math.ceil(f[f.length - 1][1] / 60);
+    oreOggi = ore.filter(o => { const d = new Date(o.t); return dayKey(d) === oggi && d.getHours() >= da && d.getHours() < a; });
+  }
+  let riepilogo = null;
+  if (oreOggi.length) {
+    const conta = {}; oreOggi.forEach(o => { const k = o.simbolo.split('_')[0]; conta[k] = (conta[k] || 0) + 1; });
+    const base = Object.keys(conta).sort((x, y) => conta[y] - conta[x])[0];
+    riepilogo = { min: Math.round(Math.min(...oreOggi.map(o => o.temp))), max: Math.round(Math.max(...oreOggi.map(o => o.temp))),
+      pioggia: Math.round(oreOggi.reduce((t, o) => t + o.pioggia, 0) * 10) / 10, ventoMax: Math.max(...oreOggi.map(o => o.vento)),
+      simbolo: oreOggi.find(o => o.simbolo.split('_')[0] === base).simbolo };
+  }
+  const giorni = D.time.map((t, i) => ({ data: dayKey(new Date(t * 1000)), min: Math.round(D.temperature_2m_min[i]), max: Math.round(D.temperature_2m_max[i]),
+    simbolo: simboloDa(D.weather_code[i], 1), pioggia: Math.round((D.precipitation_sum[i] || 0) * 10) / 10 })).filter(g => g.data > oggi).slice(0, 5);
+  S.meteo = { luogo: METEO.luogo, fonte: 'Open-Meteo', data: oggi, aggiornato: S.meteoAt,
+    apertura: oreOggi.length ? { da: f[0][2], a: f[f.length - 1][3] } : null,
+    attuale: { temp: C.temperature_2m, simbolo: simboloDa(C.weather_code, C.is_day), vento: Math.round(C.wind_speed_10m || 0), umidita: C.relative_humidity_2m },
+    riepilogo, ore: oreOggi, giorni };
+}
+const METEO_OGNI = 30 * 6e4;
+async function aggiornaMeteo() {
+  try {
+    S.meteoRaw = await scaricaMeteo(); S.meteoAt = new Date().toISOString(); S.meteoErr = false;
+    lsSet('piscina-meteo', JSON.stringify({ at: S.meteoAt, raw: S.meteoRaw }));
+  } catch {
+    S.meteoErr = !S.meteoRaw;
+    if (!S.meteoRaw) { try { const c = JSON.parse(lsGet('piscina-meteo') || 'null'); if (c) { S.meteoRaw = c.raw; S.meteoAt = c.at; S.meteoErr = false; } } catch {} }
+  }
+  costruisciMeteo(); markLoaded('meteo', { metadata: { fromCache: false } });
+  renderHome(); fillAria(); renderOrHints();
+}
+function avviaMeteo() {
+  try { const c = JSON.parse(lsGet('piscina-meteo') || 'null'); if (c && Date.now() - new Date(c.at) < METEO_OGNI) { S.meteoRaw = c.raw; S.meteoAt = c.at; costruisciMeteo(); } } catch {}
+  aggiornaMeteo();
+  setInterval(aggiornaMeteo, METEO_OGNI);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && (!S.meteoAt || Date.now() - new Date(S.meteoAt) > METEO_OGNI)) aggiornaMeteo(); });
+}
+
 function renderMeteo() {
   const box = $('#home-meteo'), m = S.meteo;
   if (!S.loaded.meteo) return;
   if (!meteoOggi()) {
     const a = apertura();
-    const msg = a.open === null ? 'Le previsioni ora per ora compaiono nei giorni di apertura, quando gli orari sono pubblicati in Bacheca.'
+    const msg = S.meteoErr ? 'Previsioni meteo non raggiungibili in questo momento: il sito riprova da solo tra poco.' : a.open === null ? 'Le previsioni ora per ora compaiono nei giorni di apertura, quando gli orari sono pubblicati in Bacheca.'
       : a.open === false && a.label !== 'Chiusa ora' && a.label !== 'Chiusa per oggi' ? 'Oggi la piscina è chiusa: le previsioni ora per ora compaiono nei giorni di apertura.'
-      : 'Le previsioni di oggi arrivano all\'inizio della giornata.';
+      : 'Previsioni non disponibili per l\'orario di oggi.';
     box.innerHTML = `<div class="head"><h3>Meteo</h3>${m && m.luogo ? `<span class="small muted">${esc(m.luogo)}</span>` : ''}</div><div class="empty">${msg}</div>${giorniHtml(m)}`;
     return;
   }
   const r = m.riepilogo || {}, i = meteoInfo(r.simbolo), now = Date.now();
-  box.innerHTML = `<div class="head"><h3>Meteo di oggi a ${esc(m.luogo)}</h3><span class="small muted">Previsioni delle ${fmtT(m.aggiornato)} · fonte ${esc(m.fonte || 'MET Norway')}</span></div>
+  box.innerHTML = `<div class="head"><h3>Meteo di oggi a ${esc(m.luogo)}</h3><span class="small muted">Adesso ${fmt(m.attuale.temp)}° · aggiornato alle ${fmtT(m.aggiornato)} · fonte ${esc(m.fonte)}</span></div>
     <div class="wx-now">${icona(i.k, 64)}
       <div><div class="wx-temp">${r.max}°<small> max</small></div><div class="wx-desc">${esc(i.txt)} · minima ${r.min}°</div></div>
       <div class="small muted">Apertura ${esc(m.apertura.da)}–${esc(m.apertura.a)}<br>${r.pioggia > 0 ? 'Pioggia prevista: ' + fmtQ(r.pioggia) + ' mm' : 'Niente pioggia prevista'}${r.ventoMax >= 20 ? '<br>Vento fino a ' + r.ventoMax + ' km/h' : ''}</div></div>
@@ -2375,15 +2455,15 @@ async function boot() {
   S.loadTimer = setTimeout(() => { if (!S.ready) banner('warn', 'I dati non sono ancora raggiungibili. La pagina continua a riprovare da sola; quanto vedi potrebbe non essere aggiornato.'); }, 10000);
   db.collection('letture').orderBy('ts', 'desc').limit(1000).onSnapshot(s => { S.letture = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('letture', s); renderManSum(); renderLetture(); renderConsumi(); renderHome(); renderEsempi(); }, onDbErr);
   db.doc('impostazioni/piscina').onSnapshot(s => { S.cfgRaw = s.exists ? s.data() : {}; S.cfg = { ...DEFAULT_CFG, ...S.cfgRaw }; markLoaded('cfg', s); fillCfgForm(); renderAll(); }, onDbErr);
-  db.doc('pubblico/bacheca').onSnapshot(s => { S.bacheca = s.exists ? s.data() : {}; markLoaded('bacheca', s); fillBacheca(); renderHome(); renderIngressi(); }, onDbErr);
-  db.doc('pubblico/meteo').onSnapshot(s => { S.meteo = s.exists ? s.data() : null; markLoaded('meteo', s); renderHome(); fillAria(); renderOrHints(); }, onDbErr);
+  db.doc('pubblico/bacheca').onSnapshot(s => { S.bacheca = s.exists ? s.data() : {}; markLoaded('bacheca', s); fillBacheca(); costruisciMeteo(); renderHome(); renderIngressi(); }, onDbErr);
+  avviaMeteo();
   db.doc('pubblico/info').onSnapshot(s => { S.info = s.exists ? s.data() : {}; markLoaded('info', s);
     ['contatti', 'portare'].forEach(k => { const el = $('#in-' + k); if (document.activeElement !== el) el.value = S.info[k] || ''; }); renderHome(); }, onDbErr);
   db.doc('pubblico/regolamento').onSnapshot(s => { S.regole = s.exists ? (s.data().testo || '') : ''; markLoaded('regole', s); if (document.activeElement !== $('#re-testo')) $('#re-testo').value = S.regole; renderHome(); }, onDbErr);
   db.collection('avvisi').onSnapshot(s => { S.avvisi = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('avvisi', s); renderAvvisiList(); renderHome(); renderEsempi(); }, onDbErr);
   db.doc('pubblico/presenze').onSnapshot(s => { S.pres = s.exists ? s.data() : null; markLoaded('pres', s); renderHome(); }, onDbErr);
   if (isStaff()) subscribeStaff();
-  setInterval(() => { checkDay(); renderHome(); }, 60000);
+  setInterval(() => { checkDay(); costruisciMeteo(); renderHome(); }, 60000);
 }
 boot();
 })();
