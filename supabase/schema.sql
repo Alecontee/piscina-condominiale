@@ -122,3 +122,10 @@ drop policy if exists "admin elimina immagini" on storage.objects;
 create policy "admin carica immagini"   on storage.objects for insert with check (bucket_id = 'immagini' and public.is_admin());
 create policy "admin modifica immagini" on storage.objects for update using (bucket_id = 'immagini' and public.is_admin());
 create policy "admin elimina immagini"  on storage.objects for delete using (bucket_id = 'immagini' and public.is_admin());
+
+-- ---------------------------------------------------------------------------
+-- Permessi di base per il sito (le regole sopra decidono poi chi vede cosa)
+-- ---------------------------------------------------------------------------
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant execute on all functions in schema public to anon, authenticated;

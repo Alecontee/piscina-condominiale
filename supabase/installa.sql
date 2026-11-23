@@ -127,6 +127,13 @@ create policy "admin carica immagini"   on storage.objects for insert with check
 create policy "admin modifica immagini" on storage.objects for update using (bucket_id = 'immagini' and public.is_admin());
 create policy "admin elimina immagini"  on storage.objects for delete using (bucket_id = 'immagini' and public.is_admin());
 
+-- ---------------------------------------------------------------------------
+-- Permessi di base per il sito (le regole sopra decidono poi chi vede cosa)
+-- ---------------------------------------------------------------------------
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant execute on all functions in schema public to anon, authenticated;
+
 -- Dati portati dal sito precedente: impostazioni, orari della Bacheca e regolamento.
 -- Si esegue una volta, dopo schema.sql.
 insert into public.impostazioni (id, dati) values ('piscina', '{"capienza": 50, "ccMax": 0.4, "clMax": 1.5, "clMin": 0.5, "etaAccomp": 14, "immagine": {"id": null, "url": "img/piscina.jpg", "pos": "center"}, "maxOspiti": 1, "nome": "Piscina condominiale", "oreMax": 12, "phMax": 7.8, "phMin": 7.2, "taMax": 31, "taMin": 27}'::jsonb)

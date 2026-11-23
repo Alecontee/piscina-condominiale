@@ -2362,7 +2362,7 @@ async function boot() {
   }
   const email = (session.user.email || '').toLowerCase();
   const { data: ut, error: ue } = await S.sb.from('utenti').select('*').eq('email', email).maybeSingle();
-  if (ue) { mostraLogin('email'); loginMsg('Non riesco a verificare il tuo accesso. Controlla la connessione e riprova.', true); return; }
+  if (ue) { mostraLogin('email'); loginMsg('Non riesco a verificare il tuo accesso. Dettaglio: ' + (ue.message || ue.code || 'errore sconosciuto'), true); return; }
   if (!ut) { mostraLogin('no', email); return; }
   S.utente = ut; S.role = RUOLI[ut.ruolo] || 'viewer'; S.roleSure = true;
   $('#login').hidden = true; $('#app').hidden = false;
