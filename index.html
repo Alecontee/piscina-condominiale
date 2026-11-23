@@ -333,6 +333,7 @@ td.v-ok { color: var(--ok); } td.v-warn { color: var(--warn); font-weight: 700; 
 .wx-h { max-width: 120px; }
 .wx-h.now { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent-2); }
 .wx-h.past { opacity: .45; }
+.wx-oggi { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
 .wx-temp small { font-size: .9rem; color: var(--muted); font-weight: 600; letter-spacing: 0; }
 .wx-h b, .wx-d b { font-variant-numeric: tabular-nums; }
 .wx-rain { font-size: .72rem; color: var(--rain); min-height: 1.1em; font-weight: 700; }
@@ -1062,7 +1063,7 @@ function renderHero() {
   const chips = [`<span class="chip ${a.lvl}"><span class="dot"></span>${esc(a.label)}${a.detail ? ' · ' + esc(a.detail) : ''}</span>`];
   if (w) chips.push(`<span class="chip ${w.lvl}"><span class="dot"></span>${esc(w.text)}</span>`);
   if (a.open) chips.push(`<span class="chip neutral"><span class="dot"></span>${presCount()} / ${S.cfg.capienza} in piscina</span>`);
-  if (meteoOggi()) { const r = S.meteo.riepilogo || {}; chips.push(`<span class="chip neutral"><span class="dot"></span>Oggi ${r.min === r.max ? r.max + '°' : r.min + '°–' + r.max + '°'} · ${esc(meteoInfo(r.simbolo).txt)}</span>`); }
+  if (S.meteo && S.meteo.attuale && isNum(S.meteo.attuale.temp)) { const r = S.meteo.riepilogo; chips.push(`<span class="chip neutral"><span class="dot"></span>${Math.round(S.meteo.attuale.temp)}° · ${esc(meteoInfo(S.meteo.attuale.simbolo).txt)}${meteoOggi() && r ? ` · oggi ${r.min}°–${r.max}°` : ''}</span>`); }
   $('#hero-chips').innerHTML = chips.join('');
   $('#side-status').innerHTML = `<div class="row"><span class="dot ${a.lvl}"></span><b>${esc(a.label)}</b></div>${a.detail ? `<span style="color:var(--side-muted)">${esc(a.detail)}</span>` : ''}${w ? `<div class="row"><span class="dot ${w.lvl}"></span>${esc(w.text)}</div>` : ''}`;
 }
@@ -1192,23 +1193,33 @@ function avviaMeteo() {
 function renderMeteo() {
   const box = $('#home-meteo'), m = S.meteo;
   if (!S.loaded.meteo) return;
+  const adesso = () => {
+    if (!m || !m.attuale || !isNum(m.attuale.temp)) return '';
+    const x = meteoInfo(m.attuale.simbolo);
+    return `<div class="wx-now">${icona(x.k, 64)}
+      <div><div class="wx-temp">${fmt(m.attuale.temp)}°<small> adesso</small></div><div class="wx-desc">${esc(x.txt)}</div></div>
+      <div class="small muted">Vento ${esc(m.attuale.vento)} km/h<br>Umidità ${esc(m.attuale.umidita)}%</div></div>`;
+  };
+  const fonte = m && m.aggiornato ? `<span class="small muted">Aggiornato alle ${fmtT(m.aggiornato)} · fonte ${esc(m.fonte)}</span>` : '';
   if (!meteoOggi()) {
     const a = apertura();
     const msg = S.meteoErr ? 'Previsioni meteo non raggiungibili in questo momento: il sito riprova da solo tra poco.' : a.open === null ? 'Le previsioni ora per ora compaiono nei giorni di apertura, quando gli orari sono pubblicati in Bacheca.'
       : a.open === false && a.label !== 'Chiusa ora' && a.label !== 'Chiusa per oggi' ? 'Oggi la piscina è chiusa: le previsioni ora per ora compaiono nei giorni di apertura.'
       : 'Previsioni non disponibili per l\'orario di oggi.';
-    box.innerHTML = `<div class="head"><h3>Meteo</h3>${m && m.luogo ? `<span class="small muted">${esc(m.luogo)}</span>` : ''}</div><div class="empty">${msg}</div>${giorniHtml(m)}`;
+    box.innerHTML = `<div class="head"><h3>Meteo${m && m.luogo ? ' a ' + esc(m.luogo) : ''}</h3>${fonte}</div>${adesso()}<div class="small muted">${msg}</div>${giorniHtml(m)}`;
     return;
   }
   const r = m.riepilogo || {}, i = meteoInfo(r.simbolo), now = Date.now();
-  box.innerHTML = `<div class="head"><h3>Meteo di oggi a ${esc(m.luogo)}</h3><span class="small muted">Adesso ${fmt(m.attuale.temp)}° · aggiornato alle ${fmtT(m.aggiornato)} · fonte ${esc(m.fonte)}</span></div>
-    <div class="wx-now">${icona(i.k, 64)}
-      <div><div class="wx-temp">${r.max}°<small> max</small></div><div class="wx-desc">${esc(i.txt)} · minima ${r.min}°</div></div>
-      <div class="small muted">Apertura ${esc(m.apertura.da)}–${esc(m.apertura.a)}<br>${r.pioggia > 0 ? 'Pioggia prevista: ' + fmtQ(r.pioggia) + ' mm' : 'Niente pioggia prevista'}${r.ventoMax >= 20 ? '<br>Vento fino a ' + r.ventoMax + ' km/h' : ''}</div></div>
-    <span class="lbl">Ora per ora durante l'apertura</span>
+  box.innerHTML = `<div class="head"><h3>Meteo di oggi a ${esc(m.luogo)}</h3>${fonte}</div>
+    ${adesso()}
+    <div class="wx-oggi"><span class="lbl">Oggi durante l'apertura · ${esc(m.apertura.da)}–${esc(m.apertura.a)}</span>
+      <div><b>${esc(i.txt)}</b> · minima ${r.min}° · massima ${r.max}° · ${r.pioggia > 0 ? 'pioggia prevista ' + fmtQ(r.pioggia) + ' mm' : 'niente pioggia prevista'}${r.ventoMax >= 20 ? ' · vento fino a ' + r.ventoMax + ' km/h' : ''}</div></div>
+    <span class="lbl">Ora per ora</span>
     <div class="wx-hours">${m.ore.map(h => { const x = meteoInfo(h.simbolo), t = new Date(h.t).getTime(), cur = now >= t && now < t + 36e5, past = now >= t + 36e5;
       return `<div class="wx-h ${cur ? 'now' : ''} ${past ? 'past' : ''}" title="${esc(x.txt)}"><span class="small muted">${cur ? 'Adesso' : fmtT(h.t)}</span>${icona(x.k, 28)}<b>${Math.round(h.temp)}°</b><span class="wx-rain">${h.pioggia > 0 ? fmtQ(h.pioggia) + ' mm' : ''}</span></div>`; }).join('')}</div>
     ${giorniHtml(m)}`;
+  const ora = box.querySelector('.wx-h.now'), striscia = box.querySelector('.wx-hours');
+  if (ora && striscia) striscia.scrollLeft = Math.max(0, ora.offsetLeft - striscia.offsetLeft - 8);
 }
 function oreProssime(n) {
   if (!meteoOggi()) return [];
