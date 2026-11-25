@@ -417,15 +417,15 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
     <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 8c1.5 0 1.5-1.2 3-1.2S7.5 8 9 8s1.5-1.2 3-1.2S13.5 8 15 8s1.5-1.2 3-1.2S19.5 8 21 8"/><path d="M3 13c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".75"/><path d="M3 18c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".5"/></svg></div>
     <h1 id="login-nome">Piscina condominiale</h1>
     <form id="login-email" autocomplete="on" hidden>
-      <p>Entra con l'email che hai comunicato all'amministratore. Ti mandiamo un link e un codice: non serve nessuna password.</p>
+      <p>Entra con l'email che hai comunicato all'amministratore. Ti mandiamo un <b>codice</b> da scrivere qui: non serve nessuna password.</p>
       <div class="field"><label for="lg-email">La tua email</label><input type="email" id="lg-email" autocomplete="email" inputmode="email" required></div>
-      <button class="primary" type="submit">Mandami il link</button>
+      <button class="primary" type="submit">Mandami il codice</button>
     </form>
     <form id="login-codice" autocomplete="off" hidden>
-      <p>Abbiamo scritto a <b id="lg-dest"></b>. Apri il link nell'email da questo dispositivo, oppure scrivi qui il codice che trovi nel messaggio.</p>
+      <p>Abbiamo mandato un codice a <b id="lg-dest"></b>. Apri l'email (controlla anche lo spam) e scrivi qui il codice.</p>
       <div class="field"><label for="lg-codice">Codice</label><input id="lg-codice" class="codice" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
       <button class="primary" type="submit">Entra</button>
-      <button class="ghost" type="button" data-act="lg-indietro">Usa un'altra email</button>
+      <div class="actions" style="justify-content:space-between"><button class="ghost" type="button" data-act="lg-rimanda" id="lg-rimanda">Rimandami il codice</button><button class="ghost" type="button" data-act="lg-indietro">Usa un'altra email</button></div>
     </form>
     <div id="login-no" hidden>
       <p>L'indirizzo <b id="lg-chi"></b> non è tra le persone invitate. Chiedi all'amministratore del condominio di aggiungerti, poi riprova.</p>
@@ -2014,7 +2014,8 @@ document.addEventListener('click', async ev => {
     case 'sc-chiudi': chiudiScanner(); break;
     case 'sc-foto': chiudiScanner(); $('#tes-file').click(); break;
     case 'esci': try { await S.sb.auth.signOut(); } catch {} location.reload(); break;
-    case 'lg-indietro': mostraLogin('email'); break;
+    case 'lg-indietro': clearInterval(S.lgTimer); mostraLogin('email'); break;
+    case 'lg-rimanda': { if (b.disabled || !S.lgEmail) return; b.disabled = true; if (await mandaCodice(S.lgEmail)) loginMsg('Ti abbiamo mandato un nuovo codice: vale solo l\'ultimo ricevuto.'); attesaRimanda(); break; }
     case 'copia-link': { const url = location.origin + location.pathname; try { await navigator.clipboard.writeText(url); toast('Indirizzo copiato: ' + url); } catch { toast(url); } break; }
     case 'inv-del': {
       if (!armed(b)) return;
@@ -2422,27 +2423,45 @@ function mostraLogin(stato, extra) {
   $('#login-msg').textContent = '';
 }
 const loginMsg = (t, bad) => { const m = $('#login-msg'); m.textContent = t; m.className = 'small ' + (bad ? 'err' : 'muted'); };
+async function mandaCodice(email) {
+  loginMsg('Invio in corso…');
+  const { error } = await S.sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
+  if (error) {
+    const m = String(error.message || '');
+    loginMsg(error.status === 429 || /rate limit|seconds/i.test(m) ? 'Hai chiesto troppi codici in poco tempo: aspetta qualche minuto e riprova. Intanto controlla l\'ultima email ricevuta.'
+      : /not authorized/i.test(m) ? 'Il servizio email del sito non è ancora attivo per questo indirizzo: l\'amministratore deve configurare l\'invio delle email in Supabase.'
+      : 'Non riesco a mandare l\'email. Controlla l\'indirizzo e riprova.' + (m ? ' Dettaglio: ' + m : ''), true);
+    return false;
+  }
+  S.lgEmail = email; lsSet('piscina-email', email); S.lgInviato = Date.now();
+  return true;
+}
+function attesaRimanda() {
+  const b = $('#lg-rimanda'); if (!b) return;
+  clearInterval(S.lgTimer);
+  const giro = () => {
+    const resta = Math.ceil((60e3 - (Date.now() - (S.lgInviato || 0))) / 1000);
+    b.disabled = resta > 0; b.textContent = resta > 0 ? `Rimandami il codice (tra ${resta} s)` : 'Rimandami il codice';
+    if (resta <= 0) clearInterval(S.lgTimer);
+  };
+  giro(); S.lgTimer = setInterval(giro, 1000);
+}
 $('#login-email').addEventListener('submit', async ev => {
   ev.preventDefault();
   const email = $('#lg-email').value.trim().toLowerCase(), btn = ev.target.querySelector('button');
   if (!/^\S+@\S+\.\S+$/.test(email)) return loginMsg('Scrivi un indirizzo email valido.', true);
-  btn.disabled = true; loginMsg('Invio in corso…');
-  const { error } = await S.sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
+  btn.disabled = true;
+  const ok = await mandaCodice(email);
   btn.disabled = false;
-  if (error) {
-    const m = String(error.message || '');
-    return loginMsg(error.status === 429 || /rate limit/i.test(m) ? 'Hai chiesto troppe email in poco tempo: aspetta qualche minuto e riprova.'
-      : /not authorized/i.test(m) ? 'Il servizio email del sito non è ancora attivo per questo indirizzo: l\'amministratore deve configurare l\'invio delle email in Supabase.'
-      : 'Non riesco a mandare l\'email. Controlla l\'indirizzo e riprova.' + (m ? ' Dettaglio: ' + m : ''), true);
-  }
-  S.lgEmail = email; lsSet('piscina-email', email); mostraLogin('codice');
+  if (ok) { mostraLogin('codice'); $('#lg-codice').value = ''; attesaRimanda(); }
 });
 $('#login-codice').addEventListener('submit', async ev => {
   ev.preventDefault();
   const token = $('#lg-codice').value.replace(/\D/g, ''), btn = ev.target.querySelector('button.primary');
   if (token.length < 6) return loginMsg('Il codice è formato da almeno 6 cifre.', true);
   btn.disabled = true; loginMsg('Verifica in corso…');
-  const { error } = await S.sb.auth.verifyOtp({ email: S.lgEmail, token, type: 'email' });
+  let { error } = await S.sb.auth.verifyOtp({ email: S.lgEmail, token, type: 'email' });
+  if (error) ({ error } = await S.sb.auth.verifyOtp({ email: S.lgEmail, token, type: 'signup' }));
   btn.disabled = false;
   if (error) return loginMsg('Codice non valido o scaduto. Controlla l\'ultima email ricevuta, oppure chiedine una nuova.', true);
   location.reload();
