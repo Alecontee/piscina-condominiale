@@ -37,3 +37,4 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
 - `supabase/schema.sql` – tabelle, regole di accesso, funzioni
 - `supabase/email-accesso.html` – testo dell'email di accesso
 - `informativa.html` – bozza dell'informativa privacy
+- `logo.svg` – logo (palazzina con piscina); `icon.svg`, `icon-scura.svg` e `icon-notte.svg` – icona chiara, scura e notturna (finestre gialle); `icon-180.png`, `icon-512.png` – icone per iPhone e Android

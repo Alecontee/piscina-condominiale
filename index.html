@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Piscina Condominiale</title>
 <meta name="description" content="Il sito della piscina del condominio: qualità dell'acqua, orari, meteo e ingressi.">
-<meta name="theme-color" content="#0e1d31">
+<meta name="theme-color" content="#0b1f3a">
 <meta name="robots" content="noindex">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -14,63 +14,69 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: barra laterale blu notte fissa a sinistra (in basso su telefono), contenuto a riquadri "bento" su fondo grigio perla */
+/* Layout: barra laterale blu notte a sinistra (in basso su telefono), contenuto a riquadri su fondo azzurro chiarissimo.
+   Colori presi dal logo: blu notte per titoli e barra, azzurro piscina per i dettagli, arancio del sole solo per le azioni principali. */
 :root {
-  --bg: #eef1f5;
+  --bg: #f1f6fa;
   --surface: #ffffff;
-  --surface-2: #f4f6f9;
-  --fg: #142033;
-  --muted: #5e6a7c;
-  --line: #dde3eb;
-  --accent: #24548a;
-  --accent-2: #3d74b3;
+  --surface-2: #f2f7fb;
+  --fg: #0d2236;
+  --muted: #55687b;
+  --line: #d9e4ec;
+  --accent: #0d3b5e;
+  --accent-2: #1f8fd6;
   --accent-fg: #ffffff;
-  --accent-soft: #e3ecf6;
-  --ok: #1f7a55; --ok-soft: #e0f1e9;
-  --warn: #946200; --warn-soft: #f8efd9;
+  --accent-soft: #e2f1fa;
+  --cta: #ff9e2c;
+  --cta-2: #ffb547;
+  --cta-fg: #2b1700;
+  --ok: #1d7a52; --ok-soft: #e0f2e8;
+  --warn: #8f5d00; --warn-soft: #faefd6;
   --bad: #b3362c; --bad-soft: #f9e4e1;
-  --shadow: 0 1px 2px rgba(20, 32, 51, .04), 0 10px 30px rgba(20, 32, 51, .06);
-  --side-bg: #0e1d31;
+  --shadow: 0 1px 2px rgba(13, 34, 54, .04), 0 10px 30px rgba(13, 34, 54, .06);
+  --side-bg: #0b1f3a;
   --side-bg-2: #13284380;
-  --side-fg: #dbe5f1;
-  --side-muted: #8b9cb3;
-  --side-active: #dbe7f5;
-  --side-active-fg: #0e1d31;
+  --side-fg: #dce9f5;
+  --side-muted: #8fa5bd;
+  --side-active: #e2f1fa;
+  --side-active-fg: #0b1f3a;
   --on-hero: #ffffff;
-  --hero-deep: #0b1a2e;
-  --hero-mid: #1d4570;
-  --hero-light: #6f9fd1;
-  --sun: #d99a1e; --moon: #7f93bd; --cloud: #a5b1c2; --rain: #2f6fb8; --snow: #7d9db3;
+  --hero-deep: #0b1f3a;
+  --hero-mid: #1f4f86;
+  --hero-light: #5cc8f5;
+  --sun: #f0a02c; --moon: #7f93bd; --cloud: #a5b1c2; --rain: #1f7fc4; --snow: #7d9db3;
   --font-display: "Urbanist", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --r: 18px;
+  --r: 20px;
   --r-sm: 12px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0a111b; --surface: #111b28; --surface-2: #0d1621; --fg: #e3eaf3; --muted: #8f9db0; --line: #1f2c3c;
-    --accent: #8db4e2; --accent-2: #5f93cf; --accent-fg: #0a1626; --accent-soft: #162a42;
+    --bg: #06132a; --surface: #0c1f3b; --surface-2: #0a1a33; --fg: #e6eef8; --muted: #9cb0c8; --line: #1a3253;
+    --accent: #ffd36b; --accent-2: #4fb3ee; --accent-fg: #1d1300; --accent-soft: #15325a;
+    --cta: #ffad4d; --cta-2: #ffc06b; --cta-fg: #2b1700;
     --ok: #6fd1a2; --ok-soft: #12301f; --warn: #ecbb5c; --warn-soft: #33270f; --bad: #ff8f84; --bad-soft: #3b1c1a;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .25);
-    --side-bg: #070d16; --side-active: #1c3352; --side-active-fg: #e3ecf7;
-    --sun: #f0c25a; --moon: #c3d0ea; --cloud: #7b8aa0; --rain: #7fb5ef; --snow: #cfe0ee;
+    --side-bg: #040e20; --side-active: #ffd36b; --side-active-fg: #1d1300;
+    --sun: #f5b54a; --moon: #c3d0ea; --cloud: #7b8aa0; --rain: #7fc2ef; --snow: #cfe0ee;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0a111b; --surface: #111b28; --surface-2: #0d1621; --fg: #e3eaf3; --muted: #8f9db0; --line: #1f2c3c;
-  --accent: #8db4e2; --accent-2: #5f93cf; --accent-fg: #0a1626; --accent-soft: #162a42;
+  --bg: #06132a; --surface: #0c1f3b; --surface-2: #0a1a33; --fg: #e6eef8; --muted: #9cb0c8; --line: #1a3253;
+  --accent: #ffd36b; --accent-2: #4fb3ee; --accent-fg: #1d1300; --accent-soft: #15325a;
+  --cta: #ffad4d; --cta-2: #ffc06b; --cta-fg: #2b1700;
   --ok: #6fd1a2; --ok-soft: #12301f; --warn: #ecbb5c; --warn-soft: #33270f; --bad: #ff8f84; --bad-soft: #3b1c1a;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .25);
-  --side-bg: #070d16; --side-active: #1c3352; --side-active-fg: #e3ecf7;
-  --sun: #f0c25a; --moon: #c3d0ea; --cloud: #7b8aa0; --rain: #7fb5ef; --snow: #cfe0ee;
+  --side-bg: #040e20; --side-active: #ffd36b; --side-active-fg: #1d1300;
+  --sun: #f5b54a; --moon: #c3d0ea; --cloud: #7b8aa0; --rain: #7fc2ef; --snow: #cfe0ee;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 img { max-width: 100%; }
-body { margin: 0; padding-top: env(safe-area-inset-top, 0px); background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { margin: 0; padding-top: env(safe-area-inset-top, 0px); background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
 h2 { font-size: clamp(1.6rem, 3.2vw, 2.1rem); font-weight: 800; }
 h3 { font-size: 1.15rem; }
@@ -82,9 +88,10 @@ a { color: var(--accent); text-underline-offset: 2px; }
 /* Struttura: barra laterale + contenuto */
 .app { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; }
 .side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 26px; padding: 26px 18px; color: var(--side-fg);
-  background: radial-gradient(120% 60% at 0% 0%, #1d3a5e 0%, transparent 60%), linear-gradient(180deg, var(--side-bg), #0a1626); }
+  background: radial-gradient(120% 60% at 0% 0%, #1f4f86 0%, transparent 60%), linear-gradient(180deg, var(--side-bg), #08172c); }
 .side-brand { display: flex; align-items: center; gap: 12px; }
-.logo { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; flex: none; background: linear-gradient(145deg, #3d74b3, #1b3d66); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 16px rgba(0,0,0,.3); }
+.logo { width: 46px; height: 46px; flex: none; display: block; border-radius: 13px; box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+img.logo { display: block; object-fit: contain; }
 .side-brand h1 { font-size: 1.12rem; color: #ffffff; font-weight: 700; }
 .side-brand .sub { display: block; font-size: .78rem; color: var(--side-muted); margin-top: 2px; }
 nav.tabs { display: flex; flex-direction: column; gap: 4px; }
@@ -93,7 +100,7 @@ nav.tabs a svg { width: 20px; height: 20px; flex: none; opacity: .85; }
 nav.tabs a:hover { background: rgba(255, 255, 255, .06); }
 nav.tabs a[aria-current="page"] { background: var(--side-active); color: var(--side-active-fg); }
 nav.tabs a[aria-current="page"] svg { opacity: 1; }
-nav.tabs a:focus-visible { outline: 2px solid #8db4e2; outline-offset: 2px; }
+nav.tabs a:focus-visible, nav.tabs button:focus-visible { outline: 2px solid #8ccdf3; outline-offset: 2px; }
 .side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
 .side-status { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .08); font-size: .85rem; }
 .side-status .row { display: flex; align-items: center; gap: 8px; }
@@ -115,12 +122,36 @@ section.tab { display: flex; flex-direction: column; gap: 20px; }
   nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; flex-direction: row; justify-content: space-around; gap: 0;
     padding: 6px max(6px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px));
     background: rgba(10, 22, 38, .94); backdrop-filter: blur(14px); border-top: 1px solid rgba(255, 255, 255, .08); }
-  nav.tabs a { flex-direction: column; gap: 3px; padding: 6px 4px; font-size: .66rem; flex: 1 1 0; min-width: 0; text-align: center; border-radius: 10px; }
-  nav.tabs a span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  nav.tabs a, nav.tabs .nav-more { flex-direction: column; align-items: center; gap: 3px; padding: 4px 2px; font-size: .74rem; font-weight: 700; flex: 1 1 0; min-width: 0; text-align: center; border-radius: 12px; background: transparent; }
+  nav.tabs a span, nav.tabs .nav-more span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  nav.tabs a svg, nav.tabs .nav-more svg { width: 46px; height: 30px; padding: 4px 12px; border-radius: 999px; opacity: .9; }
+  nav.tabs a[aria-current="page"], nav.tabs .nav-more.on { background: transparent; color: #ffffff; }
+  nav.tabs a[aria-current="page"] svg, nav.tabs .nav-more.on svg { background: var(--side-active); color: var(--side-active-fg); opacity: 1; }
+  nav.tabs a.nav-more-item { display: none; }
+  nav.tabs .nav-more { display: flex; border: 0; color: var(--side-fg); font-family: inherit; cursor: pointer; min-height: 0; }
+  button { min-height: 44px; }
+  button.sm, .side-user button { min-height: 38px; }
+  button.ghost { min-height: 40px; }
+  input:not([type="checkbox"]):not([type="radio"]), select { min-height: 48px; font-size: 16px; }
+  .side-brand h1 { font-size: 1.05rem; }
+  .logo { width: 40px; height: 40px; border-radius: 11px; }
+  #role-lbl { display: none; }
+  body:not(.r-viewer) .side-foot a.role { display: none; }
+  .side-foot { flex-direction: row; align-items: center; gap: 12px; }
   main.wrap { padding-block: 20px calc(96px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   body.r-viewer main.wrap { padding-bottom: 40px; }
 }
 body.r-viewer nav.tabs { display: none; }
+.nav-more { display: none; }
+.sheet { position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-end; justify-content: center; background: rgba(5, 14, 26, .5); }
+.sheet-box { width: 100%; max-width: 520px; background: var(--surface); border-radius: 24px 24px 0 0; display: flex; flex-direction: column; gap: 8px;
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); box-shadow: 0 -20px 50px rgba(0, 0, 0, .25); }
+.sheet-grip { width: 44px; height: 5px; border-radius: 999px; background: var(--line); align-self: center; margin-bottom: 6px; }
+.sheet-link { display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 0 16px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--line); color: var(--fg); text-decoration: none; font-weight: 700; font-size: 1.05rem; }
+.sheet-link svg { width: 24px; height: 24px; color: var(--accent); }
+.sheet-link[aria-current="page"] { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent-2) 40%, transparent); }
+.sheet-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 4px 0; min-width: 0; }
+.sheet-foot span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Superfici */
 .panel, .tile, .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
@@ -136,10 +167,10 @@ body.r-viewer nav.tabs { display: none; }
 .notice { white-space: pre-line; }
 
 /* Hero */
-.hero { position: relative; border-radius: 26px; overflow: hidden; min-height: 300px; display: flex; align-items: flex-end; color: var(--on-hero); isolation: isolate; box-shadow: 0 20px 50px rgba(11, 26, 46, .25);
+.hero { position: relative; border-radius: 26px; overflow: hidden; min-height: 300px; display: flex; align-items: flex-end; color: var(--on-hero); isolation: isolate; box-shadow: 0 20px 50px rgba(11, 31, 58, .25);
   background:
-    radial-gradient(70% 90% at 85% 0%, rgba(141, 180, 226, .55), transparent 60%),
-    radial-gradient(60% 70% at 10% 100%, rgba(61, 116, 179, .6), transparent 70%),
+    radial-gradient(70% 90% at 85% 0%, rgba(92, 200, 245, .5), transparent 60%),
+    radial-gradient(60% 70% at 10% 100%, rgba(31, 143, 214, .55), transparent 70%),
     linear-gradient(160deg, var(--hero-mid) 0%, var(--hero-deep) 75%); }
 .hero::before { content: ""; position: absolute; inset: -20%; z-index: -1; opacity: .5;
   background: repeating-radial-gradient(ellipse at 30% 120%, transparent 0 22px, rgba(255,255,255,.06) 22px 24px); }
@@ -167,7 +198,7 @@ body.r-viewer nav.tabs { display: none; }
 .c-orari { grid-column: span 5; align-self: start; } .c-utili { grid-column: span 7; }
 @media (max-width: 1100px) { .c-orari, .c-utili { grid-column: span 12; } }
 @media (max-width: 900px) { .c-water, .c-pres { grid-column: span 12; } }
-.lbl { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.lbl { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
 .tile-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .tile-val { font-family: var(--font-display); font-size: 2.3rem; font-weight: 700; line-height: 1; }
 .tile-val small { font-size: 1rem; color: var(--muted); font-weight: 600; }
@@ -179,7 +210,7 @@ body.r-viewer nav.tabs { display: none; }
 .gauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
 .gauge { border-radius: 14px; padding: 14px; background: var(--surface-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
 .g-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.gauge .k { font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.gauge .k { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
 .gauge .v { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
 .gauge .v small { font-size: .8rem; color: var(--muted); font-weight: 600; }
 .gauge.ok .v { color: var(--ok); } .gauge.warn .v { color: var(--warn); } .gauge.bad .v { color: var(--bad); }
@@ -206,8 +237,8 @@ body.r-viewer nav.tabs { display: none; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px 16px; align-items: start; }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .field.wide { grid-column: 1 / -1; }
-.field > label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-.hint { font-size: .8rem; color: var(--muted); display: flex; gap: 6px; align-items: center; min-height: 1.4em; flex-wrap: wrap; }
+.field > label { font-size: .88rem; font-weight: 700; color: var(--muted); }
+.hint { font-size: .85rem; color: var(--muted); display: flex; gap: 6px; align-items: center; min-height: 1.4em; flex-wrap: wrap; }
 input, select, textarea { font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; width: 100%; min-width: 0; transition: border-color .15s, box-shadow .15s; }
 textarea { min-height: 80px; resize: vertical; }
 input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--accent-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 22%, transparent); }
@@ -216,18 +247,18 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
 .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .form-actions { grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-button { font: inherit; font-weight: 700; font-size: .88rem; border-radius: 12px; padding: 10px 16px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; white-space: nowrap; transition: transform .12s, border-color .15s, background .15s, box-shadow .15s; }
+button { font: inherit; font-weight: 700; font-size: .92rem; border-radius: 12px; padding: 10px 16px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; white-space: nowrap; transition: transform .12s, border-color .15s, background .15s, box-shadow .15s; }
 button:hover { border-color: var(--accent-2); }
 button:active { transform: translateY(1px); }
 button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
-button.primary { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--accent-fg); border-color: transparent; box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 30%, transparent); }
+button.primary { background: linear-gradient(180deg, var(--cta-2), var(--cta)); color: var(--cta-fg); border-color: transparent; box-shadow: 0 6px 16px color-mix(in srgb, var(--cta) 35%, transparent); }
 button.primary:hover { filter: brightness(1.06); }
 button.go { background: var(--ok); color: var(--surface); border-color: var(--ok); }
 button.ghost { background: transparent; border-color: transparent; color: var(--muted); padding: 6px 10px; }
 button.ghost:hover { color: var(--fg); background: var(--surface-2); }
 button.danger:hover, button.armed { color: var(--bad); border-color: var(--bad); }
 button.armed { background: var(--bad-soft); }
-button.sm { padding: 6px 12px; font-size: .8rem; border-radius: 10px; }
+button.sm { padding: 6px 12px; font-size: .84rem; border-radius: 10px; }
 button:disabled { opacity: .45; cursor: not-allowed; filter: none; transform: none; }
 
 .pill { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
@@ -236,11 +267,11 @@ button:disabled { opacity: .45; cursor: not-allowed; filter: none; transform: no
 .pill.warn { background: var(--warn-soft); color: var(--warn); }
 .pill.bad { background: var(--bad-soft); color: var(--bad); }
 .pill.neutral { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
-.tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.tag { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
 
 .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
 table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-th { text-align: left; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; background: var(--surface-2); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { text-align: left; font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; background: var(--surface-2); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 tr:last-child td { border-bottom: 0; }
 tbody tr:hover td { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
@@ -339,8 +370,8 @@ td.v-ok { color: var(--ok); } td.v-warn { color: var(--warn); font-weight: 700; 
 .wx-rain { font-size: .72rem; color: var(--rain); min-height: 1.1em; font-weight: 700; }
 .wx-days { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
 .wx-d { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; padding: 12px 6px; border-radius: 14px; border: 1px solid var(--line); min-width: 0; }
-.wx-d .d { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
-.ideale { font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ok); }
+.wx-d .d { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.ideale { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ok); }
 
 .utili { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px 28px; }
 .utili > div { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
@@ -380,7 +411,7 @@ ol.rules { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column
 ol.rules li::marker { color: var(--accent-2); font-weight: 700; }
 .img-prev img { width: 100%; aspect-ratio: 16 / 6; object-fit: cover; border-radius: 14px; border: 1px solid var(--line); display: block; }
 
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: #0e1d31; color: #eef3f9; padding: 12px 18px; border-radius: 14px; font-size: .92rem; font-weight: 600; z-index: 60; max-width: calc(100% - 32px); box-shadow: 0 12px 30px rgba(0, 0, 0, .3); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: #0b1f3a; color: #eef5fb; padding: 12px 18px; border-radius: 14px; font-size: .92rem; font-weight: 600; z-index: 60; max-width: calc(100% - 32px); box-shadow: 0 12px 30px rgba(0, 0, 0, .3); }
 .toast.bad { background: var(--bad); color: #ffffff; }
 @media (max-width: 960px) { .toast { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); } body.r-viewer .toast { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); } }
 
@@ -389,9 +420,12 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 /* Accesso */
 .login { min-height: 100vh; display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)) 40px max(16px, env(safe-area-inset-right, 0px));
-  background: radial-gradient(80% 60% at 80% 0%, rgba(141, 180, 226, .35), transparent 60%), linear-gradient(160deg, #1d4570, #0b1a2e 70%); }
+  background: radial-gradient(70% 50% at 85% 0%, rgba(255, 181, 71, .28), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(92, 200, 245, .35), transparent 65%), linear-gradient(160deg, #1f4f86, #0b1f3a 70%); }
 .login-card { width: 100%; max-width: 420px; background: var(--surface); border-radius: 24px; padding: 30px 26px; box-shadow: 0 30px 70px rgba(0, 0, 0, .35); display: flex; flex-direction: column; gap: 16px; }
-.login-card h1 { font-size: 1.7rem; font-weight: 800; }
+.login-card h1 { font-size: 1.8rem; font-weight: 800; text-align: center; color: var(--accent); }
+.login-logo { width: 160px; height: auto; display: block; margin: -6px auto 0; }
+:root[data-theme="dark"] .login-logo { width: 120px; margin-top: 0; }
+.login-card .primary { min-height: 50px; font-size: 1rem; }
 .login-card p { margin: 0; color: var(--muted); }
 .login-card form { display: flex; flex-direction: column; gap: 12px; }
 .login-card .codice { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .3em; text-align: center; font-weight: 700; }
@@ -408,13 +442,95 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
 .sc-frame { position: absolute; inset: 18%; border: 3px solid rgba(255, 255, 255, .9); border-radius: 18px; box-shadow: 0 0 0 999px rgba(0, 0, 0, .35); }
 .scanner .actions { justify-content: center; }
 .scanner button { background: rgba(255, 255, 255, .12); color: #ffffff; border-color: rgba(255, 255, 255, .3); }
+
+/* ===== Idee nuove ===== */
+/* Cielo che cambia con l'ora, sole o luna che seguono la giornata, onde animate */
+.hero { --sky1: #5cc8f5; --sky2: #1f8fd6; --sun-x: 70%; --sun-y: 30%; --sky-op: .55; }
+.sky { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, var(--sky1), var(--sky2)); opacity: var(--sky-op); mix-blend-mode: soft-light; transition: background 2s, opacity 2s; }
+.hero:not(.has-img) .sky { mix-blend-mode: normal; opacity: .9; }
+.hero.has-img .sky { mix-blend-mode: normal; opacity: .9; -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.75) 30%, transparent 70%); mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.75) 30%, transparent 70%); }
+.hero img { transition: filter 2s; }
+.hero.notte img { filter: brightness(.5) saturate(.7) hue-rotate(10deg); }
+.hero.tramonto img { filter: sepia(.3) saturate(1.2) brightness(.92); }
+.hero.alba img { filter: sepia(.15) brightness(1.02); }
+.sky-sun { position: absolute; z-index: -1; pointer-events: none; left: var(--sun-x); top: var(--sun-y); width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ffe08a, #ff9e2c 70%); box-shadow: 0 0 0 14px rgba(255, 181, 71, .18), 0 0 60px 20px rgba(255, 181, 71, .35); mix-blend-mode: normal; transition: left 2s, top 2s; }
+.hero.notte .sky-sun { background: radial-gradient(circle at 35% 35%, #fffbe9, #d9e2f2 70%); box-shadow: 0 0 0 12px rgba(217, 226, 242, .12), 0 0 50px 14px rgba(217, 226, 242, .25); width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+.sky-stars { position: absolute; inset: 0 0 40% 0; opacity: 0; transition: opacity 2s; background-image: radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent), radial-gradient(1px 1px at 30% 45%, #fff, transparent), radial-gradient(1.5px 1.5px at 55% 15%, #fff, transparent), radial-gradient(1px 1px at 78% 38%, #fff, transparent), radial-gradient(1px 1px at 90% 12%, #fff, transparent), radial-gradient(1.5px 1.5px at 42% 28%, #fff, transparent); }
+.hero.notte .sky-stars { opacity: .8; }
+.waves { position: absolute; left: 0; right: 0; bottom: -1px; height: 44px; z-index: 0; pointer-events: none; overflow: hidden; }
+.waves svg { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; animation: onda 14s linear infinite; }
+.waves svg.w2 { animation-duration: 22s; animation-direction: reverse; opacity: .7; }
+@keyframes onda { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.hero-in { position: relative; z-index: 1; padding-bottom: 46px !important; }
+.hero-saluto { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; opacity: .92; }
+
+/* Semaforo dell'acqua */
+.semaforo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px 18px; align-items: center; padding: 20px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.luci { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 999px; background: #0b1f3a; }
+.luce { width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, .1); transition: background .4s, box-shadow .4s; }
+.semaforo.bad .luce.r { background: #ff5a4e; box-shadow: 0 0 18px 4px rgba(255, 90, 78, .6); }
+.semaforo.warn .luce.y { background: #ffc23d; box-shadow: 0 0 18px 4px rgba(255, 194, 61, .6); }
+.semaforo.ok .luce.g { background: #34d17f; box-shadow: 0 0 18px 4px rgba(52, 209, 127, .6); }
+.sem-txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.sem-txt b { font-family: var(--font-display); font-size: clamp(1.6rem, 7vw, 2.2rem); font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
+.semaforo.ok .sem-txt b { color: var(--ok); } .semaforo.warn .sem-txt b { color: var(--warn); } .semaforo.bad .sem-txt b { color: var(--bad); }
+.sem-txt span { color: var(--muted); }
+.consiglio { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 16px; background: var(--accent-soft); }
+.consiglio svg { width: 34px; height: 34px; flex: none; }
+.consiglio small { display: block; font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-2); }
+
+/* Anello affollamento */
+.ring-fg.calm { stroke: var(--ok); }
+.folla { display: flex; gap: 3px; flex-wrap: wrap; max-width: 180px; }
+.folla i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.folla i.on { background: var(--accent-2); }
+.ring-wrap.warn .folla i.on { background: var(--warn); } .ring-wrap.bad .folla i.on { background: var(--bad); } .ring-wrap.calm .folla i.on { background: var(--ok); }
+
+/* Tessera a tutto schermo */
+.tes-full { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; color: #ffffff;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: radial-gradient(120% 80% at 50% 0%, var(--tf), #06132a 75%); }
+.tes-full.adulto { --tf: #1f8fd6; } .tes-full.minore { --tf: #ff9e2c; } .tes-full.ospite { --tf: #8b5cf6; }
+.tes-full img { width: min(100%, 560px); border-radius: 22px; box-shadow: 0 30px 70px rgba(0, 0, 0, .5); }
+.tes-full .tipo { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: var(--tf); color: #ffffff; font-weight: 800; font-size: 1rem; letter-spacing: .04em; text-transform: uppercase; }
+.tes-full.minore .tipo { color: #2b1700; }
+.tes-full b.nome { font-family: var(--font-display); font-size: 1.8rem; }
+.tes-full button { background: rgba(255, 255, 255, .14); color: #ffffff; border-color: rgba(255, 255, 255, .35); min-height: 50px; padding: 0 28px; font-size: 1rem; }
+.legenda { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
+.legenda span { display: inline-flex; align-items: center; gap: 6px; }
+.legenda span::before { content: ""; width: 12px; height: 12px; border-radius: 4px; background: var(--c); }
+.tag.ospite { background: #ede6ff; color: #6236d6; }
+
+/* Scorri per registrare */
+button.swipe { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; min-width: 220px; min-height: 52px; padding: 0 16px 0 60px; border-radius: 999px; touch-action: pan-y; user-select: none; -webkit-user-select: none; --x: 0px; font-size: .95rem; }
+button.swipe.in { background: var(--ok); border-color: var(--ok); color: #ffffff; }
+button.swipe.out { background: var(--surface-2); color: var(--fg); min-width: 170px; min-height: 48px; }
+button.swipe .knob { position: absolute; left: 5px; top: 50%; width: 42px; height: 42px; margin-top: -21px; border-radius: 50%; background: #ffffff; color: var(--ok); display: grid; place-items: center; transform: translateX(var(--x)); box-shadow: 0 4px 10px rgba(0, 0, 0, .2); transition: transform .25s; }
+button.swipe.out .knob { width: 38px; height: 38px; margin-top: -19px; color: var(--accent-2); }
+button.swipe.drag .knob { transition: none; }
+button.swipe .knob svg { width: 20px; height: 20px; }
+button.swipe .fill { position: absolute; inset: 0; width: calc(var(--x) + 48px); background: rgba(255, 255, 255, .22); border-radius: inherit; }
+button.swipe.out .fill { background: color-mix(in srgb, var(--accent-2) 20%, transparent); }
+button.swipe:disabled .knob { opacity: .5; }
+.inside-row { flex-wrap: wrap; }
+
+/* Icone illustrate per sezione */
+h2 .sec-ico { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: var(--accent-soft); vertical-align: middle; margin-right: 12px; flex: none; }
+h2 .sec-ico svg { width: 30px; height: 30px; }
+.head h2 { display: flex; align-items: center; }
+
+/* Tema: scelta nel menu Altro */
+.tema { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); }
+.tema button { min-height: 40px; border: 0; background: transparent; font-size: .86rem; }
+.tema button[aria-pressed="true"] { background: var(--surface); box-shadow: var(--shadow); }
 </style>
 </head>
 <body>
 
 <div class="login" id="login" hidden>
   <div class="login-card">
-    <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 8c1.5 0 1.5-1.2 3-1.2S7.5 8 9 8s1.5-1.2 3-1.2S13.5 8 15 8s1.5-1.2 3-1.2S19.5 8 21 8"/><path d="M3 13c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".75"/><path d="M3 18c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".5"/></svg></div>
+    <img class="login-logo" id="login-logo" src="logo.svg" alt="" width="160" height="133">
     <h1 id="login-nome">Piscina condominiale</h1>
     <form id="login-email" autocomplete="on" hidden>
       <p>Entra con l'email che hai comunicato all'amministratore. Ti mandiamo un <b>codice</b> da scrivere qui: non serve nessuna password.</p>
@@ -438,16 +554,17 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
 <div class="app" id="app" hidden>
 <aside class="side">
   <div class="side-brand">
-    <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 8c1.5 0 1.5-1.2 3-1.2S7.5 8 9 8s1.5-1.2 3-1.2S13.5 8 15 8s1.5-1.2 3-1.2S19.5 8 21 8"/><path d="M3 13c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".75"/><path d="M3 18c1.5 0 1.5-1.2 3-1.2s1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2" opacity=".5"/></svg></div>
+    <img class="logo" src="icon-scura.svg" alt="" width="46" height="46">
     <div><h1 id="pool-name">Piscina condominiale</h1><span class="sub">Il sito della piscina</span></div>
   </div>
   <nav class="tabs" aria-label="Sezioni">
       <a href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4.5v-6h-5v6H5A1.5 1.5 0 0 1 3.5 19z"/></svg><span>Home</span></a>
       <a href="#bacheca" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5v3a1 1 0 0 0 1 1h2l5.5 4V5.5L7 9.5H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6M18.8 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Bacheca</span></a>
       <a href="#manutenzione" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5s6 6.3 6 10.7a6 6 0 0 1-12 0C6 9.8 12 3.5 12 3.5z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.5"/></svg><span>Manutenzione</span></a>
-      <a href="#condomini" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.6.4 4.5 2.6 4.5 5.8"/></svg><span>Condomini</span></a>
+      <a href="#condomini" class="st nav-more-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.6.4 4.5 2.6 4.5 5.8"/></svg><span>Condomini</span></a>
       <a href="#ingressi" class="st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="10" height="17" rx="1.2"/><path d="M15 5.5h3.5v15H15"/><circle cx="12" cy="12" r=".9" fill="currentColor"/></svg><span>Ingressi</span></a>
-      <a href="#impostazioni" class="ad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg><span>Impostazioni</span></a>
+      <a href="#impostazioni" class="ad nav-more-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg><span>Impostazioni</span></a>
+      <button type="button" class="nav-more st" id="nav-more" data-act="altro" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18.5" cy="12" r="1.8"/></svg><span>Altro</span></button>
   </nav>
   <div class="side-foot">
     <div class="side-status" id="side-status"></div>
@@ -465,13 +582,17 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
     <div class="urgenti" id="home-urgenti" hidden></div>
     <div class="hero" id="hero">
       <img id="hero-img" alt="" hidden>
+      <div class="sky" aria-hidden="true"><span class="sky-stars"></span></div><span class="sky-sun" aria-hidden="true"></span>
+      <div class="waves" aria-hidden="true"><svg class="w2" viewBox="0 0 1200 44" preserveAspectRatio="none"><path d="M0 22 C 50 6 100 6 150 22 S 250 38 300 22 S 400 6 450 22 S 550 38 600 22 S 700 6 750 22 S 850 38 900 22 S 1000 6 1050 22 S 1150 38 1200 22 V 44 H 0 Z" fill="rgba(255,255,255,.16)"/></svg><svg viewBox="0 0 1200 44" preserveAspectRatio="none"><path d="M0 22 C 50 6 100 6 150 22 S 250 38 300 22 S 400 6 450 22 S 550 38 600 22 S 700 6 750 22 S 850 38 900 22 S 1000 6 1050 22 S 1150 38 1200 22 V 44 H 0 Z" fill="var(--bg)" transform="translate(0 8)"/></svg></div>
       <div class="hero-tools ad"><button class="sm" data-go="impostazioni">Cambia immagine</button></div>
       <div class="hero-in">
+        <span class="hero-saluto" id="hero-saluto"></span>
         <span class="hero-date" id="home-date">—</span>
         <h2 id="hero-name">Piscina condominiale</h2>
         <div class="hero-chips" id="hero-chips"></div>
       </div>
     </div>
+    <div class="semaforo" id="home-semaforo" role="status" hidden></div>
     <div id="home-closed" class="closed" hidden></div>
     <div class="avvisi" id="home-allerta" hidden></div>
     <div class="avvisi" id="home-avvisi" hidden></div>
@@ -512,7 +633,7 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
   <section class="tab" id="tab-manutenzione" hidden>
     <div class="head">
       <div>
-        <h2>Manutenzione</h2>
+        <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 4s-7 8-7 13a7 7 0 0 0 14 0c0-5-7-13-7-13z" fill="#4fb3ee"/><path d="M10 18a3.5 3.5 0 0 0 3 3.4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><rect x="21" y="9" width="5" height="17" rx="2.5" fill="#ffb547"/><rect x="21" y="18" width="5" height="8" rx="2.5" fill="#ff9e2c"/><path d="M20 9h7" stroke="#0d3b5e" stroke-width="2" stroke-linecap="round"/></svg></span>Manutenzione</h2>
         <p>Tutto il lavoro sulla piscina in un posto: le misure quotidiane dell'acqua con i prodotti aggiunti, e gli interventi straordinari.</p>
       </div>
     </div>
@@ -636,7 +757,7 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
   <section class="tab" id="tab-condomini" hidden>
     <div class="head">
       <div>
-        <h2>Condomini</h2>
+        <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 28V11l9-6 9 6v17z" fill="#0d3b5e"/><g fill="#ffd36b"><rect x="11" y="13" width="3.5" height="3.5" rx=".8"/><rect x="17.5" y="13" width="3.5" height="3.5" rx=".8"/><rect x="11" y="19" width="3.5" height="3.5" rx=".8"/><rect x="17.5" y="19" width="3.5" height="3.5" rx=".8"/></g><path d="M4 28h24" stroke="#4fb3ee" stroke-width="2.4" stroke-linecap="round"/></svg></span>Condomini</h2>
         <p>Elenco per scala, appartamento e famiglia. Per ogni componente del nucleo decidi chi può entrare in piscina. <span class="st" id="con-ro-note">Solo l'amministratore modifica l'elenco.</span></p>
       </div>
       <div class="actions ad"><button data-act="tes-tutte">Tutte le tessere</button><button class="primary" data-act="fam-new">Nuova famiglia</button></div>
@@ -655,7 +776,7 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
   <section class="tab" id="tab-ingressi" hidden>
     <div class="head">
       <div>
-        <h2>Controllo ingressi</h2>
+        <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="8" width="24" height="16" rx="4" fill="#1f8fd6"/><rect x="18" y="12" width="7" height="7" rx="1.2" fill="#fff"/><path d="M19.5 13.5h1.5v1.5h-1.5zM22 16h1.5v1.5H22z" fill="#0d3b5e"/><path d="M8 13h6M8 17h4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="26" cy="25" r="5" fill="#34d17f"/><path d="M23.8 25l1.5 1.5 2.8-3" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Controllo ingressi</h2>
         <p>Leggi la tessera o cerca la persona per nome: vedi subito se può entrare e registri ingresso e uscita. Gli accessi negati restano nel registro.</p>
       </div>
     </div>
@@ -703,7 +824,7 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
   <section class="tab" id="tab-bacheca" hidden>
     <div class="head">
       <div>
-        <h2>Bacheca</h2>
+        <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 13v6a2 2 0 0 0 2 2h3l9 6V5l-9 6H7a2 2 0 0 0-2 2z" fill="#ff9e2c"/><path d="M23 11a6 6 0 0 1 0 10M26 8a10 10 0 0 1 0 16" stroke="#1f8fd6" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></span>Bacheca</h2>
         <p>Quello che pubblichi qui compare nella Home dei condomini: apertura, orari, avvisi e regolamento.</p>
       </div>
     </div>
@@ -775,7 +896,7 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
   <section class="tab" id="tab-impostazioni" hidden>
     <div class="head">
       <div>
-        <h2>Impostazioni</h2>
+        <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9h22M5 16h22M5 23h22" stroke="#9cb0c8" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="9" r="3.6" fill="#1f8fd6"/><circle cx="11" cy="16" r="3.6" fill="#ff9e2c"/><circle cx="23" cy="23" r="3.6" fill="#34d17f"/></svg></span>Impostazioni</h2>
         <p>Limiti predefiniti secondo l'Accordo Stato-Regioni del 16/01/2003 (acqua in vasca). Verifica sempre il regolamento della tua ASL e del condominio.</p>
       </div>
     </div>
@@ -847,6 +968,24 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
   </div>
 </div>
 
+<div class="sheet" id="altro" hidden>
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-label="Altre sezioni">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <a href="#condomini" class="sheet-link st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.6.4 4.5 2.6 4.5 5.8"/></svg><span>Condomini</span></a>
+    <a href="#impostazioni" class="sheet-link ad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg><span>Impostazioni</span></a>
+    <div class="tema" role="group" aria-label="Tema"><button type="button" data-act="tema" data-v="auto">Automatico</button><button type="button" data-act="tema" data-v="light">Chiaro</button><button type="button" data-act="tema" data-v="dark">Notte</button></div>
+    <div class="sheet-foot"><span class="small muted" id="altro-user"></span><button type="button" data-act="esci">Esci</button></div>
+    <a class="small" href="informativa.html" style="text-align:center">Informativa privacy</a>
+    <button type="button" class="ghost" data-act="altro-chiudi">Chiudi</button>
+  </div>
+</div>
+<div class="tes-full adulto" id="tes-full" role="dialog" aria-modal="true" aria-label="Tessera a tutto schermo" hidden>
+  <span class="tipo" id="tf-tipo">Adulto</span>
+  <img id="tf-img" alt="">
+  <b class="nome" id="tf-nome"></b>
+  <span id="tf-nota" style="opacity:.85"></span>
+  <button type="button" data-act="tes-full-chiudi">Chiudi</button>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
@@ -995,7 +1134,9 @@ function showTab() {
   const { t, sub } = route();
   if (sub) S.sub = sub;
   Object.keys(TABS).forEach(id => { $('#tab-' + id).hidden = id !== t; });
-  $$('nav.tabs a').forEach(a => { if (a.getAttribute('href') === '#' + t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  $$('nav.tabs a, .sheet-link').forEach(a => { if (a.getAttribute('href') === '#' + t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  $('#nav-more').classList.toggle('on', t === 'condomini' || t === 'impostazioni');
+  apriAltro(false);
   ['ordinaria', 'straordinaria'].forEach(k => {
     $('#sub-' + k).hidden = S.sub !== k;
     if (S.sub === k) $('#seg-' + k).setAttribute('aria-current', 'page'); else $('#seg-' + k).removeAttribute('aria-current');
@@ -1004,6 +1145,12 @@ function showTab() {
   if (t === 'manutenzione' && S.sub === 'ordinaria') { if (!$('#or-ts').value) $('#or-ts').value = localInput(); fillAria(); }
 }
 window.addEventListener('hashchange', showTab);
+function apriAltro(on) {
+  const sh = $('#altro'); if (!sh) return;
+  sh.hidden = !on; $('#nav-more').setAttribute('aria-expanded', on ? 'true' : 'false');
+  if (on) $('#altro-user').textContent = $('#user-lbl').textContent;
+}
+document.addEventListener('keydown', ev => { if (ev.key !== 'Escape') return; if (!$('#altro').hidden) apriAltro(false); if (!$('#tes-full').hidden) { $('#tes-full').hidden = true; } });
 function applyRole() {
   document.body.classList.remove('r-viewer', 'r-staff', 'r-admin');
   document.body.classList.add('r-' + S.role);
@@ -1339,9 +1486,95 @@ function fillAria() {
     h.textContent = `Prevista dal meteo per le ${fmtT(best.o.t)}: puoi correggerla`;
   } else if (!S.ariaAuto) h.textContent = best ? 'Inserita a mano' : 'Inseriscila a mano';
 }
+
+/* ---------- idee nuove: cielo, semaforo, consiglio, tema, scorrimento ---------- */
+function aggiornaCielo() {
+  const hero = $('#hero'); if (!hero) return;
+  const d = new Date(), h = d.getHours() + d.getMinutes() / 60;
+  let s1, s2, op = .5, notte = false;
+  if (h < 5.5 || h >= 21) { s1 = '#06132a'; s2 = '#1f4f86'; notte = true; op = .75; }
+  else if (h < 8) { s1 = '#ffb88a'; s2 = '#6fb6e8'; }
+  else if (h < 17) { s1 = '#7fd6f7'; s2 = '#1f8fd6'; op = .35; }
+  else if (h < 19.5) { s1 = '#ffb547'; s2 = '#e0603f'; op = .5; }
+  else { s1 = '#ff8a5c'; s2 = '#3a2a6b'; op = .6; }
+  let x, y;
+  if (!notte) { const t = Math.min(1, Math.max(0, (h - 5.5) / 15.5)); x = 62 + t * 30; y = 24 - Math.sin(Math.PI * t) * 13; }
+  else { const t = ((h < 12 ? h + 24 : h) - 21) / 8.5; x = 66 + t * 24; y = 16 - Math.sin(Math.PI * t) * 5; }
+  hero.style.setProperty('--sky1', s1); hero.style.setProperty('--sky2', s2); hero.style.setProperty('--sky-op', op);
+  hero.style.setProperty('--sun-x', x.toFixed(1) + '%'); hero.style.setProperty('--sun-y', y.toFixed(1) + '%');
+  hero.classList.toggle('notte', notte); hero.classList.toggle('tramonto', !notte && h >= 17); hero.classList.toggle('alba', !notte && h < 8);
+  $('#hero-saluto').textContent = h < 5.5 ? 'Buonanotte' : h < 13 ? 'Buongiorno' : h < 18 ? 'Buon pomeriggio' : 'Buonasera';
+}
+function consiglioMeteo() {
+  const m = S.meteo; if (!m) return null;
+  const r = m.riepilogo, t = m.attuale && m.attuale.temp, max = r ? r.max : isNum(t) ? Math.round(t) : null;
+  if (r && r.pioggia > 0) return ['pioggia', 'Pioggia prevista durante l\'apertura: controlla la Bacheca prima di uscire.'];
+  if (max !== null && max >= 30) return ['caldo', 'Caldo forte: crema solare, cappello e acqua. Meglio l\'ombra tra le 13 e le 16.'];
+  if (r && r.ventoMax >= 25) return ['vento', 'Vento sostenuto: porta un telo in più e tieni fermi gli oggetti leggeri.'];
+  if (max !== null && max >= 25) return ['sole', 'Giornata da piscina: ricorda la crema solare e la borraccia.'];
+  if (max !== null && max < 22) return ['fresco', 'Aria fresca: porta un accappatoio per quando esci dall\'acqua.'];
+  return ['sole', 'Bella giornata: porta cuffia e ciabatte, il resto lo trovi qui.'];
+}
+const ICO_CONS = {
+  sole: '<svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="7" fill="#ffb547"/><g stroke="#ff9e2c" stroke-width="2.4" stroke-linecap="round"><path d="M17 3v4M17 27v4M3 17h4M27 17h4M7 7l2.8 2.8M24.2 24.2L27 27M7 27l2.8-2.8M24.2 9.8L27 7"/></g></svg>',
+  caldo: '<svg viewBox="0 0 34 34" aria-hidden="true"><rect x="14" y="4" width="6" height="18" rx="3" fill="#ffd9c7"/><circle cx="17" cy="25" r="6" fill="#e0603f"/><rect x="15.5" y="10" width="3" height="14" rx="1.5" fill="#e0603f"/></svg>',
+  pioggia: '<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M9 20a6 6 0 0 1 1-12 8 8 0 0 1 15 2 5 5 0 0 1 0 10z" fill="#9cb0c8"/><g stroke="#1f8fd6" stroke-width="2.4" stroke-linecap="round"><path d="M12 24l-2 5M18 24l-2 5M24 24l-2 5"/></g></svg>',
+  vento: '<svg viewBox="0 0 34 34" aria-hidden="true"><g fill="none" stroke="#1f8fd6" stroke-width="2.6" stroke-linecap="round"><path d="M4 13h18a4 4 0 1 0-4-4"/><path d="M4 20h22a4 4 0 1 1-4 4"/></g></svg>',
+  fresco: '<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 9h18l-2 18H10z" fill="#4fb3ee"/><path d="M8 9c3-4 15-4 18 0" fill="none" stroke="#0d3b5e" stroke-width="2.2"/></svg>'
+};
+function renderSemaforo() {
+  const box = $('#home-semaforo'); if (!box) return;
+  if (!S.loaded.cfg || !S.loaded.bacheca) { box.hidden = true; return; }
+  const a = apertura(), w = S.loaded.letture ? waterState() : null, ng = guastiAperti().length, pres = presCount(), cap = S.cfg.capienza || 1;
+  let lvl, big, sub;
+  if (S.bacheca.stato === 'chiusa') { lvl = 'bad'; big = 'Vasca chiusa'; sub = S.bacheca.motivo || 'Ingressi sospesi fino a nuovo avviso.'; }
+  else if (a.open === false) { lvl = 'bad'; big = 'Vasca chiusa'; sub = [a.label, a.detail].filter(Boolean).join(' · '); }
+  else if (a.open === null) { lvl = 'warn'; big = 'Orari in arrivo'; sub = 'Gli orari non sono ancora pubblicati in Bacheca.'; }
+  else if (w && w.lvl === 'bad') { lvl = 'bad'; big = 'Niente bagno per ora'; sub = 'Parametri fuori norma: trattamento dell\'acqua in corso.'; }
+  else if (pres >= cap) { lvl = 'warn'; big = 'Vasca al completo'; sub = 'Riprova tra poco: ' + cap + ' persone su ' + cap + '.'; }
+  else if (ng) { lvl = 'warn'; big = 'Puoi entrare, con un guasto in corso'; sub = 'Leggi l\'avviso qui sopra.'; }
+  else if (!w || w.lvl === 'warn') { lvl = 'warn'; big = 'Puoi fare il bagno'; sub = w ? w.text : 'In attesa della prima misura dell\'acqua.'; }
+  else { lvl = 'ok'; big = 'Puoi fare il bagno'; sub = 'Acqua controllata alle ' + fmtT(w.last.ts) + (a.detail ? ' · ' + a.detail.toLowerCase() : ''); }
+  const cons = consiglioMeteo();
+  box.className = 'semaforo ' + lvl; box.hidden = false;
+  box.innerHTML = `<div class="luci" aria-hidden="true"><span class="luce r"></span><span class="luce y"></span><span class="luce g"></span></div>
+    <div class="sem-txt"><b>${esc(big)}</b><span>${esc(sub)}</span></div>
+    ${cons ? `<div class="consiglio">${ICO_CONS[cons[0]]}<div><small>Consiglio del giorno</small>${esc(cons[1])}</div></div>` : ''}`;
+}
+function temaAuto() { const h = new Date().getHours() + new Date().getMinutes() / 60; return h >= 20.5 || h < 6.5 || matchMedia('(prefers-color-scheme: dark)').matches; }
+function applicaTema() {
+  const pref = lsGet('piscina-tema') || 'auto', dark = pref === 'dark' || (pref === 'auto' && temaAuto());
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  $$('img.logo').forEach(i => { i.src = dark ? 'icon-notte.svg' : 'icon-scura.svg'; });
+  const ll = $('#login-logo'); if (ll) ll.src = dark ? 'icon-notte.svg' : 'logo.svg';
+  const mt = document.querySelector('meta[name="theme-color"]'); if (mt) mt.content = dark ? '#040e20' : '#0b1f3a';
+  $$('.tema button').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === pref ? 'true' : 'false'));
+}
+function impostaTema(v) { lsSet('piscina-tema', v); applicaTema(); }
+/* scorrimento per registrare: trascina il pallino fino in fondo; da tastiera basta Invio */
+(function () {
+  let cur = null, x0 = 0, max = 0, dx = 0;
+  document.addEventListener('pointerdown', ev => {
+    const b = ev.target.closest('button.swipe'); if (!b || b.disabled) return;
+    cur = b; x0 = ev.clientX; dx = 0; max = b.clientWidth - b.querySelector('.knob').offsetWidth - 10;
+    b.classList.add('drag'); try { b.setPointerCapture(ev.pointerId); } catch {}
+  });
+  document.addEventListener('pointermove', ev => {
+    if (!cur) return; dx = Math.max(0, Math.min(max, ev.clientX - x0)); cur.style.setProperty('--x', dx + 'px');
+  });
+  const fine = () => {
+    if (!cur) return; const b = cur; cur = null; b.classList.remove('drag');
+    if (dx >= max * .85) {
+      b.style.setProperty('--x', max + 'px');
+      if (navigator.vibrate) navigator.vibrate(b.classList.contains('in') ? [40, 60, 40] : 80);
+      b._ok = true; setTimeout(() => { b.click(); b._ok = false; b.style.setProperty('--x', '0px'); }, 120);
+    } else b.style.setProperty('--x', '0px');
+  };
+  document.addEventListener('pointerup', fine); document.addEventListener('pointercancel', fine);
+})();
 function renderHome() {
   const c = S.cfg, b = S.bacheca, a = apertura();
-  renderHero();
+  renderHero(); aggiornaCielo(); renderSemaforo();
   const cl = $('#home-closed');
   if (b.stato === 'chiusa') { cl.innerHTML = `<strong>Piscina chiusa</strong><span class="notice">${esc(b.motivo || 'Ingressi sospesi fino a nuovo avviso.')}</span>`; cl.hidden = false; }
   else cl.hidden = true;
@@ -1371,16 +1604,19 @@ function renderHome() {
 
   // presenze
   const pres = presCount(), cap = c.capienza || 1, pct = Math.min(100, Math.round(pres / cap * 100));
-  const pl = pres >= cap ? 'bad' : pct >= 85 ? 'warn' : '';
+  const pl = pres >= cap ? 'bad' : pct >= 85 ? 'warn' : pct < 50 ? 'calm' : '';
   const libero = Math.max(0, cap - pres);
-  const presPill = a.open === false ? pill('neutral', 'Chiusa') : pl ? pill(pl, pl === 'bad' ? 'Al completo' : 'Quasi piena') : pill('ok', 'Posti liberi');
+  const presPill = a.open === false ? pill('neutral', 'Chiusa') : pl === 'bad' ? pill('bad', 'Al completo') : pl === 'warn' ? pill('warn', 'Quasi piena') : pl === 'calm' ? pill('ok', 'Poca gente') : pill('ok', 'Posti liberi');
+  const frase = a.open === false ? '' : pl === 'bad' ? 'Riprova più tardi' : pl === 'warn' ? 'Sta per riempirsi' : pl === 'calm' ? 'Ottimo momento per venire' : 'Ancora spazio per tutti';
+  const nDots = 20, on = Math.round(pct / 100 * nDots);
   const C = 2 * Math.PI * 42;
   $('#home-pres').innerHTML = `<div class="tile-top"><span class="lbl">In piscina ora</span>${presPill}</div>
-    <div class="ring-wrap">
+    <div class="ring-wrap ${pl}">
       <div class="ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42"/><circle class="ring-fg ${pl}" style="opacity:${pres ? 1 : 0}" cx="50" cy="50" r="42" stroke-dasharray="${(C * pct / 100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg>
         <div class="ring-c"><b>${pres}</b><span>su ${cap}</span></div></div>
       <div class="ring-info"><b>${a.open === false ? esc(a.label) : `${libero} post${libero === 1 ? 'o libero' : 'i liberi'}`}</b>
-        <span class="small muted">${a.open === false ? esc(a.detail || '') : `Occupazione al ${pct}%`}</span></div>
+        <span class="small muted">${a.open === false ? esc(a.detail || '') : `${frase} · ${pct}% della capienza`}</span>
+        ${a.open === false ? '' : `<div class="folla" aria-hidden="true">${Array.from({ length: nDots }, (_, i) => `<i class="${i < on ? 'on' : ''}"></i>`).join('')}</div>`}</div>
     </div>`;
 
   // orari
@@ -1724,7 +1960,7 @@ function renderIngressi() {
   $('#acc-dentro').innerHTML = pres.length ? pres.slice().sort((a, b) => cmpNat(b.entrata, a.entrata)).map(e => `<div class="inside-row">
     <div><div><strong>${esc(e.nome)}</strong>${e.esito === 'ospite' ? ' <span class="tag">Ospite</span>' : ''}${e.esito === 'accompagnato' ? ' <span class="tag">Accomp.</span>' : ''}</div>
     <div class="meta">${esc(e.unita || '')} · dalle ${fmtT(e.entrata)}</div></div>
-    <button class="sm" data-act="acc-out" data-id="${esc(e.id)}">Uscita</button></div>`).join('')
+    <button class="swipe out" data-swipe="1" data-act="acc-out" data-id="${esc(e.id)}" aria-label="Registra uscita di ${esc(e.nome)}"><span class="fill" aria-hidden="true"></span><span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span><span>Scorri: uscita</span></button></div>`).join('')
     : '<div class="empty">Nessuno in piscina.</div>';
   const log = (S.accessi.entries || []).slice().sort((a, b) => cmpNat(b.entrata, a.entrata));
   $('#acc-log').innerHTML = log.length ? `<table><thead><tr><th>Ora</th><th>Persona</th><th>Unità</th><th>Esito</th><th>Uscita</th></tr></thead><tbody>
@@ -1759,9 +1995,9 @@ function resItem(f, m, checked, nota) {
   const pres = presenti(), blocked = pres.length >= S.cfg.capienza || S.bacheca.stato === 'chiusa';
   const e = eligibility(f, m), dentro = pres.find(x => x.membroId === m.id);
   let act;
-  if (dentro) act = `<span class="small muted">Dentro dalle ${fmtT(dentro.entrata)}</span><button class="sm" data-act="acc-out" data-id="${esc(dentro.id)}">Uscita</button>`;
+  if (dentro) act = `<span class="small muted">Dentro dalle ${fmtT(dentro.entrata)}</span><button class="swipe out" data-swipe="1" data-act="acc-out" data-id="${esc(dentro.id)}" aria-label="Registra uscita"><span class="fill" aria-hidden="true"></span><span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span><span>Scorri: uscita</span></button>`;
   else if (e.lvl === 'bad') act = `<button class="sm" data-act="acc-neg" data-f="${esc(f.id)}" data-m="${esc(m.id)}">Registra tentativo</button>`;
-  else act = `<button class="${nota ? '' : 'sm '}go" data-act="acc-in" data-f="${esc(f.id)}" data-m="${esc(m.id)}" ${blocked ? 'disabled' : ''}>Registra ingresso</button>`;
+  else act = `<button class="swipe in" data-swipe="1" data-act="acc-in" data-f="${esc(f.id)}" data-m="${esc(m.id)}" ${blocked ? 'disabled' : ''} aria-label="Registra ingresso di ${esc(m.nome)}"><span class="fill" aria-hidden="true"></span><span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span><span>Scorri per l'ingresso</span></button>`;
   return `<div class="res-item ${e.lvl} ${nota ? 'big' : ''}">
     <div><div class="name">${esc(m.nome)}</div><div class="meta">${esc(unitLabel(f))} · Famiglia ${esc(f.cognome)}${m.ruolo ? ' · ' + esc(m.ruolo) : ''}${nota ? '<br>' + nota : ''}</div></div>
     <div class="act">${act}</div>
@@ -1820,19 +2056,18 @@ async function disegnaTessera(f, m, perStampa) {
   const rr = (x, y, w, h, r) => { g.beginPath(); if (g.roundRect) g.roundRect(x, y, w, h, r); else g.rect(x, y, w, h); };
   if (perStampa) { g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H); }
   g.save(); rr(0, 0, W, H, perStampa ? 0 : 38); g.clip();
-  const bg = g.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#24548a'); bg.addColorStop(.55, '#13304f'); bg.addColorStop(1, '#0b1a2e');
+  const bg = g.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#1f4f86'); bg.addColorStop(.55, '#12345c'); bg.addColorStop(1, '#0b1f3a');
   g.fillStyle = bg; g.fillRect(0, 0, W, H);
-  const gl = g.createRadialGradient(W * .88, 0, 10, W * .88, 0, 520); gl.addColorStop(0, 'rgba(141,180,226,.42)'); gl.addColorStop(1, 'rgba(141,180,226,0)');
+  const gl = g.createRadialGradient(W * .88, 0, 10, W * .88, 0, 520); gl.addColorStop(0, 'rgba(92,200,245,.4)'); gl.addColorStop(1, 'rgba(92,200,245,0)');
   g.fillStyle = gl; g.fillRect(0, 0, W, H);
   g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 3;
   for (let k = 0; k < 5; k++) { g.beginPath(); for (let x = 0; x <= W; x += 8) { const y = 400 + k * 30 + Math.sin(x / 55 + k * .9) * 9; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }
   // marchio
-  g.strokeStyle = '#ffffff'; g.lineWidth = 4; g.lineCap = 'round';
-  [0, 12, 24].forEach((dy, k) => { g.globalAlpha = 1 - k * .25; g.beginPath(); for (let x = 0; x <= 40; x += 2) { const y = 52 + dy + Math.sin(x / 6.4) * 4; x ? g.lineTo(56 + x, y) : g.moveTo(56 + x, y); } g.stroke(); });
-  g.globalAlpha = 1;
+  try { const lg = new Image(); lg.src = 'icon.svg'; await lg.decode(); g.drawImage(lg, 50, 34, 64, 64); }
+  catch { g.fillStyle = 'rgba(255,255,255,.9)'; rr(50, 34, 64, 64, 16); g.fill(); }
   g.fillStyle = '#ffffff'; g.font = `700 25px ${disp}`; if ('letterSpacing' in g) g.letterSpacing = '3px';
-  g.fillText(testoMax(g, (S.cfg.nome || 'Piscina condominiale').toUpperCase(), 470), 114, 82);
-  g.textAlign = 'right'; g.fillStyle = 'rgba(255,255,255,.75)'; g.fillText('STAGIONE ' + stagione(), W - 56, 82); g.textAlign = 'left';
+  g.fillText(testoMax(g, (S.cfg.nome || 'Piscina condominiale').toUpperCase(), 460), 130, 76);
+  g.textAlign = 'right'; g.fillStyle = 'rgba(255,255,255,.75)'; g.fillText('STAGIONE ' + stagione(), W - 56, 76); g.textAlign = 'left';
   if ('letterSpacing' in g) g.letterSpacing = '0px';
   // persona
   let fs = 60; g.font = `800 ${fs}px ${disp}`;
@@ -1846,7 +2081,7 @@ async function disegnaTessera(f, m, perStampa) {
   g.fillStyle = '#ffffff'; rr(bx, by, bs, bs, 24); g.fill();
   const q = qr(0, 'M'); q.addData(m.codice); q.make();
   const n = q.getModuleCount(), cell = Math.floor((bs - 40) / n), ox = bx + Math.round((bs - cell * n) / 2), oy = by + Math.round((bs - cell * n) / 2);
-  g.fillStyle = '#0e1d31';
+  g.fillStyle = '#0b1f3a';
   for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) g.fillRect(ox + c * cell, oy + r * cell, cell, cell);
   g.fillStyle = '#ffffff'; g.font = `800 36px ${disp}`; g.textAlign = 'center';
   if ('letterSpacing' in g) g.letterSpacing = '4px';
@@ -1855,7 +2090,7 @@ async function disegnaTessera(f, m, perStampa) {
   g.textAlign = 'left';
   // fascia
   const acc = accompagnato(m);
-  g.fillStyle = acc ? '#e3ab34' : '#3d74b3'; g.fillRect(0, H - 84, W, 84);
+  g.fillStyle = acc ? '#ffb547' : '#1f8fd6'; g.fillRect(0, H - 84, W, 84);
   g.fillStyle = acc ? '#2a1c00' : '#ffffff'; g.font = `800 27px ${disp}`;
   if ('letterSpacing' in g) g.letterSpacing = '2px';
   g.fillText(acc ? 'SOLO ACCOMPAGNATO DA UN ADULTO' : 'INGRESSO AUTONOMO', 56, H - 32);
@@ -1984,11 +2219,13 @@ const dec = v => isNum(v) ? String(v).replace('.', ',') : '';
 
 /* ---------- eventi ---------- */
 document.addEventListener('click', async ev => {
+  if (ev.target.id === 'altro') { apriAltro(false); return; }
   const go = ev.target.closest('[data-go]');
   if (go) { location.hash = go.dataset.go; return; }
   const b = ev.target.closest('button[data-act]');
   if (!b) return;
   const act = b.dataset.act, id = b.dataset.id;
+  if (b.dataset.swipe && ev.detail > 0 && !b._ok) { b.animate && b.querySelector('.knob').animate([{ transform: 'translateX(0)' }, { transform: 'translateX(14px)' }, { transform: 'translateX(0)' }], { duration: 350 }); return; }
   switch (act) {
     case 'tes-fam': { const f = S.famiglie.find(x => x.id === id); if (f) apriTessere([f], `Famiglia ${f.cognome}, ${unitLabel(f)}`); break; }
     case 'tes-tutte': apriTessere(S.famiglie.slice().sort((a, c) => cmpNat(a.scala, c.scala) || cmpNat(a.interno, c.interno)), 'tutti i condomini'); break;
@@ -2014,6 +2251,8 @@ document.addEventListener('click', async ev => {
     case 'sc-chiudi': chiudiScanner(); break;
     case 'sc-foto': chiudiScanner(); $('#tes-file').click(); break;
     case 'esci': try { await S.sb.auth.signOut(); } catch {} location.reload(); break;
+    case 'altro': apriAltro(true); break;
+    case 'altro-chiudi': apriAltro(false); break;
     case 'lg-indietro': clearInterval(S.lgTimer); mostraLogin('email'); break;
     case 'lg-rimanda': { if (b.disabled || !S.lgEmail) return; b.disabled = true; if (await mandaCodice(S.lgEmail)) loginMsg('Ti abbiamo mandato un nuovo codice: vale solo l\'ultimo ricevuto.'); attesaRimanda(); break; }
     case 'copia-link': { const url = location.origin + location.pathname; try { await navigator.clipboard.writeText(url); toast('Indirizzo copiato: ' + url); } catch { toast(url); } break; }
@@ -2023,6 +2262,19 @@ document.addEventListener('click', async ev => {
       if (error) toast('Non riesco a rimuovere la persona.', 'bad'); else { toast('Persona rimossa: non può più entrare.'); caricaUtenti(); }
       break;
     }
+    case 'tes-full': {
+      const t = S.mieTessere, k = t ? t.membri.findIndex(x => x.id === b.dataset.m) : -1; if (k < 0) return;
+      const m = t.membri[k], tipo = m.ospite ? 'ospite' : accompagnato(m) ? 'minore' : 'adulto';
+      const tf = $('#tes-full'); tf.className = 'tes-full ' + tipo;
+      $('#tf-tipo').textContent = { adulto: 'Adulto', minore: 'Minore', ospite: 'Ospite' }[tipo];
+      $('#tf-img').src = t.imgs[k]; $('#tf-img').alt = 'Tessera di ' + m.nome; $('#tf-nome').textContent = m.nome;
+      $('#tf-nota').textContent = tipo === 'minore' ? 'Entra solo con un adulto' : tipo === 'ospite' ? 'Valida solo per oggi' : 'Mostra il QR all\'operatore';
+      tf.hidden = false; tf.querySelector('button').focus();
+      try { S.wake = await navigator.wakeLock.request('screen'); } catch {}
+      break;
+    }
+    case 'tes-full-chiudi': $('#tes-full').hidden = true; try { S.wake && S.wake.release(); } catch {} S.wake = null; break;
+    case 'tema': impostaTema(b.dataset.v); break;
     case 'mia-tes': {
       const t = S.mieTessere, m = t && t.membri.find(x => x.id === b.dataset.m); if (!m) return;
       (await disegnaTessera(t.f, m)).toBlob(blob => scaricaFile.save({ filename: `tessera-${slug(m.nome)}.png`, data: blob }), 'image/png');
@@ -2520,9 +2772,10 @@ async function renderMieTessere() {
   if (!membri.length) { box.innerHTML = '<h3>Le tue tessere</h3><div class="empty">Le tessere della tua famiglia non sono ancora pronte: le prepara l\'amministratore.</div>'; return; }
   const imgs = [];
   for (const m of membri) imgs.push((await disegnaTessera(f, m)).toDataURL('image/png'));
-  S.mieTessere = { f, membri };
+  S.mieTessere = { f, membri, imgs };
   box.innerHTML = `<div class="head"><h3>Le tue tessere</h3><span class="small muted">Mostrale all'ingresso, stampate o dal telefono</span></div>
-    <div class="tessere-grid">${membri.map((m, k) => `<div class="tessera"><img src="${imgs[k]}" alt="Tessera di ${esc(m.nome)}"><div class="actions"><span class="small"><b>${esc(m.nome)}</b></span><button class="sm" data-act="mia-tes" data-m="${esc(m.id)}">Salva sul telefono</button></div></div>`).join('')}</div>`;
+    <div class="tessere-grid">${membri.map((m, k) => `<div class="tessera"><img src="${imgs[k]}" alt="Tessera di ${esc(m.nome)}"><div class="actions"><span class="small"><b>${esc(m.nome)}</b></span><span class="actions"><button class="sm primary" data-act="tes-full" data-m="${esc(m.id)}">Mostra</button><button class="sm" data-act="mia-tes" data-m="${esc(m.id)}">Salva</button></span></div></div>`).join('')}</div>
+    <div class="legenda"><span style="--c:#1f8fd6">Adulto</span><span style="--c:#ff9e2c">Minore, entra accompagnato</span><span style="--c:#8b5cf6">Ospite</span></div>`;
 }
 
 /* ---------- lettura del QR con la fotocamera in diretta ---------- */
@@ -2567,6 +2820,7 @@ function chiudiScanner() {
 }
 
 async function boot() {
+  applicaTema(); setInterval(() => { applicaTema(); aggiornaCielo(); }, 60000);
   $('#or-prod').innerHTML = prodRow();
   resetSt();
   $('#hero-img').addEventListener('error', () => { S.imgBroken = true; renderHero(); }); renderHeader(); applyRole();
