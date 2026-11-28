@@ -11,14 +11,14 @@ Il sito della piscina del condominio: qualità dell'acqua, orari, meteo, avvisi,
 | Ruolo | Accesso |
 |---|---|
 | Condomino | Solo la Home, più le tessere della propria famiglia |
-| Operatore | Bacheca, Manutenzione, Ingressi, consultazione dei condomini |
-| Amministratore | Tutto, compresi elenco condomini, impostazioni e persone invitate |
+| Operatore | Misure e note della manutenzione ordinaria, Ingressi, SOS guasti e avvisi; vede turni, mansioni e condomini senza modificarli |
+| Amministratore | Tutto, compresi turni, mansioni, acquisti, orari, regolamento, elenco condomini, impostazioni e persone invitate |
 
 Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso avviene con un link o un codice ricevuto via email, senza password.
 
 ## Installazione
 
-1. **Supabase**: crea un progetto (regione Central EU). In *SQL Editor* esegui `supabase/schema.sql`, poi aggiungi il primo amministratore:
+1. **Supabase**: crea un progetto (regione Central EU). In *SQL Editor* esegui `supabase/schema.sql` e poi `supabase/turni-riservata.sql` (turni, mansioni e acquisti), poi aggiungi il primo amministratore:
    Poi esegui `supabase/dati-iniziali.sql` (orari, regolamento e impostazioni già decisi) e aggiungi il primo amministratore:
    ```sql
    insert into public.utenti (email, nome, ruolo) values ('tua@email.it', 'Il tuo nome', 'admin');
@@ -35,6 +35,7 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
 - `index.html` – il sito
 - `config.js` – collegamento a Supabase
 - `supabase/schema.sql` – tabelle, regole di accesso, funzioni
+- `supabase/turni-riservata.sql` – turni e mansioni dei bagnini, acquisti riservati agli amministratori
 - `supabase/email-accesso.html` – testo dell'email di accesso
 - `informativa.html` – bozza dell'informativa privacy
 - `logo.svg` – logo (palazzina con piscina); `icon.svg`, `icon-scura.svg` e `icon-notte.svg` – icona chiara, scura e notturna (finestre gialle); `icon-180.png`, `icon-512.png` – icone per iPhone e Android
