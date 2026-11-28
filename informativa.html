@@ -6,55 +6,130 @@
 <title>Informativa privacy · Piscina Condominiale</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Manrope:wght@400;600&display=swap">
+<!-- Nessun carattere o script esterno in questa pagina: si apre senza contattare servizi di terzi. -->
 <style>
-:root { --bg: #eef1f5; --surface: #ffffff; --fg: #142033; --muted: #5e6a7c; --line: #dde3eb; --accent: #24548a; --warn: #946200; --warn-soft: #f8efd9; }
-@media (prefers-color-scheme: dark) { :root { --bg: #0a111b; --surface: #111b28; --fg: #e3eaf3; --muted: #8f9db0; --line: #1f2c3c; --accent: #8db4e2; --warn: #ecbb5c; --warn-soft: #33270f; color-scheme: dark; } }
+:root { --bg: #eef1f5; --surface: #ffffff; --surface-2: #f4f6f9; --fg: #142033; --muted: #5e6a7c; --line: #dde3eb; --accent: #24548a; --warn: #946200; --warn-soft: #f8efd9; --ph-bg: #fff1a8; --ph-fg: #4a3b00; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0a111b; --surface: #111b28; --surface-2: #0d1621; --fg: #e3eaf3; --muted: #8f9db0; --line: #1f2c3c; --accent: #8db4e2; --warn: #ecbb5c; --warn-soft: #33270f; --ph-bg: #5a4a00; --ph-fg: #fff3b8; color-scheme: dark; } }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 "Manrope", system-ui, sans-serif; }
-main { max-width: 760px; margin: 0 auto; padding: 40px max(18px, env(safe-area-inset-left, 0px)) 60px max(18px, env(safe-area-inset-right, 0px)); }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 820px; margin: 0 auto; padding: 40px max(18px, env(safe-area-inset-left, 0px)) 60px max(18px, env(safe-area-inset-right, 0px)); }
 article { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 28px; }
-h1, h2 { font-family: "Urbanist", system-ui, sans-serif; line-height: 1.15; }
-h1 { font-size: 2rem; margin: 0 0 6px; } h2 { font-size: 1.2rem; margin: 28px 0 8px; }
+@media (max-width: 560px) { article { padding: 20px 16px; } }
+h1, h2, h3 { line-height: 1.2; }
+h1 { font-size: 2rem; margin: 0 0 6px; } h2 { font-size: 1.25rem; margin: 32px 0 8px; } h3 { font-size: 1.05rem; margin: 20px 0 6px; }
 .nota { background: var(--warn-soft); color: var(--warn); border-radius: 12px; padding: 12px 16px; font-size: .92rem; }
-a { color: var(--accent); }
+/* Segnaposto da sostituire prima della pubblicazione: devono restare ben visibili */
+.ph { background: var(--ph-bg); color: var(--ph-fg); border-radius: 4px; padding: 0 4px; font-weight: 700; }
+a { color: var(--accent); overflow-wrap: anywhere; }
 .muted { color: var(--muted); }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; margin: 10px 0; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { background: var(--surface-2); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+ul { padding-left: 1.3em; }
+li { margin: 4px 0; }
 </style>
 </head>
 <body>
 <main>
 <p><a href="./">← Torna al sito</a></p>
 <article>
-<h1>Informativa sul trattamento dei dati</h1>
-<p class="muted">Sito della piscina condominiale · ai sensi degli articoli 13 e 14 del Regolamento UE 2016/679 (GDPR)</p>
-<p class="nota">Bozza da completare e far verificare dall'amministratore del condominio prima della pubblicazione. Le parti tra parentesi quadre vanno sostituite.</p>
+<h1>Informativa sul trattamento dei dati personali</h1>
+<p class="muted">Sito della piscina condominiale · articoli 13 e 14 del Regolamento UE 2016/679 (GDPR) e D.Lgs. 196/2003 · aggiornata al <span class="ph">[data di pubblicazione]</span></p>
+<p class="nota">Bozza da completare e far verificare all'amministratore del condominio (ed eventualmente a un consulente privacy) prima della pubblicazione. Le parti evidenziate in giallo vanno sostituite.</p>
 
-<h2>Chi tratta i dati</h2>
-<p>Titolare del trattamento è il <b>[Condominio …, via …, Seguro di Settimo Milanese]</b>, rappresentato dall'amministratore <b>[nome, contatto email]</b>, al quale ci si può rivolgere per qualsiasi richiesta.</p>
+<h2>1. Chi è il titolare del trattamento</h2>
+<p>Titolare del trattamento è il <span class="ph">[Condominio …, via …, n. …, 20019 Seguro di Settimo Milanese (MI), codice fiscale …]</span>, rappresentato dall'amministratore pro tempore <span class="ph">[nome e cognome o studio]</span>.</p>
+<p>Per qualsiasi richiesta sui tuoi dati puoi scrivere a <span class="ph">[email di contatto dell'amministratore]</span> oppure <span class="ph">[indirizzo postale / PEC]</span>.</p>
+<p>Il condominio non è tenuto a nominare un responsabile della protezione dei dati (DPO).</p>
 
-<h2>Quali dati</h2>
+<h2>2. Quali dati trattiamo</h2>
+<div class="tbl"><table>
+<thead><tr><th>Categoria</th><th>Dati</th><th>Di chi</th></tr></thead>
+<tbody>
+<tr><td>Persone invitate al sito</td><td>Indirizzo email, nome (facoltativo), ruolo (condomino, operatore, amministratore), famiglia collegata</td><td>Condomini, operatori, amministratore</td></tr>
+<tr><td>Elenco dei condomini</td><td>Per ogni nucleo: cognome, scala, interno, telefono di riferimento, eventuale sospensione dall'accesso e relativo motivo, note. Per ogni componente: nome e cognome, ruolo nel nucleo (es. figlio), data di nascita, autorizzazione all'accesso, obbligo di accompagnatore, eventuale nota</td><td>Condomini e familiari, compresi i minori</td></tr>
+<tr><td>Tessera della piscina</td><td>Codice personale di 6 caratteri contenuto nel QR, stampato sulla tessera con nome, cognome della famiglia, scala e interno</td><td>Ogni componente autorizzato</td></tr>
+<tr><td>Registro degli ingressi</td><td>Nome, scala e interno, ora di entrata e di uscita, esito (entrato, accompagnato, ospite, negato) e motivo del rifiuto</td><td>Chi entra o tenta di entrare</td></tr>
+<tr><td>Ospiti</td><td>Nome dell'ospite, famiglia che lo ospita, orari</td><td>Ospiti dei condomini</td></tr>
+<tr><td>Manutenzione e avvisi</td><td>Nome di chi registra una misurazione dell'acqua o segnala un guasto</td><td>Operatori</td></tr>
+<tr><td>Immagine della Home</td><td>Foto della piscina caricata dall'amministratore (non deve ritrarre persone riconoscibili)</td><td>—</td></tr>
+<tr><td>Dati tecnici</td><td>Indirizzo IP, tipo di browser, data e ora delle richieste, sessione di accesso; registri tecnici dei fornitori elencati al punto 5</td><td>Chiunque apra il sito</td></tr>
+</tbody>
+</table></div>
+<p>Non trattiamo dati sanitari né altre categorie particolari di dati. La data di nascita serve solo a calcolare l'età per sapere se un minore deve entrare accompagnato. I dati dei minori sono forniti da chi esercita la responsabilità genitoriale.</p>
+<p>Il sito salva nel tuo browser (memoria locale) l'ultima email usata per entrare, il nome dell'operatore, l'elenco degli avvisi già letti e una copia delle previsioni meteo, oltre alla sessione di accesso. Sono dati tecnici necessari al funzionamento: il sito non usa cookie di profilazione né strumenti di statistica o pubblicità.</p>
+
+<h2>3. Perché e su quale base</h2>
+<div class="tbl"><table>
+<thead><tr><th>Finalità</th><th>Base giuridica (art. 6 GDPR)</th></tr></thead>
+<tbody>
+<tr><td>Gestire l'uso della piscina comune secondo il regolamento condominiale: chi può entrare, tessere, capienza, ospiti, sospensioni</td><td>Esecuzione del regolamento condominiale e delle delibere assembleari (lett. b); legittimo interesse del condominio al corretto uso del bene comune (lett. f)</td></tr>
+<tr><td>Sicurezza dei bagnanti, in particolare dei minori, e conoscenza di chi è presente in vasca in caso di emergenza</td><td>Legittimo interesse alla sicurezza (lett. f)</td></tr>
+<tr><td>Registro dei controlli dell'acqua e degli interventi di manutenzione</td><td>Obblighi previsti dalla normativa igienico-sanitaria sulle piscine (lett. c) <span class="ph">[da confermare con l'ASL]</span></td></tr>
+<tr><td>Comunicazioni ai condomini: orari, chiusure, guasti, avvisi</td><td>Esecuzione del regolamento (lett. b)</td></tr>
+<tr><td>Accesso sicuro al sito con codice via email</td><td>Necessità tecnica per fornire il servizio (lett. b e f)</td></tr>
+</tbody>
+</table></div>
+<p>Il sito non prende decisioni automatiche con effetti giuridici: l'esito «può entrare / non può entrare» applica le autorizzazioni decise dall'amministratore ed è sempre verificato da un operatore.</p>
+
+<h2>4. Chi può vedere i dati</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chi</th><th>Cosa vede</th></tr></thead>
+<tbody>
+<tr><td>Condomini invitati</td><td>Informazioni generali della piscina (orari, qualità dell'acqua, avvisi, numero di presenti, meteo, regolamento) e le tessere della propria famiglia. Non vedono i dati degli altri condomini.</td></tr>
+<tr><td>Operatori della piscina</td><td>Elenco dei condomini con i dati del punto 2 (compresi telefono, data di nascita e stato di sospensione), registro degli ingressi, manutenzione e avvisi, per svolgere il servizio al cancello e in vasca.</td></tr>
+<tr><td>Amministratore</td><td>Tutti i dati, compreso l'elenco delle persone invitate.</td></tr>
+<tr><td>Fornitori tecnici (punto 5)</td><td>Solo quanto necessario a far funzionare il servizio, come responsabili del trattamento o fornitori indipendenti.</td></tr>
+</tbody>
+</table></div>
+<p>Operatori e amministratore sono autorizzati al trattamento e tenuti alla riservatezza. I dati non vengono diffusi, venduti o usati per altri scopi.</p>
+
+<h2>5. Servizi esterni usati dal sito</h2>
+<p>Per funzionare il sito si appoggia ai servizi elencati qui sotto. Ognuno riceve almeno l'indirizzo IP di chi apre il sito, perché è necessario per far arrivare i contenuti al browser.</p>
+<div class="tbl"><table>
+<thead><tr><th>Servizio</th><th>A cosa serve</th><th>Quali dati riceve</th><th>Dove</th></tr></thead>
+<tbody>
+<tr><td>Supabase (Supabase Inc., su infrastruttura Amazon Web Services)</td><td>Archivio dei dati, accesso con codice, aggiornamenti in tempo reale, foto della Home</td><td>Tutti i dati del punto 2; IP e registri tecnici</td><td>Unione Europea, <b>Irlanda</b> (regione eu-west-1). Responsabile del trattamento con accordo sul trattamento dei dati (DPA) <span class="ph">[verificare che il DPA di Supabase sia accettato]</span></td></tr>
+<tr><td><span class="ph">[Servizio di invio email, es. Brevo – Sendinblue SAS, Francia]</span></td><td>Invio dell'email con il codice di accesso</td><td>Indirizzo email, contenuto dell'email, data di invio</td><td><span class="ph">[Unione Europea – da confermare]</span>. Responsabile del trattamento</td></tr>
+<tr><td>GitHub Pages (GitHub Inc., gruppo Microsoft)</td><td>Pubblicazione delle pagine del sito</td><td>IP, browser, pagine richieste (registri tecnici). Non riceve i dati dell'archivio</td><td>Stati Uniti; trasferimento basato sull'EU-US Data Privacy Framework</td></tr>
+<tr><td>Google Fonts (Google LLC / Google Ireland Ltd)</td><td>Caratteri tipografici delle pagine</td><td>IP, browser, pagina di provenienza</td><td>Unione Europea e Stati Uniti; EU-US Data Privacy Framework</td></tr>
+<tr><td>jsDelivr (rete di distribuzione con Cloudflare e Fastly)</td><td>Librerie per l'archivio, i codici QR, la lettura dei QR e i PDF delle tessere</td><td>IP, browser</td><td>Rete mondiale; server più vicino all'utente</td></tr>
+<tr><td>Open-Meteo</td><td>Previsioni meteo per la zona della piscina</td><td>IP e la posizione fissa della piscina (non la posizione dell'utente)</td><td><span class="ph">[Unione Europea / Svizzera – da confermare]</span></td></tr>
+</tbody>
+</table></div>
+<p>La fotocamera, usata solo dagli operatori per leggere il QR delle tessere, funziona interamente nel browser: le immagini non vengono salvate né inviate.</p>
+
+<h2>6. Per quanto tempo conserviamo i dati</h2>
+<div class="tbl"><table>
+<thead><tr><th>Dati</th><th>Durata</th></tr></thead>
+<tbody>
+<tr><td>Registro degli ingressi e degli ospiti</td><td><b>12 mesi</b> dal giorno dell'ingresso, poi cancellazione automatica <span class="ph">[attiva dopo l'applicazione dello script supabase/conservazione.sql]</span></td></tr>
+<tr><td>Elenco dei condomini e tessere</td><td>Finché la famiglia abita nel condominio o ha diritto di usare la piscina; cancellazione entro <span class="ph">[30 giorni]</span> dalla fine del diritto o dalla richiesta</td></tr>
+<tr><td>Persone invitate e account di accesso</td><td>Finché la persona è invitata; dopo la rimozione l'account di accesso viene cancellato entro <span class="ph">[30 giorni]</span></td></tr>
+<tr><td>Misurazioni dell'acqua (con il nome dell'operatore)</td><td><span class="ph">[periodo indicato dall'ASL, es. 5 anni]</span></td></tr>
+<tr><td>Interventi di manutenzione straordinaria</td><td><span class="ph">[10 anni, come la documentazione condominiale]</span></td></tr>
+<tr><td>Avvisi e segnalazioni di guasto</td><td><span class="ph">[24 mesi]</span> dalla pubblicazione</td></tr>
+<tr><td>Registri tecnici dei fornitori</td><td>Secondo le politiche dei fornitori, di norma pochi giorni</td></tr>
+</tbody>
+</table></div>
+
+<h2>7. Come proteggiamo i dati</h2>
 <ul>
-<li>Indirizzo email e nome delle persone invitate al sito, con il loro ruolo (condomino, operatore, amministratore).</li>
-<li>Per ogni nucleo familiare: cognome, scala, interno, telefono di riferimento, nomi dei componenti, data di nascita (usata solo per sapere chi deve entrare accompagnato), autorizzazione all'accesso ed eventuali note.</li>
-<li>Codice personale della tessera della piscina.</li>
-<li>Registro degli ingressi: nome, appartamento, ora di entrata e di uscita, ingressi negati con il motivo, nome degli ospiti.</li>
-<li>Dati tecnici necessari all'accesso (sessione e registri del servizio di archiviazione).</li>
+<li>Al sito si accede solo se invitati, con un codice monouso inviato via email; non ci sono password da ricordare o da rubare.</li>
+<li>Le regole di accesso sono applicate dall'archivio stesso: ogni ruolo può leggere e modificare solo ciò che gli spetta.</li>
+<li>Le comunicazioni sono cifrate (HTTPS). Il QR della tessera contiene solo un codice, senza dati personali; una tessera persa può essere invalidata subito.</li>
+<li>Le pagine non vengono indicizzate dai motori di ricerca.</li>
 </ul>
 
-<h2>Perché</h2>
-<p>Per gestire l'uso della piscina comune secondo il regolamento condominiale: controllo degli accessi e della capienza, sicurezza dei bagnanti e in particolare dei minori, comunicazioni ai condomini, registro dei controlli dell'acqua previsto dalla normativa sanitaria. La base giuridica è l'esecuzione del regolamento condominiale e il legittimo interesse alla sicurezza (art. 6, par. 1, lett. b e f del GDPR).</p>
+<h2>8. I tuoi diritti</h2>
+<p>Puoi chiedere in qualsiasi momento di accedere ai tuoi dati, correggerli, cancellarli, limitarne l'uso, riceverli in un formato leggibile e opporti al trattamento basato sul legittimo interesse (articoli 15–22 del GDPR). Per i figli minori i diritti sono esercitati da chi ne ha la responsabilità genitoriale. Scrivi a <span class="ph">[email di contatto dell'amministratore]</span>: rispondiamo entro un mese.</p>
+<p>Il conferimento dei dati è necessario per usare la piscina tramite il sito: senza, l'accesso va gestito in altro modo con l'amministratore.</p>
+<p>Puoi presentare reclamo al Garante per la protezione dei dati personali, <a href="https://www.garanteprivacy.it">www.garanteprivacy.it</a>.</p>
 
-<h2>Chi può vederli</h2>
-<p>I condomini vedono solo le informazioni generali della Home e le tessere della propria famiglia. Gli operatori della piscina vedono l'elenco dei condomini e il registro degli ingressi per svolgere il loro lavoro. L'amministratore gestisce tutti i dati. I dati non vengono diffusi né ceduti a terzi.</p>
-
-<h2>Dove sono conservati</h2>
-<p>Nell'archivio del servizio Supabase, con server nell'Unione Europea (Francoforte), che agisce come responsabile del trattamento. Il sito è pubblicato tramite GitHub Pages, che non riceve i dati dei condomini. Le previsioni meteo provengono dal servizio Open-Meteo, al quale il browser chiede solo le previsioni per la zona della piscina, senza alcun dato personale.</p>
-
-<h2>Per quanto tempo</h2>
-<p>I dati anagrafici restano finché la persona abita nel condominio o fino a sua richiesta di cancellazione. Il registro degli ingressi viene conservato per <b>[12 mesi]</b> e poi cancellato.</p>
-
-<h2>I tuoi diritti</h2>
-<p>Puoi chiedere in qualsiasi momento di vedere, correggere o cancellare i tuoi dati, limitarne l'uso o opporti, scrivendo all'amministratore. Puoi anche presentare reclamo al Garante per la protezione dei dati personali (www.garanteprivacy.it).</p>
+<h2>9. Modifiche</h2>
+<p>Questa informativa può essere aggiornata, ad esempio se cambiano i servizi usati. La data in alto indica l'ultima versione; le modifiche importanti vengono comunicate con un avviso nel sito.</p>
 </article>
 </main>
 </body>

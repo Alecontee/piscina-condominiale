@@ -18,7 +18,7 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
 
 ## Installazione
 
-1. **Supabase**: crea un progetto (regione Central EU). In *SQL Editor* esegui `supabase/schema.sql`, poi aggiungi il primo amministratore:
+1. **Supabase**: crea un progetto in una regione dell'Unione Europea (il progetto attuale è in Irlanda, eu-west-1: se cambi regione aggiorna anche `informativa.html`). In *SQL Editor* esegui `supabase/schema.sql`, poi aggiungi il primo amministratore:
    Poi esegui `supabase/dati-iniziali.sql` (orari, regolamento e impostazioni già decisi) e aggiungi il primo amministratore:
    ```sql
    insert into public.utenti (email, nome, ruolo) values ('tua@email.it', 'Il tuo nome', 'admin');
@@ -36,4 +36,5 @@ Entra solo chi è nell'elenco **Impostazioni → Persone invitate**. L'accesso a
 - `config.js` – collegamento a Supabase
 - `supabase/schema.sql` – tabelle, regole di accesso, funzioni
 - `supabase/email-accesso.html` – testo dell'email di accesso
-- `informativa.html` – bozza dell'informativa privacy
+- `supabase/conservazione.sql` – cancellazione automatica del registro ingressi dopo 12 mesi (da eseguire una volta, dopo l'approvazione)
+- `informativa.html` – bozza dell'informativa privacy: le parti evidenziate in giallo vanno completate
