@@ -476,9 +476,12 @@ body.r-viewer .st, body.r-viewer .ad, body.r-staff .ad { display: none !importan
 .sem-txt b { font-family: var(--font-display); font-size: clamp(1.6rem, 7vw, 2.2rem); font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
 .semaforo.ok .sem-txt b { color: var(--ok); } .semaforo.warn .sem-txt b { color: var(--warn); } .semaforo.bad .sem-txt b { color: var(--bad); }
 .sem-txt span { color: var(--muted); }
-.consiglio { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 16px; background: var(--accent-soft); }
-.consiglio svg { width: 34px; height: 34px; flex: none; }
-.consiglio small { display: block; font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-2); }
+.sem-msg { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 16px; background: var(--accent-soft); }
+.sem-msg svg { width: 30px; height: 30px; flex: none; }
+.sem-msg small { display: block; font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.semaforo.ok .sem-msg { background: color-mix(in srgb, #34d17f 14%, transparent); } .semaforo.ok .sem-msg small { color: var(--ok); }
+.semaforo.warn .sem-msg { background: color-mix(in srgb, #ffc23d 18%, transparent); } .semaforo.warn .sem-msg small { color: var(--warn); }
+.semaforo.bad .sem-msg { background: color-mix(in srgb, #ff5a4e 14%, transparent); } .semaforo.bad .sem-msg small { color: var(--bad); }
 
 /* Anello affollamento */
 .ring-fg.calm { stroke: var(--ok); }
@@ -1487,7 +1490,7 @@ function fillAria() {
   } else if (!S.ariaAuto) h.textContent = best ? 'Inserita a mano' : 'Inseriscila a mano';
 }
 
-/* ---------- idee nuove: cielo, semaforo, consiglio, tema, scorrimento ---------- */
+/* ---------- idee nuove: cielo, semaforo, tema, scorrimento ---------- */
 function aggiornaCielo() {
   const hero = $('#hero'); if (!hero) return;
   const d = new Date(), h = d.getHours() + d.getMinutes() / 60;
@@ -1505,22 +1508,14 @@ function aggiornaCielo() {
   hero.classList.toggle('notte', notte); hero.classList.toggle('tramonto', !notte && h >= 17); hero.classList.toggle('alba', !notte && h < 8);
   $('#hero-saluto').textContent = h < 5.5 ? 'Buonanotte' : h < 13 ? 'Buongiorno' : h < 18 ? 'Buon pomeriggio' : 'Buonasera';
 }
-function consiglioMeteo() {
-  const m = S.meteo; if (!m) return null;
-  const r = m.riepilogo, t = m.attuale && m.attuale.temp, max = r ? r.max : isNum(t) ? Math.round(t) : null;
-  if (r && r.pioggia > 0) return ['pioggia', 'Pioggia prevista durante l\'apertura: controlla la Bacheca prima di uscire.'];
-  if (max !== null && max >= 30) return ['caldo', 'Caldo forte: crema solare, cappello e acqua. Meglio l\'ombra tra le 13 e le 16.'];
-  if (r && r.ventoMax >= 25) return ['vento', 'Vento sostenuto: porta un telo in più e tieni fermi gli oggetti leggeri.'];
-  if (max !== null && max >= 25) return ['sole', 'Giornata da piscina: ricorda la crema solare e la borraccia.'];
-  if (max !== null && max < 22) return ['fresco', 'Aria fresca: porta un accappatoio per quando esci dall\'acqua.'];
-  return ['sole', 'Bella giornata: porta cuffia e ciabatte, il resto lo trovi qui.'];
-}
-const ICO_CONS = {
-  sole: '<svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="7" fill="#ffb547"/><g stroke="#ff9e2c" stroke-width="2.4" stroke-linecap="round"><path d="M17 3v4M17 27v4M3 17h4M27 17h4M7 7l2.8 2.8M24.2 24.2L27 27M7 27l2.8-2.8M24.2 9.8L27 7"/></g></svg>',
-  caldo: '<svg viewBox="0 0 34 34" aria-hidden="true"><rect x="14" y="4" width="6" height="18" rx="3" fill="#ffd9c7"/><circle cx="17" cy="25" r="6" fill="#e0603f"/><rect x="15.5" y="10" width="3" height="14" rx="1.5" fill="#e0603f"/></svg>',
-  pioggia: '<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M9 20a6 6 0 0 1 1-12 8 8 0 0 1 15 2 5 5 0 0 1 0 10z" fill="#9cb0c8"/><g stroke="#1f8fd6" stroke-width="2.4" stroke-linecap="round"><path d="M12 24l-2 5M18 24l-2 5M24 24l-2 5"/></g></svg>',
-  vento: '<svg viewBox="0 0 34 34" aria-hidden="true"><g fill="none" stroke="#1f8fd6" stroke-width="2.6" stroke-linecap="round"><path d="M4 13h18a4 4 0 1 0-4-4"/><path d="M4 20h22a4 4 0 1 1-4 4"/></g></svg>',
-  fresco: '<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 9h18l-2 18H10z" fill="#4fb3ee"/><path d="M8 9c3-4 15-4 18 0" fill="none" stroke="#0d3b5e" stroke-width="2.2"/></svg>'
+/* un messaggio fisso per ogni colore del semaforo */
+const MSG_SEM = {
+  ok: ['Buon bagno', 'Acqua controllata e vasca aperta: porta cuffia e ciabatte e fai la doccia prima di entrare.',
+    '<svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#34d17f"/><path d="M9 15.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
+  warn: ['Con attenzione', 'Prima di scendere in vasca controlla gli avvisi e segui le indicazioni dell\'operatore.',
+    '<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3l13 23H2z" fill="#ffc23d" stroke-linejoin="round"/><path d="M15 11v7" stroke="#2b1700" stroke-width="3" stroke-linecap="round"/><circle cx="15" cy="22" r="1.8" fill="#2b1700"/></svg>'],
+  bad: ['Per ora no', 'Per ora non si entra in vasca. Quando si riapre lo vedi qui e in Bacheca.',
+    '<svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#ff5a4e"/><path d="M8 15h14" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></svg>']
 };
 function renderSemaforo() {
   const box = $('#home-semaforo'); if (!box) return;
@@ -1535,11 +1530,11 @@ function renderSemaforo() {
   else if (ng) { lvl = 'warn'; big = 'Puoi entrare, con un guasto in corso'; sub = 'Leggi l\'avviso qui sopra.'; }
   else if (!w || w.lvl === 'warn') { lvl = 'warn'; big = 'Puoi fare il bagno'; sub = w ? w.text : 'In attesa della prima misura dell\'acqua.'; }
   else { lvl = 'ok'; big = 'Puoi fare il bagno'; sub = 'Acqua controllata alle ' + fmtT(w.last.ts) + (a.detail ? ' · ' + a.detail.toLowerCase() : ''); }
-  const cons = consiglioMeteo();
+  const [tit, msg, ico] = MSG_SEM[lvl];
   box.className = 'semaforo ' + lvl; box.hidden = false;
   box.innerHTML = `<div class="luci" aria-hidden="true"><span class="luce r"></span><span class="luce y"></span><span class="luce g"></span></div>
     <div class="sem-txt"><b>${esc(big)}</b><span>${esc(sub)}</span></div>
-    ${cons ? `<div class="consiglio">${ICO_CONS[cons[0]]}<div><small>Consiglio del giorno</small>${esc(cons[1])}</div></div>` : ''}`;
+    <div class="sem-msg">${ico}<div><small>${tit}</small>${msg}</div></div>`;
 }
 function temaAuto() { const h = new Date().getHours() + new Date().getMinutes() / 60; return h >= 20.5 || h < 6.5 || matchMedia('(prefers-color-scheme: dark)').matches; }
 function applicaTema() {
