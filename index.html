@@ -1079,35 +1079,38 @@ function armed(btn) {
 }
 
 /* ---------- valutazione parametri ---------- */
-function band(v, min, max) {
+/* dentro l'intervallo: verde. Fuori fino al 20% del limite superato: giallo. Oltre il 20%: rosso.
+   Per il pH (scala logaritmica) il 20% si calcola sull'ampiezza dell'intervallo, non sul valore. */
+const TOLL = 0.2;
+function band(v, min, max, margine) {
   if (!isNum(v)) return null; v = +v;
-  if (v < min || v > max) return 'bad';
-  const m = (max - min) * 0.1;
-  return (v < min + m || v > max - m) ? 'warn' : 'ok';
+  if (v >= min && v <= max) return 'ok';
+  const lim = v < min ? min : max, m = margine ?? Math.abs(lim) * TOLL;
+  return Math.abs(v - lim) <= m + 1e-9 ? 'warn' : 'bad';
 }
-const ccBand = v => isNum(v) ? (+v > S.cfg.ccMax ? 'bad' : (+v > S.cfg.ccMax * 0.75 ? 'warn' : 'ok')) : null;
+const phBand = (v, c = S.cfg) => band(v, c.phMin, c.phMax, (c.phMax - c.phMin) * TOLL);
+const ccBand = v => band(v, -Infinity, S.cfg.ccMax);
 function evalL(l) {
   const c = S.cfg;
-  return { ph: band(l.ph, c.phMin, c.phMax), cl: band(l.cloro, c.clMin, c.clMax), cc: ccBand(l.cloroComb), ta: band(l.tAcqua, c.taMin, c.taMax) };
+  return { ph: phBand(l.ph), cl: band(l.cloro, c.clMin, c.clMax), cc: ccBand(l.cloroComb), ta: band(l.tAcqua, c.taMin, c.taMax) };
 }
 const worst = a => a.includes('bad') ? 'bad' : a.includes('warn') ? 'warn' : a.includes('ok') ? 'ok' : null;
-const LV = { ok: 'Nei limiti', warn: 'Vicino al limite', bad: 'Fuori limite' };
+const LV = { ok: 'Nei limiti', warn: 'Poco fuori limite', bad: 'Fuori limite' };
 const pill = (lvl, txt) => `<span class="pill ${lvl || 'neutral'}">${esc(txt ?? (LV[lvl] || '—'))}</span>`;
 
 /* suggerimenti di trattamento in base ai valori */
 function suggerimenti(v) {
   const c = S.cfg, out = [];
   if (isNum(v.ph)) {
-    if (+v.ph > c.phMax) out.push(['bad', 'pH alto: aggiungi correttore pH− (riduttore). Con pH alto il cloro funziona molto meno.']);
-    else if (+v.ph < c.phMin) out.push(['bad', 'pH basso: aggiungi correttore pH+ (incrementatore). Acqua acida irrita occhi e pelle.']);
-    else if (band(v.ph, c.phMin, c.phMax) === 'warn') out.push(['warn', 'pH vicino al limite: valuta una piccola correzione e ricontrolla più tardi.']);
+    if (+v.ph > c.phMax) out.push([phBand(v.ph), 'pH alto: aggiungi correttore pH− (riduttore). Con pH alto il cloro funziona molto meno.']);
+    else if (+v.ph < c.phMin) out.push([phBand(v.ph), 'pH basso: aggiungi correttore pH+ (incrementatore). Acqua acida irrita occhi e pelle.']);
   }
   if (isNum(v.cloro)) {
-    if (+v.cloro < c.clMin) out.push(['bad', 'Cloro libero basso: aggiungi cloro. Correggi prima il pH, poi il cloro.']);
-    else if (+v.cloro > c.clMax) out.push(['bad', 'Cloro libero alto: sospendi il dosaggio e attendi che scenda prima di far entrare i bagnanti.']);
+    if (+v.cloro < c.clMin) out.push([band(v.cloro, c.clMin, c.clMax), 'Cloro libero basso: aggiungi cloro. Correggi prima il pH, poi il cloro.']);
+    else if (+v.cloro > c.clMax) out.push([band(v.cloro, c.clMin, c.clMax), 'Cloro libero alto: sospendi il dosaggio e attendi che scenda prima di far entrare i bagnanti.']);
   }
-  if (isNum(v.cloroComb) && +v.cloroComb > c.ccMax) out.push(['bad', 'Cloro combinato alto: serve una clorazione shock o un rinnovo parziale dell\'acqua.']);
-  if (isNum(v.tAcqua) && band(v.tAcqua, c.taMin, c.taMax) === 'bad') out.push(['warn', 'Temperatura dell\'acqua fuori dall\'intervallo di riferimento.']);
+  if (isNum(v.cloroComb) && +v.cloroComb > c.ccMax) out.push([ccBand(v.cloroComb), 'Cloro combinato alto: serve una clorazione shock o un rinnovo parziale dell\'acqua.']);
+  if (isNum(v.tAcqua) && band(v.tAcqua, c.taMin, c.taMax) !== 'ok') out.push([band(v.tAcqua, c.taMin, c.taMax), 'Temperatura dell\'acqua fuori dall\'intervallo di riferimento.']);
   if (!out.length && isNum(v.ph) && isNum(v.cloro)) out.push(['ok', 'Valori nei limiti: nessuna correzione necessaria.']);
   return out;
 }
@@ -1230,7 +1233,7 @@ function waterState() {
   if (!last) return null;
   const e = evalL(last), lvl = worst([e.ph, e.cl, e.cc, e.ta]);
   const stale = (Date.now() - new Date(last.ts)) / 36e5 > S.cfg.oreMax;
-  const v = stale ? ['warn', 'Misura non aggiornata'] : lvl === 'ok' ? ['ok', 'Acqua nei parametri'] : lvl === 'warn' ? ['warn', 'Acqua nei parametri, valori sotto controllo'] : ['bad', 'Parametri fuori norma: trattamento in corso'];
+  const v = stale && lvl === 'bad' ? ['bad', 'Ultima misura fuori norma e non aggiornata'] : stale ? ['warn', 'Misura non aggiornata'] : lvl === 'ok' ? ['ok', 'Acqua nei parametri'] : lvl === 'warn' ? ['warn', 'Valori poco fuori limite: correzione in corso'] : ['bad', 'Parametri fuori norma: trattamento in corso'];
   return { last, e, lvl: v[0], text: v[1] };
 }
 function avvisiAttivi() {
@@ -1778,7 +1781,7 @@ function formValues() {
 function renderOrHints() {
   const c = S.cfg, v = formValues();
   const set = (id, lvl, ref) => { $(id).innerHTML = `<span>Rif. ${ref}</span>${lvl ? pill(lvl) : ''}`; };
-  set('#or-ph-h', band(v.ph, c.phMin, c.phMax), `${fmt(c.phMin)}–${fmt(c.phMax)}`);
+  set('#or-ph-h', phBand(v.ph), `${fmt(c.phMin)}–${fmt(c.phMax)}`);
   set('#or-cl-h', band(v.cloro, c.clMin, c.clMax), `${fmt(c.clMin, 2)}–${fmt(c.clMax, 2)}`);
   set('#or-cc-h', ccBand(v.cloroComb), `≤ ${fmt(c.ccMax, 2)}`);
   set('#or-ta-h', band(v.tAcqua, c.taMin, c.taMax), `${fmt(c.taMin, 0)}–${fmt(c.taMax, 0)} °C`);
