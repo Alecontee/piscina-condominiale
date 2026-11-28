@@ -237,6 +237,7 @@ body.r-viewer nav.tabs { display: none; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px 16px; align-items: start; }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .field.wide { grid-column: 1 / -1; }
+@media (max-width: 520px) { .grid > .field[style*="span 2"] { grid-column: 1 / -1 !important; } }
 .field > label { font-size: .88rem; font-weight: 700; color: var(--muted); }
 .hint { font-size: .85rem; color: var(--muted); display: flex; gap: 6px; align-items: center; min-height: 1.4em; flex-wrap: wrap; }
 input, select, textarea { font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; width: 100%; min-width: 0; transition: border-color .15s, box-shadow .15s; }
@@ -937,7 +938,7 @@ h2 .sec-ico svg { width: 30px; height: 30px; }
         <div class="field"><label for="imp-eta">Minori accompagnati sotto i (anni)</label><input type="number" id="imp-eta" min="0" max="18" step="1"></div>
         <div class="field"><label for="imp-osp">Ospiti al giorno per famiglia</label><input type="number" id="imp-osp" min="0" step="1"></div>
 
-        <div class="field wide"><span class="lbl">Limiti dell'acqua</span></div>
+        <div class="field wide"><span class="lbl">Limiti di attenzione dell'acqua</span><span class="small muted">Oltre questi valori il semaforo diventa giallo.</span></div>
         <div class="field"><label for="imp-phmin">pH minimo</label><input type="number" id="imp-phmin" step="0.1"></div>
         <div class="field"><label for="imp-phmax">pH massimo</label><input type="number" id="imp-phmax" step="0.1"></div>
         <div class="field"><label for="imp-clmin">Cloro libero min (mg/l)</label><input type="number" id="imp-clmin" step="0.05"></div>
@@ -945,6 +946,12 @@ h2 .sec-ico svg { width: 30px; height: 30px; }
         <div class="field"><label for="imp-ccmax">Cloro combinato max (mg/l)</label><input type="number" id="imp-ccmax" step="0.05"></div>
         <div class="field"><label for="imp-tamin">Temp. acqua min (°C)</label><input type="number" id="imp-tamin" step="0.5"></div>
         <div class="field"><label for="imp-tamax">Temp. acqua max (°C)</label><input type="number" id="imp-tamax" step="0.5"></div>
+        <div class="field wide"><span class="lbl">Limiti di divieto di balneazione</span><span class="small muted">Oltre questi valori non si può stare in acqua e il semaforo diventa rosso.</span></div>
+        <div class="field"><label for="imp-phstopmin">pH minimo per il bagno</label><input type="number" id="imp-phstopmin" step="0.1"></div>
+        <div class="field"><label for="imp-phstopmax">pH massimo per il bagno</label><input type="number" id="imp-phstopmax" step="0.1"></div>
+        <div class="field"><label for="imp-clstopmin">Cloro libero min per il bagno (mg/l)</label><input type="number" id="imp-clstopmin" step="0.05"></div>
+        <div class="field"><label for="imp-clstopmax">Cloro libero max per il bagno (mg/l)</label><input type="number" id="imp-clstopmax" step="0.05"></div>
+        <div class="field"><label for="imp-ccstop">Cloro combinato max per il bagno (mg/l)</label><input type="number" id="imp-ccstop" step="0.05"></div>
         <div class="form-actions"><button class="primary" type="submit">Salva impostazioni</button><button type="button" id="imp-reset">Ripristina limiti predefiniti</button></div>
       </form>
     </div>
@@ -996,7 +1003,7 @@ h2 .sec-ico svg { width: 30px; height: 30px; }
 <script>
 (() => {
 'use strict';
-const DEFAULT_CFG = { nome: 'Piscina condominiale', capienza: 30, oreMax: 12, phMin: 6.5, phMax: 7.5, clMin: 0.7, clMax: 1.5, ccMax: 0.4, taMin: 24, taMax: 30, etaAccomp: 14, maxOspiti: 2 };
+const DEFAULT_CFG = { nome: 'Piscina condominiale', capienza: 30, oreMax: 12, phMin: 6.5, phMax: 7.5, clMin: 0.7, clMax: 1.5, ccMax: 0.4, taMin: 24, taMax: 30, phStopMin: 6.0, phStopMax: 8.0, clStopMin: 0.5, clStopMax: 3.0, ccStop: 0.6, etaAccomp: 14, maxOspiti: 2 };
 const STATI = { da_fare: 'Da fare', in_corso: 'In corso', completato: 'Completato' };
 const UNITA = ['kg', 'g', 'l', 'ml', 'pastiglie'];
 /* scheda → livello minimo: viewer < staff < admin */
@@ -1079,23 +1086,24 @@ function armed(btn) {
 }
 
 /* ---------- valutazione parametri ---------- */
-/* dentro l'intervallo: verde. Fuori fino al 20% del limite superato: giallo. Oltre il 20%: rosso.
-   Per il pH (scala logaritmica) il 20% si calcola sull'ampiezza dell'intervallo, non sul valore. */
-const TOLL = 0.2;
-function band(v, min, max, margine) {
+/* dentro i limiti di attenzione: verde. Oltre i limiti di attenzione: giallo.
+   Oltre i limiti di divieto di balneazione: rosso. La temperatura non ha divieto: al massimo giallo. */
+function band(v, min, max, stopMin = -Infinity, stopMax = Infinity) {
   if (!isNum(v)) return null; v = +v;
   if (v >= min && v <= max) return 'ok';
-  const lim = v < min ? min : max, m = margine ?? Math.abs(lim) * TOLL;
-  return Math.abs(v - lim) <= m + 1e-9 ? 'warn' : 'bad';
+  return v < stopMin || v > stopMax ? 'bad' : 'warn';
 }
-const phBand = (v, c = S.cfg) => band(v, c.phMin, c.phMax, (c.phMax - c.phMin) * TOLL);
-const ccBand = v => band(v, -Infinity, S.cfg.ccMax);
+const stopMin = (stop, min) => isNum(stop) ? Math.min(+stop, min) : min;
+const stopMax = (stop, max) => isNum(stop) ? Math.max(+stop, max) : max;
+const phBand = (v, c = S.cfg) => band(v, c.phMin, c.phMax, stopMin(c.phStopMin, c.phMin), stopMax(c.phStopMax, c.phMax));
+const clBand = (v, c = S.cfg) => band(v, c.clMin, c.clMax, stopMin(c.clStopMin, c.clMin), stopMax(c.clStopMax, c.clMax));
+const ccBand = (v, c = S.cfg) => band(v, -Infinity, c.ccMax, -Infinity, stopMax(c.ccStop, c.ccMax));
+const taBand = (v, c = S.cfg) => band(v, c.taMin, c.taMax);
 function evalL(l) {
-  const c = S.cfg;
-  return { ph: phBand(l.ph), cl: band(l.cloro, c.clMin, c.clMax), cc: ccBand(l.cloroComb), ta: band(l.tAcqua, c.taMin, c.taMax) };
+  return { ph: phBand(l.ph), cl: clBand(l.cloro), cc: ccBand(l.cloroComb), ta: taBand(l.tAcqua) };
 }
 const worst = a => a.includes('bad') ? 'bad' : a.includes('warn') ? 'warn' : a.includes('ok') ? 'ok' : null;
-const LV = { ok: 'Nei limiti', warn: 'Poco fuori limite', bad: 'Fuori limite' };
+const LV = { ok: 'Nei limiti', warn: 'Fuori limite', bad: 'Niente bagno' };
 const pill = (lvl, txt) => `<span class="pill ${lvl || 'neutral'}">${esc(txt ?? (LV[lvl] || '—'))}</span>`;
 
 /* suggerimenti di trattamento in base ai valori */
@@ -1106,11 +1114,11 @@ function suggerimenti(v) {
     else if (+v.ph < c.phMin) out.push([phBand(v.ph), 'pH basso: aggiungi correttore pH+ (incrementatore). Acqua acida irrita occhi e pelle.']);
   }
   if (isNum(v.cloro)) {
-    if (+v.cloro < c.clMin) out.push([band(v.cloro, c.clMin, c.clMax), 'Cloro libero basso: aggiungi cloro. Correggi prima il pH, poi il cloro.']);
-    else if (+v.cloro > c.clMax) out.push([band(v.cloro, c.clMin, c.clMax), 'Cloro libero alto: sospendi il dosaggio e attendi che scenda prima di far entrare i bagnanti.']);
+    if (+v.cloro < c.clMin) out.push([clBand(v.cloro), 'Cloro libero basso: aggiungi cloro. Correggi prima il pH, poi il cloro.']);
+    else if (+v.cloro > c.clMax) out.push([clBand(v.cloro), 'Cloro libero alto: sospendi il dosaggio e attendi che scenda prima di far entrare i bagnanti.']);
   }
   if (isNum(v.cloroComb) && +v.cloroComb > c.ccMax) out.push([ccBand(v.cloroComb), 'Cloro combinato alto: serve una clorazione shock o un rinnovo parziale dell\'acqua.']);
-  if (isNum(v.tAcqua) && band(v.tAcqua, c.taMin, c.taMax) !== 'ok') out.push([band(v.tAcqua, c.taMin, c.taMax), 'Temperatura dell\'acqua fuori dall\'intervallo di riferimento.']);
+  if (isNum(v.tAcqua) && taBand(v.tAcqua) !== 'ok') out.push(['warn', 'Temperatura dell\'acqua fuori dall\'intervallo di riferimento.']);
   if (!out.length && isNum(v.ph) && isNum(v.cloro)) out.push(['ok', 'Valori nei limiti: nessuna correzione necessaria.']);
   return out;
 }
@@ -1233,7 +1241,7 @@ function waterState() {
   if (!last) return null;
   const e = evalL(last), lvl = worst([e.ph, e.cl, e.cc, e.ta]);
   const stale = (Date.now() - new Date(last.ts)) / 36e5 > S.cfg.oreMax;
-  const v = stale && lvl === 'bad' ? ['bad', 'Ultima misura fuori norma e non aggiornata'] : stale ? ['warn', 'Misura non aggiornata'] : lvl === 'ok' ? ['ok', 'Acqua nei parametri'] : lvl === 'warn' ? ['warn', 'Valori poco fuori limite: correzione in corso'] : ['bad', 'Parametri fuori norma: trattamento in corso'];
+  const v = stale && lvl === 'bad' ? ['bad', 'Ultima misura fuori norma e non aggiornata'] : stale ? ['warn', 'Misura non aggiornata'] : lvl === 'ok' ? ['ok', 'Acqua nei parametri'] : lvl === 'warn' ? ['warn', 'Valori oltre i limiti di attenzione: correzione in corso'] : ['bad', 'Parametri fuori norma: trattamento in corso'];
   return { last, e, lvl: v[0], text: v[1] };
 }
 function avvisiAttivi() {
@@ -1513,7 +1521,7 @@ function aggiornaCielo() {
 }
 /* un messaggio fisso per ogni colore del semaforo */
 const MSG_SEM = {
-  ok: ['Buon bagno', 'Acqua controllata e vasca aperta: porta cuffia e ciabatte e fai la doccia prima di entrare.',
+  ok: ['Buon bagno', 'Acqua controllata e vasca aperta.',
     '<svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#34d17f"/><path d="M9 15.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>'],
   warn: ['Con attenzione', 'Prima di scendere in vasca controlla gli avvisi e segui le indicazioni dell\'operatore.',
     '<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3l13 23H2z" fill="#ffc23d" stroke-linejoin="round"/><path d="M15 11v7" stroke="#2b1700" stroke-width="3" stroke-linecap="round"/><circle cx="15" cy="22" r="1.8" fill="#2b1700"/></svg>'],
@@ -1782,9 +1790,9 @@ function renderOrHints() {
   const c = S.cfg, v = formValues();
   const set = (id, lvl, ref) => { $(id).innerHTML = `<span>Rif. ${ref}</span>${lvl ? pill(lvl) : ''}`; };
   set('#or-ph-h', phBand(v.ph), `${fmt(c.phMin)}–${fmt(c.phMax)}`);
-  set('#or-cl-h', band(v.cloro, c.clMin, c.clMax), `${fmt(c.clMin, 2)}–${fmt(c.clMax, 2)}`);
+  set('#or-cl-h', clBand(v.cloro), `${fmt(c.clMin, 2)}–${fmt(c.clMax, 2)}`);
   set('#or-cc-h', ccBand(v.cloroComb), `≤ ${fmt(c.ccMax, 2)}`);
-  set('#or-ta-h', band(v.tAcqua, c.taMin, c.taMax), `${fmt(c.taMin, 0)}–${fmt(c.taMax, 0)} °C`);
+  set('#or-ta-h', taBand(v.tAcqua), `${fmt(c.taMin, 0)}–${fmt(c.taMax, 0)} °C`);
   const s = [...suggerimenti(v), ...consigliMeteo().map(([l, t]) => [l, 'Meteo: ' + t])];
   $('#or-sugg').innerHTML = s.length ? s.map(([l, t]) => `<li class="${l}">${esc(t)}</li>`).join('') : '<li>Inserisci pH e cloro: qui compare cosa aggiungere.</li>';
 }
@@ -2198,6 +2206,7 @@ function fillCfgForm(src = S.cfg) {
   const c = src, s = (id, v) => { $(id).value = v ?? ''; };
   s('#imp-nome', c.nome); s('#imp-cap', c.capienza); s('#imp-ore', c.oreMax); s('#imp-phmin', c.phMin); s('#imp-phmax', c.phMax);
   s('#imp-clmin', c.clMin); s('#imp-clmax', c.clMax); s('#imp-ccmax', c.ccMax); s('#imp-tamin', c.taMin); s('#imp-tamax', c.taMax);
+  s('#imp-phstopmin', c.phStopMin); s('#imp-phstopmax', c.phStopMax); s('#imp-clstopmin', c.clStopMin); s('#imp-clstopmax', c.clStopMax); s('#imp-ccstop', c.ccStop);
   s('#imp-eta', c.etaAccomp); s('#imp-osp', c.maxOspiti);
 }
 function renderEsempi() {
@@ -2517,13 +2526,17 @@ $('#imp-form').addEventListener('submit', async ev => {
   const c = { nome: $('#imp-nome').value.trim() || D.nome,
     capienza: Math.max(1, Math.round(n('#imp-cap', D.capienza))), oreMax: Math.max(1, n('#imp-ore', D.oreMax)),
     phMin: n('#imp-phmin', D.phMin), phMax: n('#imp-phmax', D.phMax), clMin: n('#imp-clmin', D.clMin), clMax: n('#imp-clmax', D.clMax), ccMax: n('#imp-ccmax', D.ccMax),
-    taMin: n('#imp-tamin', D.taMin), taMax: n('#imp-tamax', D.taMax), etaAccomp: n('#imp-eta', D.etaAccomp), maxOspiti: Math.max(0, Math.round(n('#imp-osp', D.maxOspiti))) };
+    taMin: n('#imp-tamin', D.taMin), taMax: n('#imp-tamax', D.taMax),
+    phStopMin: n('#imp-phstopmin', D.phStopMin), phStopMax: n('#imp-phstopmax', D.phStopMax), clStopMin: n('#imp-clstopmin', D.clStopMin), clStopMax: n('#imp-clstopmax', D.clStopMax), ccStop: n('#imp-ccstop', D.ccStop),
+    etaAccomp: n('#imp-eta', D.etaAccomp), maxOspiti: Math.max(0, Math.round(n('#imp-osp', D.maxOspiti))) };
   if (c.phMin >= c.phMax || c.clMin >= c.clMax || c.taMin >= c.taMax) return toast('Ogni valore minimo deve essere più basso del massimo.', 'bad');
+  if (c.phStopMin > c.phMin || c.phStopMax < c.phMax || c.clStopMin > c.clMin || c.clStopMax < c.clMax || c.ccStop < c.ccMax)
+    return toast('I limiti per il bagno devono essere più larghi dei limiti di attenzione.', 'bad');
   if (S.cfgRaw.immagine) c.immagine = S.cfgRaw.immagine;
   await guard(S.db.doc('impostazioni/piscina').set(c), 'Impostazioni salvate');
 });
 $('#imp-reset').addEventListener('click', () => {
-  const D = DEFAULT_CFG; fillCfgForm({ ...S.cfg, phMin: D.phMin, phMax: D.phMax, clMin: D.clMin, clMax: D.clMax, ccMax: D.ccMax, taMin: D.taMin, taMax: D.taMax });
+  const D = DEFAULT_CFG; fillCfgForm({ ...S.cfg, phMin: D.phMin, phMax: D.phMax, clMin: D.clMin, clMax: D.clMax, ccMax: D.ccMax, taMin: D.taMin, taMax: D.taMax, phStopMin: D.phStopMin, phStopMax: D.phStopMax, clStopMin: D.clStopMin, clStopMax: D.clStopMax, ccStop: D.ccStop });
   toast('Limiti predefiniti inseriti: premi «Salva impostazioni» per confermare.');
 });
 
