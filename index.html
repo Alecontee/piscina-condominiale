@@ -903,6 +903,43 @@ body::after { will-change: transform; contain: strict; }
 .login-card { border: 1px solid var(--vetro-bordo); background-image: linear-gradient(180deg, var(--lucido), transparent 42%); border-radius: 22px; }
 .login-card h1 { font-size: 2.3rem; line-height: .95; color: var(--fg); text-transform: uppercase; }
 .login-card .codice { letter-spacing: .24em; font-size: 2rem; font-weight: 800; }
+
+/* ---------- turni e area riservata ---------- */
+.seg { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+@media (max-width: 560px) { .seg a { padding: 10px 12px; } .seg a span { font-size: .76rem; } }
+.settimana { display: flex; align-items: center; gap: 8px; }
+.settimana b { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; white-space: nowrap; }
+.settimana button { min-width: 44px; font-size: 1.2rem; line-height: 1; }
+body.r-admin .st-only { display: none; }
+.chi-vede { margin: -4px 0 4px; }
+.turni { display: flex; flex-direction: column; gap: 10px; }
+.giorno { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; background: var(--surface-2); }
+.giorno.oggi { border-color: var(--accent-2); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-2) 18%, transparent); }
+.giorno.passato { opacity: .72; }
+.g-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.g-head > b { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; }
+.turni-g, .lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.turni-g li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 8px 10px; border-radius: 10px; background: var(--surface); }
+.t-ora { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.t-chi { display: flex; flex-direction: column; min-width: 0; }
+.t-az { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.t-add { align-self: flex-start; }
+@media (max-width: 560px) { .turni-g li { grid-template-columns: auto minmax(0, 1fr); } .turni-g .t-az { grid-column: 1 / -1; justify-content: flex-start; } }
+.riservata-nota { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; background: var(--surface); border: 1px dashed color-mix(in srgb, var(--fg) 35%, transparent); }
+.riservata-nota svg { width: 26px; height: 26px; flex: none; color: var(--accent-2); }
+.gruppo + .gruppo { margin-top: 12px; }
+.gruppo .sub-h { margin-bottom: 6px; }
+.lista li { display: flex; align-items: center; justify-content: space-between; gap: 6px 12px; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); }
+.lista li > span:first-child { display: flex; flex-direction: column; min-width: 0; flex: 1 1 200px; }
+.lista.acquisti li.fatto { opacity: .8; }
+.aq-dx { display: flex; align-items: center; gap: 8px; }
+.lista li > .t-az { flex: 1 1 100%; justify-content: flex-start; margin-left: -8px; }
+.aq-costo { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+details.aggiungi { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+details.aggiungi summary { cursor: pointer; font-weight: 700; color: var(--accent-2); min-height: 40px; display: flex; align-items: center; }
+details.aggiungi[open] summary { margin-bottom: 10px; }
+#sub-riservata, #sub-turni { display: flex; flex-direction: column; gap: 16px; }
+#sub-riservata[hidden], #sub-turni[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -1008,18 +1045,19 @@ body::after { will-change: transform; contain: strict; }
     </div>
   </section>
 
-  <!-- MANUTENZIONE: ordinaria + straordinaria -->
+  <!-- MANUTENZIONE: ordinaria, turni dei bagnini, area riservata agli amministratori -->
   <section class="tab" id="tab-manutenzione" hidden>
     <div class="head">
       <div>
         <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 4s-7 8-7 13a7 7 0 0 0 14 0c0-5-7-13-7-13z" fill="#4fb3ee"/><path d="M10 18a3.5 3.5 0 0 0 3 3.4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><rect x="21" y="9" width="5" height="17" rx="2.5" fill="#ffb547"/><rect x="21" y="18" width="5" height="8" rx="2.5" fill="#ff9e2c"/><path d="M20 9h7" stroke="#0d3b5e" stroke-width="2" stroke-linecap="round"/></svg></span>Manutenzione</h2>
-        <p>Tutto il lavoro sulla piscina in un posto: le misure quotidiane dell'acqua con i prodotti aggiunti, e gli interventi straordinari.</p>
+        <p>Le misure quotidiane dell'acqua con i prodotti aggiunti, i turni e le mansioni dei bagnini. Gli amministratori hanno in più una scheda riservata per gli acquisti.</p>
       </div>
     </div>
     <div class="tiles" id="mn-sum"></div>
-    <nav class="seg" aria-label="Tipo di manutenzione">
-      <a href="#ordinaria" id="seg-ordinaria"><b>Ordinaria</b><span>Misure dell'acqua e prodotti aggiunti</span></a>
-      <a href="#straordinaria" id="seg-straordinaria"><b>Straordinaria</b><span>Riparazioni, ditte e lavori stagionali</span></a>
+    <nav class="seg" aria-label="Parti della manutenzione">
+      <a href="#ordinaria" id="seg-ordinaria"><b>Ordinaria</b><span>Misure dell'acqua e prodotti</span></a>
+      <a href="#turni" id="seg-turni"><b>Turni</b><span>Chi è di turno e cosa fa</span></a>
+      <a href="#riservata" id="seg-riservata" class="ad"><b>Acquisti</b><span>Solo amministratori</span></a>
     </nav>
 
     <div class="sub" id="sub-ordinaria">
@@ -1076,58 +1114,71 @@ body::after { will-change: transform; contain: strict; }
     </div>
     </div>
 
-    <div class="sub" id="sub-straordinaria" hidden>
-    <div class="panel">
-      <h3 id="st-title">Nuovo intervento</h3>
-      <form class="grid" id="st-form" autocomplete="off">
-        <input type="hidden" id="st-id">
-        <div class="field"><label for="st-data">Data</label><input type="date" id="st-data" required></div>
-        <div class="field" style="grid-column: span 2"><label for="st-voce">Voce</label><input type="text" id="st-voce" list="st-voci" maxlength="120" required placeholder="Scrivi o scegli dall'elenco"></div>
-        <div class="field"><label for="st-cat">Categoria</label><input type="text" id="st-cat" list="st-cats" maxlength="60" placeholder="Es. Filtrazione"></div>
-        <div class="field"><label for="st-stato">Stato</label>
-          <select id="st-stato"><option value="da_fare">Da fare</option><option value="in_corso">In corso</option><option value="completato">Completato</option></select></div>
-        <div class="field"><label for="st-ditta">Ditta / tecnico</label><input type="text" id="st-ditta" maxlength="100"></div>
-        <div class="field"><label for="st-costo">Costo (€)</label><input type="number" id="st-costo" min="0" step="0.01" inputmode="decimal"></div>
-        <div class="field wide"><label for="st-desc">Descrizione</label><textarea id="st-desc" maxlength="1500" placeholder="Cosa è stato fatto o cosa va fatto"></textarea></div>
-        <div class="form-actions">
-          <button class="primary" type="submit" id="st-submit">Aggiungi intervento</button>
-          <button type="button" id="st-cancel" hidden>Annulla modifica</button>
-        </div>
-      </form>
-      <datalist id="st-voci">
-        <option value="Sostituzione sabbia/vetro del filtro"></option>
-        <option value="Riparazione o sostituzione pompa"></option>
-        <option value="Pulizia di fondo vasca"></option>
-        <option value="Svuotamento e riempimento vasca"></option>
-        <option value="Sostituzione piastrelle / mosaico"></option>
-        <option value="Controllo impianto elettrico e illuminazione"></option>
-        <option value="Taratura sonde e pompe dosatrici"></option>
-        <option value="Analisi di laboratorio dell'acqua"></option>
-        <option value="Revisione scaletta e corrimano"></option>
-        <option value="Copertura invernale / svernamento"></option>
-        <option value="Riapertura stagionale"></option>
-        <option value="Sostituzione cassetta di primo soccorso"></option>
-      </datalist>
-      <datalist id="st-cats">
-        <option value="Filtrazione"></option><option value="Pompe e dosaggio"></option><option value="Impianto elettrico"></option>
-        <option value="Vasca e struttura"></option><option value="Pulizia"></option><option value="Analisi"></option>
-        <option value="Sicurezza"></option><option value="Stagionale"></option><option value="Altro"></option>
-      </datalist>
-    </div>
+    <div class="sub" id="sub-turni" hidden>
     <div class="panel">
       <div class="head">
-        <h3>Interventi</h3>
-        <div class="actions">
-          <select id="st-filtro" aria-label="Filtra per stato">
-            <option value="aperti">Da fare e in corso</option>
-            <option value="tutti">Tutti</option>
-            <option value="completato">Completati</option>
-          </select>
-          <button class="exp" data-act="export-int" hidden>Esporta CSV</button>
-        </div>
+        <h3>Turni dei bagnini</h3>
+        <div class="settimana"><button type="button" class="sm" data-act="tu-sett" data-d="-7" aria-label="Settimana precedente">‹</button><b id="tu-sett"></b><button type="button" class="sm" data-act="tu-sett" data-d="7" aria-label="Settimana successiva">›</button></div>
       </div>
-      <div id="st-sum" class="small muted"></div>
-      <div class="tbl-wrap" id="st-list"><div class="empty">Caricamento…</div></div>
+      <p class="small muted chi-vede"><span class="ad">Li vedono operatori e amministratori; li cambiano solo gli amministratori.</span><span class="st-only">Li prepara l'amministratore: qui vedi chi è di turno.</span></p>
+      <div id="tu-list" class="turni"><div class="empty">Caricamento…</div></div>
+      <div class="actions ad"><button type="button" class="sm" data-act="tu-copia">Copia i turni della settimana prima</button></div>
+    </div>
+    <div class="panel ad">
+      <h3 id="tu-title">Nuovo turno</h3>
+      <form class="grid" id="tu-form" autocomplete="off">
+        <input type="hidden" id="tu-id">
+        <div class="field"><label for="tu-data">Giorno</label><input type="date" id="tu-data" required></div>
+        <div class="field"><label for="tu-da">Dalle</label><input type="time" id="tu-da" required></div>
+        <div class="field"><label for="tu-a">Alle</label><input type="time" id="tu-a" required></div>
+        <div class="field"><label for="tu-bagnino">Bagnino</label><input type="text" id="tu-bagnino" list="tu-nomi" maxlength="60" required placeholder="Nome"></div>
+        <div class="field wide"><label for="tu-note">Note</label><input type="text" id="tu-note" maxlength="200" placeholder="Es. scambio di turno, arriva alle 9"></div>
+        <div class="form-actions"><button class="primary" type="submit" id="tu-submit">Aggiungi turno</button><button type="button" id="tu-cancel" hidden>Annulla modifica</button></div>
+      </form>
+      <datalist id="tu-nomi"></datalist>
+    </div>
+    <div class="panel">
+      <div class="head"><h3>Mansioni dei bagnini</h3></div>
+      <p class="small muted chi-vede"><span class="ad">Le vedono operatori e amministratori; le cambiano solo gli amministratori.</span><span class="st-only">Le decidono gli amministratori: qui vedi cosa fare in ogni momento del turno.</span></p>
+      <div id="ma-list"><div class="empty">Caricamento…</div></div>
+      <details class="aggiungi ad" id="ma-box">
+        <summary id="ma-title">Aggiungi una mansione</summary>
+        <form class="grid" id="ma-form" autocomplete="off">
+          <input type="hidden" id="ma-id">
+          <div class="field" style="grid-column: span 2"><label for="ma-voce">Mansione</label><input type="text" id="ma-voce" maxlength="120" required placeholder="Es. pulizia skimmer"></div>
+          <div class="field"><label for="ma-quando">Quando</label><select id="ma-quando"><option value="apertura">All'apertura</option><option value="turno">Durante il turno</option><option value="chiusura">Alla chiusura</option><option value="settimana">Una volta a settimana</option></select></div>
+          <div class="field"><label for="ma-chi">Chi</label><input type="text" id="ma-chi" list="tu-nomi" maxlength="60" placeholder="Vuoto = chi è di turno"></div>
+          <div class="field wide"><label for="ma-note">Note</label><input type="text" id="ma-note" maxlength="200" placeholder="Es. il lunedì, con i guanti"></div>
+          <div class="form-actions"><button class="primary" type="submit" id="ma-submit">Aggiungi mansione</button><button type="button" id="ma-cancel" hidden>Annulla modifica</button></div>
+        </form>
+      </details>
+    </div>
+    </div>
+
+    <div class="sub ad" id="sub-riservata" hidden>
+    <div class="riservata-nota"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg><span><b>Solo amministratori.</b> Operatori e condomini non vedono gli acquisti.</span></div>
+    <div class="panel">
+      <div class="head">
+        <h3>Acquisti per la gestione</h3>
+        <select id="aq-filtro" aria-label="Mostra"><option value="tutti">Tutti</option><option value="da_acquistare">Da acquistare</option><option value="acquistato">Acquistati</option></select>
+      </div>
+      <div class="tiles" id="aq-sum"></div>
+      <div id="aq-list"><div class="empty">Caricamento…</div></div>
+      <details class="aggiungi" id="aq-box">
+        <summary id="aq-title">Aggiungi un acquisto</summary>
+        <form class="grid" id="aq-form" autocomplete="off">
+          <input type="hidden" id="aq-id">
+          <div class="field" style="grid-column: span 2"><label for="aq-voce">Prodotto o materiale</label><input type="text" id="aq-voce" list="prodotti" maxlength="120" required placeholder="Es. cloro granulare"></div>
+          <div class="field"><label for="aq-data">Data</label><input type="date" id="aq-data" required></div>
+          <div class="field"><label for="aq-qta">Quantità</label><input type="number" id="aq-qta" min="0" step="0.01" inputmode="decimal"></div>
+          <div class="field"><label for="aq-unita">Unità</label><select id="aq-unita"><option>kg</option><option>l</option><option>pz</option><option>conf.</option></select></div>
+          <div class="field"><label for="aq-costo">Costo (€)</label><input type="number" id="aq-costo" min="0" step="0.01" inputmode="decimal"></div>
+          <div class="field"><label for="aq-stato">Stato</label><select id="aq-stato"><option value="da_acquistare">Da acquistare</option><option value="acquistato">Acquistato</option></select></div>
+          <div class="field"><label for="aq-fornitore">Fornitore</label><input type="text" id="aq-fornitore" maxlength="80"></div>
+          <div class="field wide"><label for="aq-note">Note</label><input type="text" id="aq-note" maxlength="200" placeholder="Es. pagato di tasca propria, da rimborsare"></div>
+          <div class="form-actions"><button class="primary" type="submit" id="aq-submit">Aggiungi acquisto</button><button type="button" id="aq-cancel" hidden>Annulla modifica</button></div>
+        </form>
+      </details>
     </div>
     </div>
   </section>
@@ -1204,7 +1255,7 @@ body::after { will-change: transform; contain: strict; }
     <div class="head">
       <div>
         <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 13v6a2 2 0 0 0 2 2h3l9 6V5l-9 6H7a2 2 0 0 0-2 2z" fill="#ff9e2c"/><path d="M23 11a6 6 0 0 1 0 10M26 8a10 10 0 0 1 0 16" stroke="#1f8fd6" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></span>Bacheca</h2>
-        <p>Quello che pubblichi qui compare nella Home dei condomini: apertura, orari, avvisi e regolamento.</p>
+        <p>Quello che pubblichi qui compare nella Home dei condomini: apertura, orari, avvisi e regolamento. <span class="st-only">Gli operatori segnalano guasti e pubblicano avvisi; orari, regolamento e informazioni li decidono gli amministratori.</span></p>
       </div>
     </div>
     <div class="panel sos">
@@ -1221,12 +1272,11 @@ body::after { will-change: transform; contain: strict; }
           <label class="check"><input type="radio" name="sos-eff" value="limitata"> Uso limitato</label>
           <label class="check"><input type="radio" name="sos-eff" value="normale"> Si può usare normalmente</label></div>
           <div class="hint">Con «Piscina chiusa» la piscina risulta chiusa e gli ingressi si bloccano; quando segni il guasto come risolto si riapre da sola.</div></div>
-        <div class="field wide"><div><label class="check"><input type="checkbox" id="sos-int" checked> Crea anche un intervento da fare in Manutenzione straordinaria</label></div></div>
         <div class="form-actions"><button class="danger-solid" type="submit">Pubblica il guasto</button><button type="button" data-act="sos-chiudi">Annulla</button></div>
       </form>
       <div id="sos-list" class="urgenti"></div>
     </div>
-    <div class="panel">
+    <div class="panel ad">
       <h3>Apertura e orari</h3>
       <form class="grid" id="ba-form" autocomplete="off">
         <div class="field"><label for="ba-stato">Stato della piscina</label><select id="ba-stato"><option value="aperta">Aperta secondo orario</option><option value="chiusa">Chiusa fino a nuovo avviso</option></select></div>
@@ -1254,14 +1304,14 @@ body::after { will-change: transform; contain: strict; }
       </form>
       <div id="av-list" class="avvisi"><div class="empty">Caricamento…</div></div>
     </div>
-    <div class="panel">
+    <div class="panel ad">
       <h3>Regolamento</h3>
       <form id="re-form" style="display:flex;flex-direction:column;gap:10px" autocomplete="off">
         <div class="field"><label for="re-testo">Una regola per riga</label><textarea id="re-testo" rows="8" maxlength="4000" placeholder="Doccia obbligatoria prima di entrare in vasca"></textarea></div>
         <div class="actions"><button class="primary" type="submit">Salva regolamento</button><button type="button" data-act="re-modello">Usa un modello</button></div>
       </form>
     </div>
-    <div class="panel">
+    <div class="panel ad">
       <h3>Informazioni utili</h3>
       <form class="grid" id="in-form" autocomplete="off">
         <div class="field" style="grid-column: span 2"><label for="in-contatti">Contatti, uno per riga</label><textarea id="in-contatti" rows="5" maxlength="1500" placeholder="Custode: 333 123 4567&#10;Amministratore: 02 123 4567"></textarea><div class="hint">Scrivi nome o ruolo, due punti, numero. Il 112 compare sempre.</div></div>
@@ -1386,7 +1436,7 @@ const TABS = { home: 'viewer', bacheca: 'staff', manutenzione: 'staff', condomin
 const RANK = { viewer: 0, staff: 1, admin: 2 };
 const ROLE_LBL = { viewer: 'Condomino · sola consultazione', staff: 'Operatore', admin: 'Amministratore' };
 
-const S = { mieiAvvisi: new Set(), popupIds: [], utenti: null, utente: null, sb: null, info: {}, sub: 'ordinaria', db: null, dl: null, assets: null, bacheca: {}, avvisi: [], regole: '', cfgRaw: {}, imgBroken: false, role: 'viewer', roleSure: false, letture: [], interventi: [], famiglie: [], accessi: { entries: [] }, pres: null, accDay: null, unsubAcc: null, cfg: { ...DEFAULT_CFG }, loaded: {}, need: [], ready: false, editFam: null };
+const S = { mieiAvvisi: new Set(), popupIds: [], utenti: null, utente: null, sb: null, info: {}, sub: 'ordinaria', db: null, dl: null, assets: null, bacheca: {}, avvisi: [], regole: '', cfgRaw: {}, imgBroken: false, role: 'viewer', roleSure: false, letture: [], interventi: [], turni: [], mansioni: [], acquisti: [], tuWeek: null, famiglie: [], accessi: { entries: [] }, pres: null, accDay: null, unsubAcc: null, cfg: { ...DEFAULT_CFG }, loaded: {}, need: [], ready: false, editFam: null };
 const isStaff = () => RANK[S.role] >= 1, isAdmin = () => S.role === 'admin';
 
 /* ---------- utilità ---------- */
@@ -1516,7 +1566,8 @@ function presCount() {
 /* ---------- navigazione e permessi ---------- */
 function route() {
   let h = location.hash.slice(1), sub = null;
-  if (h === 'ordinaria' || h === 'straordinaria') { sub = h; h = 'manutenzione'; }
+  if (h === 'straordinaria') h = 'ordinaria';
+  if (h === 'ordinaria' || h === 'turni' || h === 'riservata') { sub = h === 'riservata' && !isAdmin() ? 'ordinaria' : h; h = 'manutenzione'; }
   return { t: TABS[h] && RANK[S.role] >= RANK[TABS[h]] ? h : 'home', sub };
 }
 function showTab() {
@@ -1526,7 +1577,8 @@ function showTab() {
   $$('nav.tabs a, .sheet-link').forEach(a => { if (a.getAttribute('href') === '#' + t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   $('#nav-more').classList.toggle('on', t === 'condomini' || t === 'impostazioni');
   apriAltro(false);
-  ['ordinaria', 'straordinaria'].forEach(k => {
+  if (S.sub === 'riservata' && !isAdmin()) S.sub = 'ordinaria';
+  ['ordinaria', 'turni', 'riservata'].forEach(k => {
     $('#sub-' + k).hidden = S.sub !== k;
     if (S.sub === k) $('#seg-' + k).setAttribute('aria-current', 'page'); else $('#seg-' + k).removeAttribute('aria-current');
   });
@@ -1550,7 +1602,7 @@ function applyRole() {
 
 /* ---------- render ---------- */
 function renderAll() {
-  renderHeader(); renderHome(); renderManSum(); renderImgPanel(); renderLetture(); renderConsumi(); renderOrHints(); renderInterventi(); renderCondomini(); renderIngressi(); renderEsempi();
+  renderHeader(); renderHome(); renderManSum(); renderImgPanel(); renderLetture(); renderConsumi(); renderOrHints(); renderTurni(); renderMansioni(); renderRiservata(); renderCondomini(); renderIngressi(); renderEsempi();
 }
 function renderHeader() {
   $('#pool-name').textContent = S.cfg.nome || DEFAULT_CFG.nome;
@@ -2117,9 +2169,8 @@ function renderStaffHome() {
   if (apx.open === false && presCount() > 0) alerts.push(['bad', `${presCount()} person${presCount() === 1 ? 'a risulta' : 'e risultano'} in piscina a piscina chiusa. <a href="#ingressi">Controlla</a>`]);
   consigliMeteo().filter(x => x[0] !== 'ok').forEach(([l, t]) => alerts.push([l, 'Meteo: ' + esc(t)]));
   if (!haOrari(S.bacheca) && S.loaded.bacheca) alerts.push(['warn', 'Orari di apertura non pubblicati: i condomini non li vedono. <a href="#bacheca">Pubblica gli orari</a>']);
-  const aperti = S.interventi.filter(i => i.stato !== 'completato');
-  aperti.filter(i => i.stato === 'da_fare' && i.data && i.data < dayKey()).slice(0, 3)
-    .forEach(i => alerts.push(['warn', `Intervento in ritardo: <strong>${esc(i.voce)}</strong> (previsto ${fmtD(i.data)}). <a href="#straordinaria">Apri</a>`]));
+  const buchi = scoperto(new Date());
+  if (S.loaded.turni && buchi.length) alerts.push(['warn', `Oggi nessun bagnino di turno ${buchi.map(x => `dalle ${hm(x[0])} alle ${hm(x[1])}`).join(' e ')}. <a href="#turni">Turni</a>`]);
   let tot = 0, ok = 0; const sosp = S.famiglie.filter(f => f.sospesa).length;
   S.famiglie.forEach(f => (f.membri || []).forEach(m => { tot++; if (eligibility(f, m).lvl !== 'bad') ok++; }));
   guastiAperti().forEach(g => alerts.push(['bad', `Guasto aperto: <strong>${esc(g.categoria)}</strong> · ${esc(g.testo)} <a href="#bacheca">Gestisci</a>`]));
@@ -2130,7 +2181,7 @@ function renderStaffHome() {
 
   $('#home-staff-tiles').innerHTML = `
     <div class="tile"><span class="lbl">Ingressi di oggi</span><div class="tile-val">${acc.filter(x => x.esito !== 'negato').length}</div><div class="small muted">${neg} negati · ${acc.filter(x => x.esito === 'ospite').length} ospiti</div></div>
-    <div class="tile"><span class="lbl">Interventi aperti</span><div class="tile-val">${aperti.length}</div><div class="small muted">${aperti.filter(i => i.stato === 'da_fare').length} da fare · ${aperti.filter(i => i.stato === 'in_corso').length} in corso</div></div>
+    <div class="tile">${tileTurno()}</div>
     <div class="tile"><span class="lbl">Condomini abilitati</span><div class="tile-val">${ok}<small> / ${tot}</small></div><div class="small muted">${S.famiglie.length} famiglie${sosp ? ' · ' + sosp + ' sospese' : ''}</div></div>`;
   const order = { bad: 0, warn: 1, ok: 2 };
   alerts.sort((a, b) => order[a[0]] - order[b[0]]);
@@ -2150,13 +2201,10 @@ function renderManSum() {
   }
   const rec = S.letture.filter(l => new Date(l.ts).getTime() >= d7);
   const giorni = new Set(rec.map(l => dayKey(new Date(l.ts)))).size;
-  const aperti = S.interventi.filter(i => i.stato !== 'completato');
-  const ritardo = aperti.filter(i => i.stato === 'da_fare' && i.data && i.data < dayKey()).length;
   $('#mn-sum').innerHTML = `<div class="tile">${t1}</div>
     <div class="tile"><div class="tile-top"><span class="lbl">Ultimi 7 giorni</span>${giorni < 7 ? pill('warn', (7 - giorni) + ' giorn' + (7 - giorni === 1 ? 'o' : 'i') + ' senza misure') : pill('ok', 'Ogni giorno')}</div>
       <div class="tile-val">${rec.length}<small> misure</small></div><div class="small muted">${rec.filter(l => (l.prodotti || []).length).length} con prodotti aggiunti</div></div>
-    <div class="tile"><div class="tile-top"><span class="lbl">Interventi aperti</span>${ritardo ? pill('bad', ritardo + ' in ritardo') : ''}</div>
-      <div class="tile-val">${aperti.length}</div><div class="small muted">${aperti.filter(i => i.stato === 'da_fare').length} da fare · ${aperti.filter(i => i.stato === 'in_corso').length} in corso</div></div>`;
+    <div class="tile">${tileTurno()}</div>`;
 }
 function formValues() {
   return { ph: $('#or-ph').value, cloro: $('#or-cl').value, cloroComb: $('#or-cc').value, tAcqua: $('#or-ta').value };
@@ -2208,27 +2256,6 @@ function renderConsumi() {
   const keys = Object.keys(tot).sort((a, b) => cmpNat(a, b));
   box.innerHTML = keys.length ? keys.map(k => { const [p, u] = k.split('|'); return `<div class="consumo"><span>${esc(p)}</span><b>${fmtQ(tot[k])} ${esc(u)}</b></div>`; }).join('')
     : '<div class="empty" style="grid-column:1/-1">Nessun prodotto registrato negli ultimi 30 giorni. Aggiungili nella sezione «Aggiunta prodotti» della misurazione.</div>';
-}
-
-function renderInterventi() {
-  const box = $('#st-list');
-  if (!S.loaded.interventi) return;
-  const f = $('#st-filtro').value;
-  const rows = S.interventi.filter(i => f === 'tutti' ? true : f === 'aperti' ? i.stato !== 'completato' : i.stato === f)
-    .sort((a, b) => (a.stato === 'completato') - (b.stato === 'completato') || cmpNat(b.data, a.data));
-  const anno = String(new Date().getFullYear());
-  const spesa = S.interventi.filter(i => i.stato === 'completato' && String(i.data || '').startsWith(anno)).reduce((s, i) => s + (+i.costo || 0), 0);
-  const prev = S.interventi.filter(i => i.stato !== 'completato').reduce((s, i) => s + (+i.costo || 0), 0);
-  $('#st-sum').textContent = `Spesa ${anno} per interventi completati: ${eur(spesa)} · Previsto per interventi aperti: ${eur(prev)}`;
-  if (!rows.length) { box.innerHTML = `<div class="empty">${S.interventi.length ? 'Nessun intervento con questo filtro.' : 'Nessun intervento registrato. Aggiungi la prima voce con il modulo qui sopra.'}</div>`; return; }
-  box.innerHTML = `<table><thead><tr><th>Data</th><th>Voce</th><th>Categoria</th><th>Ditta</th><th class="r">Costo</th><th>Stato</th><th></th></tr></thead><tbody>
-  ${rows.map(i => `<tr>
-    <td>${fmtD(i.data)}</td>
-    <td><strong>${esc(i.voce)}</strong>${i.esempio ? ' <span class="tag">Esempio</span>' : ''}${i.descrizione ? `<div class="small muted">${esc(i.descrizione)}</div>` : ''}</td>
-    <td>${esc(i.categoria || '—')}</td><td>${esc(i.ditta || '—')}</td><td class="r">${isNum(i.costo) ? eur(i.costo) : '—'}</td>
-    <td><select data-act="int-stato" data-id="${esc(i.id)}" aria-label="Stato" style="width:auto;padding:4px 8px">${Object.entries(STATI).map(([k, v]) => `<option value="${k}" ${k === i.stato ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
-    <td style="white-space:nowrap"><button class="ghost sm" data-act="edit-int" data-id="${esc(i.id)}">Modifica</button><button class="ghost sm danger" data-act="del-int" data-id="${esc(i.id)}">Elimina</button></td></tr>`).join('')}
-  </tbody></table>`;
 }
 
 function famMatches(f, q) {
@@ -2585,10 +2612,147 @@ function fillCfgForm(src = S.cfg) {
   s('#imp-eta', c.etaAccomp); s('#imp-osp', c.maxOspiti);
 }
 function renderEsempi() {
-  const n = S.letture.filter(x => x.esempio).length + S.interventi.filter(x => x.esempio).length + S.famiglie.filter(x => x.esempio).length + S.avvisi.filter(x => x.esempio).length;
+  const n = S.letture.filter(x => x.esempio).length + S.famiglie.filter(x => x.esempio).length + S.avvisi.filter(x => x.esempio).length;
   $('#esempi-panel').hidden = !n || !isAdmin();
-  $('#esempi-txt').textContent = `L'archivio contiene ${n} voci di prova contrassegnate «Esempio» (misurazioni, interventi, famiglie e avvisi inventati). Eliminale quando inizi a inserire i dati reali.`;
+  $('#esempi-txt').textContent = `L'archivio contiene ${n} voci di prova contrassegnate «Esempio» (misurazioni, famiglie e avvisi inventati). Eliminale quando inizi a inserire i dati reali.`;
 }
+
+
+/* ---------- turni dei bagnini ---------- */
+const hm = m => pad(Math.floor(m / 60)) + ':' + pad(m % 60);
+function lunedi(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+const turniDel = k => S.turni.filter(t => t.data === k).sort((a, b) => cmpNat(a.da, b.da));
+/* fasce di apertura del giorno, tolte le chiusure */
+function aperturaDel(d) {
+  const b = S.bacheca || {}, k = dayKey(d);
+  if (b.stato === 'chiusa' && k === dayKey()) return [];
+  if ((b.s1 && k < b.s1) || (b.s2 && k > b.s2)) return [];
+  if (hasRiposo(b) && +b.riposo === d.getDay()) return [];
+  return fasceDel(b, d).map(x => [x[0], x[1]]);
+}
+/* parti dell'apertura senza nessun bagnino di turno */
+function scoperto(d) {
+  let buchi = aperturaDel(d);
+  turniDel(dayKey(d)).forEach(t => {
+    const a = toMin(t.da), z = toMin(t.a); if (a === null || z === null) return;
+    buchi = buchi.flatMap(([x, y]) => z <= x || a >= y ? [[x, y]] : [[x, Math.max(x, a)], [Math.min(y, z), y]].filter(([p, q]) => q - p > 0));
+  });
+  return buchi;
+}
+function tileTurno() {
+  const oggi = turniDel(dayKey()), m = new Date().getHours() * 60 + new Date().getMinutes();
+  const ora = oggi.filter(t => toMin(t.da) <= m && m < toMin(t.a)).map(t => t.bagnino);
+  const buchi = scoperto(new Date());
+  return `<div class="tile-top"><span class="lbl">Di turno oggi</span>${!S.loaded.turni ? '' : buchi.length ? pill('warn', 'Ore scoperte') : oggi.length ? pill('ok', 'Coperto') : ''}</div>
+    <div class="tile-val" style="font-size:1.5rem">${oggi.length ? esc([...new Set(oggi.map(t => t.bagnino))].join(', ')) : 'Nessuno'}</div>
+    <div class="small muted">${ora.length ? 'Adesso: ' + esc(ora.join(', ')) : oggi.length ? 'Nessuno di turno in questo momento' : 'Aggiungi i turni in Manutenzione'}</div>`;
+}
+function renderTurni() {
+  const box = $('#tu-list'); if (!box) return;
+  if (!S.tuWeek) S.tuWeek = lunedi(new Date());
+  const giorni = Array.from({ length: 7 }, (_, i) => { const d = new Date(S.tuWeek); d.setDate(d.getDate() + i); return d; });
+  const f = d => d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' });
+  $('#tu-sett').textContent = `${f(giorni[0])} – ${f(giorni[6])}`;
+  const nomi = [...new Set(S.turni.map(t => t.bagnino).filter(Boolean))].sort(cmpNat);
+  $('#tu-nomi').innerHTML = nomi.map(n => `<option value="${esc(n)}"></option>`).join('');
+  if (!S.loaded.turni) return;
+  const oggi = dayKey();
+  box.innerHTML = giorni.map(d => {
+    const k = dayKey(d), lista = turniDel(k), ap = aperturaDel(d), buchi = scoperto(d);
+    const stato = !ap.length ? pill('neutral', 'Piscina chiusa') : buchi.length ? pill('warn', 'Scoperto ' + buchi.map(x => `${hm(x[0])}–${hm(x[1])}`).join(', ')) : pill('ok', 'Coperto');
+    return `<div class="giorno${k === oggi ? ' oggi' : ''}${k < oggi ? ' passato' : ''}">
+      <div class="g-head"><b>${cap1(d.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric' }))}${k === oggi ? ' <span class="tag">Oggi</span>' : ''}</b>${stato}</div>
+      ${ap.length ? `<div class="small muted">Apertura ${ap.map(x => `${hm(x[0])}–${hm(x[1])}`).join(' e ')}</div>` : ''}
+      ${lista.length ? `<ul class="turni-g">${lista.map(t => `<li><span class="t-ora">${esc(t.da)}–${esc(t.a)}</span><span class="t-chi"><b>${esc(t.bagnino)}</b>${t.note ? `<span class="small muted">${esc(t.note)}</span>` : ''}</span>
+        <span class="t-az ad"><button type="button" class="ghost sm" data-act="tu-edit" data-id="${esc(t.id)}">Modifica</button><button type="button" class="ghost sm danger" data-act="tu-del" data-id="${esc(t.id)}">Elimina</button></span></li>`).join('')}</ul>` : ''}
+      <button type="button" class="ghost sm ad t-add" data-act="tu-add" data-d="${k}">Aggiungi turno</button>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- area riservata: mansioni e acquisti ---------- */
+const QUANDO = { apertura: "All'apertura", turno: 'Durante il turno', chiusura: 'Alla chiusura', settimana: 'Una volta a settimana' };
+function renderMansioni() {
+  if (!isStaff() || !$('#ma-list')) return;
+  if (S.loaded.mansioni) {
+    $('#ma-list').innerHTML = S.mansioni.length ? Object.entries(QUANDO).map(([q, t]) => {
+      const r = S.mansioni.filter(x => (x.quando || 'turno') === q).sort((a, b) => cmpNat(a.voce, b.voce));
+      return r.length ? `<div class="gruppo"><div class="sub-h">${t}</div><ul class="lista">${r.map(x => `<li><span><b>${esc(x.voce)}</b><span class="small muted">${esc(x.chi || 'Chi è di turno')}${x.note ? ' · ' + esc(x.note) : ''}</span></span>
+        <span class="t-az ad"><button type="button" class="ghost sm" data-act="ma-edit" data-id="${esc(x.id)}">Modifica</button><button type="button" class="ghost sm danger" data-act="ma-del" data-id="${esc(x.id)}">Elimina</button></span></li>`).join('')}</ul></div>` : '';
+    }).join('') : `<div class="empty">${isAdmin() ? 'Nessuna mansione scritta. Aggiungi la prima qui sotto: per esempio la pulizia degli skimmer all\'apertura.' : 'Gli amministratori non hanno ancora scritto le mansioni.'}</div>`;
+  }
+}
+function renderRiservata() {
+  if (!isAdmin() || !$('#aq-list') || !S.loaded.acquisti) return;
+  const anno = String(new Date().getFullYear()), f = $('#aq-filtro').value;
+  const fatti = S.acquisti.filter(x => x.stato === 'acquistato' && String(x.data || '').startsWith(anno));
+  const daFare = S.acquisti.filter(x => x.stato !== 'acquistato');
+  $('#aq-sum').innerHTML = `<div class="tile"><span class="lbl">Speso nel ${anno}</span><div class="tile-val" style="font-size:2rem">${eur(fatti.reduce((t, x) => t + (+x.costo || 0), 0))}</div><div class="small muted">${fatti.length} acquist${fatti.length === 1 ? 'o' : 'i'}</div></div>
+    <div class="tile"><div class="tile-top"><span class="lbl">Da acquistare</span>${daFare.length ? pill('warn', String(daFare.length)) : ''}</div><div class="tile-val" style="font-size:2rem">${eur(daFare.reduce((t, x) => t + (+x.costo || 0), 0))}</div><div class="small muted">spesa prevista</div></div>`;
+  const rows = S.acquisti.filter(x => f === 'tutti' || (f === 'acquistato' ? x.stato === 'acquistato' : x.stato !== 'acquistato'))
+    .sort((a, b) => (a.stato === 'acquistato') - (b.stato === 'acquistato') || cmpNat(b.data, a.data));
+  $('#aq-list').innerHTML = rows.length ? `<ul class="lista acquisti">${rows.map(x => `<li class="${x.stato === 'acquistato' ? 'fatto' : ''}">
+      <span><b>${esc(x.voce)}</b><span class="small muted">${[isNum(x.qta) ? fmtQ(x.qta) + ' ' + esc(x.unita || '') : '', fmtD(x.data), esc(x.fornitore || ''), esc(x.note || '')].filter(Boolean).join(' · ')}</span></span>
+      <span class="aq-dx"><b class="aq-costo">${isNum(x.costo) ? eur(x.costo) : '—'}</b>${pill(x.stato === 'acquistato' ? 'ok' : 'warn', x.stato === 'acquistato' ? 'Acquistato' : 'Da acquistare')}</span>
+      <span class="t-az">${x.stato === 'acquistato' ? '' : `<button type="button" class="sm" data-act="aq-fatto" data-id="${esc(x.id)}">Segna acquistato</button>`}<button type="button" class="ghost sm" data-act="aq-edit" data-id="${esc(x.id)}">Modifica</button><button type="button" class="ghost sm danger" data-act="aq-del" data-id="${esc(x.id)}">Elimina</button></span></li>`).join('')}</ul>`
+    : `<div class="empty">${S.acquisti.length ? 'Nessun acquisto con questo filtro.' : 'Nessun acquisto registrato. Aggiungi il primo qui sotto.'}</div>`;
+}
+
+/* moduli di turni, mansioni e acquisti: stesso schema per tutti e tre */
+const MODULI = {
+  tu: { coll: 'turni', campi: ['data', 'da', 'a', 'bagnino', 'note'], titolo: ['Nuovo turno', 'Modifica turno'], invio: ['Aggiungi turno', 'Salva turno'], ok: ['Turno aggiunto', 'Turno aggiornato'], lista: () => S.turni },
+  ma: { coll: 'mansioni', campi: ['voce', 'quando', 'chi', 'note'], titolo: ['Aggiungi una mansione', 'Modifica mansione'], invio: ['Aggiungi mansione', 'Salva mansione'], ok: ['Mansione aggiunta', 'Mansione aggiornata'], lista: () => S.mansioni },
+  aq: { coll: 'acquisti', campi: ['voce', 'data', 'qta', 'unita', 'costo', 'stato', 'fornitore', 'note'], num: ['qta', 'costo'], titolo: ['Aggiungi un acquisto', 'Modifica acquisto'], invio: ['Aggiungi acquisto', 'Salva acquisto'], ok: ['Acquisto aggiunto', 'Acquisto aggiornato'], lista: () => S.acquisti }
+};
+function resetForm(k) {
+  const m = MODULI[k]; $('#' + k + '-form').reset(); $('#' + k + '-id').value = '';
+  if ($('#' + k + '-data')) $('#' + k + '-data').value = dayKey();
+  $('#' + k + '-title').textContent = m.titolo[0]; $('#' + k + '-submit').textContent = m.invio[0]; $('#' + k + '-cancel').hidden = true;
+}
+function apriForm(k, id, extra) {
+  const m = MODULI[k], x = id ? m.lista().find(v => v.id === id) : null;
+  resetForm(k);
+  if (x) { $('#' + k + '-id').value = x.id; m.campi.forEach(c => { const el = $('#' + k + '-' + c); if (el && x[c] !== undefined && x[c] !== null) el.value = x[c]; }); $('#' + k + '-title').textContent = m.titolo[1]; $('#' + k + '-submit').textContent = m.invio[1]; $('#' + k + '-cancel').hidden = false; }
+  Object.entries(extra || {}).forEach(([c, v]) => { $('#' + k + '-' + c).value = v; });
+  const box = $('#' + k + '-box'); if (box) box.open = true;
+  $('#' + k + '-form').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+}
+Object.keys(MODULI).forEach(k => {
+  $('#' + k + '-cancel').addEventListener('click', () => resetForm(k));
+  $('#' + k + '-form').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    if (!isAdmin() || !needDb()) return;
+    const m = MODULI[k], id = $('#' + k + '-id').value, doc = { aggiornato: new Date().toISOString() };
+    m.campi.forEach(c => { const v = $('#' + k + '-' + c).value; doc[c] = (m.num || []).includes(c) ? numOrNull(v) : v.trim(); });
+    if (k === 'tu' && doc.a <= doc.da) return toast('Il turno deve finire dopo l\'inizio.', 'bad');
+    if (await guard(id ? S.db.doc(m.coll + '/' + id).set(doc) : S.db.collection(m.coll).add(doc), m.ok[id ? 1 : 0])) resetForm(k);
+  });
+});
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-act]'); if (!b) return;
+  const id = b.dataset.id;
+  switch (b.dataset.act) {
+    case 'tu-sett': S.tuWeek.setDate(S.tuWeek.getDate() + +b.dataset.d); renderTurni(); break;
+    case 'tu-add': apriForm('tu', null, { data: b.dataset.d }); break;
+    case 'tu-edit': apriForm('tu', id); break;
+    case 'ma-edit': apriForm('ma', id); break;
+    case 'aq-edit': apriForm('aq', id); break;
+    case 'tu-del': if (needDb() && armed(b)) guard(S.db.doc('turni/' + id).delete(), 'Turno eliminato'); break;
+    case 'ma-del': if (needDb() && armed(b)) guard(S.db.doc('mansioni/' + id).delete(), 'Mansione eliminata'); break;
+    case 'aq-del': if (needDb() && armed(b)) guard(S.db.doc('acquisti/' + id).delete(), 'Acquisto eliminato'); break;
+    case 'aq-fatto': if (needDb()) guard(S.db.doc('acquisti/' + id).update({ stato: 'acquistato', data: dayKey(), aggiornato: new Date().toISOString() }), 'Segnato come acquistato'); break;
+    case 'tu-copia': {
+      if (!needDb()) return;
+      const prima = new Date(S.tuWeek); prima.setDate(prima.getDate() - 7);
+      const da = dayKey(prima), a = dayKey(new Date(S.tuWeek.getTime() - 864e5)), questa = dayKey(S.tuWeek);
+      const vecchi = S.turni.filter(t => t.data >= da && t.data <= a);
+      if (!vecchi.length) return toast('La settimana prima non ha turni da copiare.');
+      if (S.turni.some(t => t.data >= questa && t.data < dayKey(new Date(S.tuWeek.getTime() + 7 * 864e5))) && !armed(b)) return;
+      (async () => { let ok = true; for (const t of vecchi) { const d = new Date(t.data + 'T00:00'); d.setDate(d.getDate() + 7); const { id: _, ...resto } = t; ok = await guard(S.db.collection('turni').add({ ...resto, data: dayKey(d), aggiornato: new Date().toISOString() })) && ok; } if (ok) toast('Turni copiati'); })();
+      break;
+    }
+  }
+});
 
 /* CSV */
 function csv(rows) { return '﻿' + rows.map(r => r.map(v => { const s = String(v ?? ''); return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(';')).join('\r\n'); }
@@ -2690,14 +2854,6 @@ document.addEventListener('click', async ev => {
     case 'prod-add': $('#or-prod').insertAdjacentHTML('beforeend', prodRow()); $('#or-prod .prod-row:last-child input').focus(); break;
     case 'prod-del': b.closest('.prod-row').remove(); break;
     case 'del-lettura': if (needDb() && armed(b)) guard(S.db.doc('letture/' + id).delete(), 'Misurazione eliminata'); break;
-    case 'del-int': if (needDb() && armed(b)) guard(S.db.doc('interventi/' + id).delete(), 'Intervento eliminato'); break;
-    case 'edit-int': {
-      const i = S.interventi.find(x => x.id === id); if (!i) return;
-      $('#st-id').value = i.id; $('#st-data').value = i.data || ''; $('#st-voce').value = i.voce || ''; $('#st-cat').value = i.categoria || '';
-      $('#st-stato').value = i.stato || 'da_fare'; $('#st-ditta').value = i.ditta || ''; $('#st-costo').value = isNum(i.costo) ? i.costo : ''; $('#st-desc').value = i.descrizione || '';
-      $('#st-title').textContent = 'Modifica intervento'; $('#st-submit').textContent = 'Salva modifiche'; $('#st-cancel').hidden = false;
-      $('#st-form').scrollIntoView({ behavior: 'smooth', block: 'center' }); break;
-    }
     case 'fam-new': openFamEditor(null); break;
     case 'fam-edit': openFamEditor(S.famiglie.find(f => f.id === id)); break;
     case 'fam-cancel': closeFamEditor(); break;
@@ -2738,15 +2894,12 @@ document.addEventListener('click', async ev => {
     case 'export-letture':
       saveCsv(`misurazioni-piscina-${dayKey()}.csv`, [['Data e ora', 'pH', 'Cloro libero mg/l', 'Cloro combinato mg/l', 'Temp acqua °C', 'Temp aria °C', 'Prodotti aggiunti', 'Operatore', 'Note'],
         ...S.letture.map(l => [fmtDT(l.ts), dec(l.ph), dec(l.cloro), dec(l.cloroComb), dec(l.tAcqua), dec(l.tAria), prodText(l), l.operatore || '', l.note || ''])]); break;
-    case 'export-int':
-      saveCsv(`interventi-piscina-${dayKey()}.csv`, [['Data', 'Voce', 'Categoria', 'Stato', 'Ditta', 'Costo €', 'Descrizione'],
-        ...S.interventi.map(i => [fmtD(i.data), i.voce, i.categoria || '', STATI[i.stato] || '', i.ditta || '', dec(i.costo), i.descrizione || ''])]); break;
     case 'export-acc':
       saveCsv(`ingressi-piscina-${S.accDay || dayKey()}.csv`, [['Entrata', 'Uscita', 'Persona', 'Unità', 'Esito', 'Motivo'],
         ...(S.accessi.entries || []).map(e => [fmtT(e.entrata), e.uscita ? fmtT(e.uscita) : '', e.nome, e.unita || '', e.esito, e.motivo || ''])]); break;
     case 'del-esempi': {
       if (!needDb() || !armed(b)) return;
-      const jobs = [...S.letture.filter(x => x.esempio).map(x => 'letture/' + x.id), ...S.interventi.filter(x => x.esempio).map(x => 'interventi/' + x.id), ...S.famiglie.filter(x => x.esempio).map(x => 'famiglie/' + x.id), ...S.avvisi.filter(x => x.esempio).map(x => 'avvisi/' + x.id)];
+      const jobs = [...S.letture.filter(x => x.esempio).map(x => 'letture/' + x.id), ...S.famiglie.filter(x => x.esempio).map(x => 'famiglie/' + x.id), ...S.avvisi.filter(x => x.esempio).map(x => 'avvisi/' + x.id)];
       let ok = true;
       for (const p of jobs) { try { await S.db.doc(p).delete(); } catch (e) { ok = false; toast(errMsg(e), 'bad'); break; } }
       if (ok) toast('Dati di esempio eliminati');
@@ -2755,15 +2908,13 @@ document.addEventListener('click', async ev => {
   }
 });
 document.addEventListener('change', ev => {
-  const s = ev.target.closest('select[data-act="int-stato"]');
-  if (s && needDb()) guard(S.db.doc('interventi/' + s.dataset.id).update({ stato: s.value }), 'Stato aggiornato');
 });
 document.addEventListener('submit', ev => { if (ev.target.id === 'fe-form') saveFam(ev); });
 
 ['#or-ph', '#or-cl', '#or-cc', '#or-ta'].forEach(s => $(s).addEventListener('input', renderOrHints));
 $('#or-tr').addEventListener('input', () => { S.ariaAuto = false; $('#or-tr-h').textContent = 'Inserita a mano'; });
 $('#or-range').addEventListener('change', renderLetture);
-$('#st-filtro').addEventListener('change', renderInterventi);
+$('#aq-filtro').addEventListener('change', renderRiservata);
 $('#con-q').addEventListener('input', renderCondomini);
 $('#con-scala').addEventListener('change', renderCondomini);
 $('#acc-q').addEventListener('input', renderRicerca);
@@ -2802,21 +2953,6 @@ $('#or-form').addEventListener('submit', async ev => {
   }
 });
 
-function resetSt() {
-  $('#st-form').reset(); $('#st-id').value = ''; $('#st-data').value = dayKey();
-  $('#st-title').textContent = 'Nuovo intervento'; $('#st-submit').textContent = 'Aggiungi intervento'; $('#st-cancel').hidden = true;
-}
-$('#st-cancel').addEventListener('click', resetSt);
-$('#st-form').addEventListener('submit', async ev => {
-  ev.preventDefault();
-  if (!needDb()) return;
-  const id = $('#st-id').value;
-  const prev = S.interventi.find(x => x.id === id);
-  const doc = { data: $('#st-data').value, voce: $('#st-voce').value.trim(), categoria: $('#st-cat').value.trim(), stato: $('#st-stato').value, ditta: $('#st-ditta').value.trim(), costo: numOrNull($('#st-costo').value), descrizione: $('#st-desc').value.trim(), aggiornato: new Date().toISOString() };
-  if (prev && prev.esempio) doc.esempio = true;
-  if (await guard(id ? S.db.doc('interventi/' + id).set(doc) : S.db.collection('interventi').add(doc), id ? 'Intervento aggiornato' : 'Intervento aggiunto')) resetSt();
-});
-
 $('#osp-form').addEventListener('submit', ev => {
   ev.preventDefault();
   const f = S.famiglie.find(x => x.id === $('#osp-fam').value), nome = $('#osp-nome').value.trim();
@@ -2838,7 +2974,7 @@ $('#img-pos').addEventListener('change', ev => {
 });
 $('#ba-form').addEventListener('submit', async ev => {
   ev.preventDefault();
-  if (!needDb()) return;
+  if (!isAdmin() || !needDb()) return;
   const g = id => $(id).value;
   const grp = p => ({ da: g(`#ba-${p}-da`), a: g(`#ba-${p}-a`) });
   const doc = { stato: g('#ba-stato'), motivo: g('#ba-motivo').trim(), fer: grp('f'), we: grp('w'), festivi: $('#ba-festivi').checked, riposo: g('#ba-riposo'), s1: g('#ba-s1'), s2: g('#ba-s2'), aggiornato: new Date().toISOString() };
@@ -2851,7 +2987,7 @@ $('#ba-form').addEventListener('submit', async ev => {
 });
 $('#in-form').addEventListener('submit', async ev => {
   ev.preventDefault();
-  if (!needDb()) return;
+  if (!isAdmin() || !needDb()) return;
   const pulisci = id => $(id).value.split('\n').map(r => r.trim()).filter(Boolean).join('\n');
   await guard(S.db.doc('pubblico/info').set({ contatti: pulisci('#in-contatti'), portare: pulisci('#in-portare'), aggiornato: new Date().toISOString() }), 'Informazioni salvate nella Home');
 });
@@ -2866,10 +3002,6 @@ $('#sos-form').addEventListener('submit', async ev => {
   try {
     const ref = S.db.collection('avvisi').doc(); S.mieiAvvisi.add(ref.id);
     const doc = { tipo: 'guasto', categoria, testo, effetto, stato: 'aperto', data: new Date().toISOString(), operatore: (S.utente && (S.utente.nome || S.utente.email)) || '' };
-    if ($('#sos-int').checked) {
-      const ir = S.db.collection('interventi').doc(); doc.interventoId = ir.id;
-      await guard(ir.set({ data: dayKey(), voce: 'Guasto: ' + categoria, categoria: CAT_INT[categoria] || 'Altro', stato: 'da_fare', ditta: '', costo: null, descrizione: testo, aggiornato: new Date().toISOString() }));
-    }
     if (effetto === 'chiusa' && S.bacheca.stato !== 'chiusa') {
       doc.haChiuso = true;
       await guard(S.db.doc('pubblico/bacheca').set({ ...S.bacheca, stato: 'chiusa', motivo: 'Per un guasto: ' + categoria.toLowerCase() + '. I dettagli sono in cima alla pagina.', aggiornato: new Date().toISOString() }));
@@ -2888,7 +3020,7 @@ $('#av-form').addEventListener('submit', async ev => {
 });
 $('#re-form').addEventListener('submit', async ev => {
   ev.preventDefault();
-  if (!needDb()) return;
+  if (!isAdmin() || !needDb()) return;
   const testo = $('#re-testo').value.split('\n').map(r => r.trim()).filter(Boolean).join('\n');
   await guard(S.db.doc('pubblico/regolamento').set({ testo, aggiornato: new Date().toISOString() }), 'Regolamento salvato');
 });
@@ -2934,8 +3066,13 @@ let staffSubs = false;
 function subscribeStaff() {
   if (staffSubs || !S.db) return; staffSubs = true;
   const db = S.db;
-  S.need.push('interventi', 'famiglie');
-  db.collection('interventi').onSnapshot(s => { S.interventi = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('interventi', s); renderManSum(); renderInterventi(); renderHome(); renderEsempi(); }, onDbErr);
+  S.need.push('turni', 'mansioni', 'famiglie');
+  db.collection('turni').onSnapshot(s => { S.turni = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('turni', s); renderManSum(); renderTurni(); renderHome(); }, onDbErr);
+  db.collection('mansioni').onSnapshot(s => { S.mansioni = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('mansioni', s); renderMansioni(); }, onDbErr);
+  if (isAdmin()) {
+    S.need.push('acquisti');
+    db.collection('acquisti').onSnapshot(s => { S.acquisti = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('acquisti', s); renderRiservata(); }, onDbErr);
+  }
   db.collection('famiglie').onSnapshot(s => { S.famiglie = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('famiglie', s); renderCondomini(); renderIngressi(); renderHome(); renderEsempi(); renderUtenti(); }, onDbErr);
   subAccessi();
 }
@@ -3208,14 +3345,14 @@ function chiudiScanner() {
 async function boot() {
   applicaTema(); setInterval(() => { applicaTema(); aggiornaCielo(); }, 60000);
   $('#or-prod').innerHTML = prodRow();
-  resetSt();
+  ['tu', 'ma', 'aq'].forEach(k => resetForm(k));
   $('#hero-img').addEventListener('error', () => { S.imgBroken = true; renderHero(); }); renderHeader(); applyRole();
   S.dl = scaricaFile; $$('.exp').forEach(b => { b.hidden = false; });
   const conf = window.PISCINA_CONFIG || {};
   if (!window.supabase || !conf.url || !conf.anonKey || /INSERISCI/.test(conf.url + conf.anonKey)) {
     $('#app').hidden = false;
     banner('warn', 'Il sito non è ancora collegato all\'archivio: manca la configurazione di Supabase in config.js.');
-    S.loaded = { letture: true, interventi: true, famiglie: true, cfg: true, meteo: true }; fillCfgForm(); renderAll(); return;
+    S.loaded = { letture: true, turni: true, mansioni: true, acquisti: true, famiglie: true, cfg: true, meteo: true }; fillCfgForm(); renderAll(); return;
   }
   S.sb = window.supabase.createClient(conf.url, conf.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' } });
   S.lgEmail = lsGet('piscina-email') || ''; $('#lg-email').value = S.lgEmail;
