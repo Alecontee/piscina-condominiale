@@ -1050,14 +1050,14 @@ details.aggiungi[open] summary { margin-bottom: 10px; }
     <div class="head">
       <div>
         <h2><span class="sec-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 4s-7 8-7 13a7 7 0 0 0 14 0c0-5-7-13-7-13z" fill="#4fb3ee"/><path d="M10 18a3.5 3.5 0 0 0 3 3.4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><rect x="21" y="9" width="5" height="17" rx="2.5" fill="#ffb547"/><rect x="21" y="18" width="5" height="8" rx="2.5" fill="#ff9e2c"/><path d="M20 9h7" stroke="#0d3b5e" stroke-width="2" stroke-linecap="round"/></svg></span>Manutenzione</h2>
-        <p>Le misure quotidiane dell'acqua con i prodotti aggiunti e i turni dei bagnini. Gli amministratori hanno in più un'area riservata per mansioni e acquisti.</p>
+        <p>Le misure quotidiane dell'acqua con i prodotti aggiunti, i turni e le mansioni dei bagnini. Gli amministratori hanno in più una scheda riservata per gli acquisti.</p>
       </div>
     </div>
     <div class="tiles" id="mn-sum"></div>
     <nav class="seg" aria-label="Parti della manutenzione">
       <a href="#ordinaria" id="seg-ordinaria"><b>Ordinaria</b><span>Misure dell'acqua e prodotti</span></a>
-      <a href="#turni" id="seg-turni"><b>Turni</b><span>Chi è di turno e quando</span></a>
-      <a href="#riservata" id="seg-riservata" class="ad"><b>Riservata</b><span>Mansioni e acquisti</span></a>
+      <a href="#turni" id="seg-turni"><b>Turni</b><span>Chi è di turno e cosa fa</span></a>
+      <a href="#riservata" id="seg-riservata" class="ad"><b>Acquisti</b><span>Solo amministratori</span></a>
     </nav>
 
     <div class="sub" id="sub-ordinaria">
@@ -1132,19 +1132,16 @@ details.aggiungi[open] summary { margin-bottom: 10px; }
         <div class="field"><label for="tu-da">Dalle</label><input type="time" id="tu-da" required></div>
         <div class="field"><label for="tu-a">Alle</label><input type="time" id="tu-a" required></div>
         <div class="field"><label for="tu-bagnino">Bagnino</label><input type="text" id="tu-bagnino" list="tu-nomi" maxlength="60" required placeholder="Nome"></div>
-        <div class="field wide"><label for="tu-note">Note</label><input type="text" id="tu-note" maxlength="200" placeholder="Es. cambio con Marco, arriva alle 9"></div>
+        <div class="field wide"><label for="tu-note">Note</label><input type="text" id="tu-note" maxlength="200" placeholder="Es. scambio di turno, arriva alle 9"></div>
         <div class="form-actions"><button class="primary" type="submit" id="tu-submit">Aggiungi turno</button><button type="button" id="tu-cancel" hidden>Annulla modifica</button></div>
       </form>
       <datalist id="tu-nomi"></datalist>
     </div>
-    </div>
-
-    <div class="sub ad" id="sub-riservata" hidden>
-    <div class="riservata-nota"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg><span><b>Solo amministratori.</b> Operatori e condomini non vedono questa parte.</span></div>
     <div class="panel">
       <div class="head"><h3>Mansioni dei bagnini</h3></div>
+      <p class="small muted chi-vede"><span class="ad">Le vedono operatori e amministratori; le cambiano solo gli amministratori.</span><span class="st-only">Le decidono gli amministratori: qui vedi cosa fare in ogni momento del turno.</span></p>
       <div id="ma-list"><div class="empty">Caricamento…</div></div>
-      <details class="aggiungi" id="ma-box">
+      <details class="aggiungi ad" id="ma-box">
         <summary id="ma-title">Aggiungi una mansione</summary>
         <form class="grid" id="ma-form" autocomplete="off">
           <input type="hidden" id="ma-id">
@@ -1156,6 +1153,10 @@ details.aggiungi[open] summary { margin-bottom: 10px; }
         </form>
       </details>
     </div>
+    </div>
+
+    <div class="sub ad" id="sub-riservata" hidden>
+    <div class="riservata-nota"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg><span><b>Solo amministratori.</b> Operatori e condomini non vedono gli acquisti.</span></div>
     <div class="panel">
       <div class="head">
         <h3>Acquisti per la gestione</h3>
@@ -1174,7 +1175,7 @@ details.aggiungi[open] summary { margin-bottom: 10px; }
           <div class="field"><label for="aq-costo">Costo (€)</label><input type="number" id="aq-costo" min="0" step="0.01" inputmode="decimal"></div>
           <div class="field"><label for="aq-stato">Stato</label><select id="aq-stato"><option value="da_acquistare">Da acquistare</option><option value="acquistato">Acquistato</option></select></div>
           <div class="field"><label for="aq-fornitore">Fornitore</label><input type="text" id="aq-fornitore" maxlength="80"></div>
-          <div class="field wide"><label for="aq-note">Note</label><input type="text" id="aq-note" maxlength="200" placeholder="Es. pagato da Marco, da rimborsare"></div>
+          <div class="field wide"><label for="aq-note">Note</label><input type="text" id="aq-note" maxlength="200" placeholder="Es. pagato di tasca propria, da rimborsare"></div>
           <div class="form-actions"><button class="primary" type="submit" id="aq-submit">Aggiungi acquisto</button><button type="button" id="aq-cancel" hidden>Annulla modifica</button></div>
         </form>
       </details>
@@ -1601,7 +1602,7 @@ function applyRole() {
 
 /* ---------- render ---------- */
 function renderAll() {
-  renderHeader(); renderHome(); renderManSum(); renderImgPanel(); renderLetture(); renderConsumi(); renderOrHints(); renderTurni(); renderRiservata(); renderCondomini(); renderIngressi(); renderEsempi();
+  renderHeader(); renderHome(); renderManSum(); renderImgPanel(); renderLetture(); renderConsumi(); renderOrHints(); renderTurni(); renderMansioni(); renderRiservata(); renderCondomini(); renderIngressi(); renderEsempi();
 }
 function renderHeader() {
   $('#pool-name').textContent = S.cfg.nome || DEFAULT_CFG.nome;
@@ -2671,16 +2672,18 @@ function renderTurni() {
 
 /* ---------- area riservata: mansioni e acquisti ---------- */
 const QUANDO = { apertura: "All'apertura", turno: 'Durante il turno', chiusura: 'Alla chiusura', settimana: 'Una volta a settimana' };
-function renderRiservata() {
-  if (!isAdmin() || !$('#ma-list')) return;
+function renderMansioni() {
+  if (!isStaff() || !$('#ma-list')) return;
   if (S.loaded.mansioni) {
     $('#ma-list').innerHTML = S.mansioni.length ? Object.entries(QUANDO).map(([q, t]) => {
       const r = S.mansioni.filter(x => (x.quando || 'turno') === q).sort((a, b) => cmpNat(a.voce, b.voce));
       return r.length ? `<div class="gruppo"><div class="sub-h">${t}</div><ul class="lista">${r.map(x => `<li><span><b>${esc(x.voce)}</b><span class="small muted">${esc(x.chi || 'Chi è di turno')}${x.note ? ' · ' + esc(x.note) : ''}</span></span>
-        <span class="t-az"><button type="button" class="ghost sm" data-act="ma-edit" data-id="${esc(x.id)}">Modifica</button><button type="button" class="ghost sm danger" data-act="ma-del" data-id="${esc(x.id)}">Elimina</button></span></li>`).join('')}</ul></div>` : '';
-    }).join('') : '<div class="empty">Nessuna mansione scritta. Aggiungi la prima qui sotto: per esempio la pulizia degli skimmer all\'apertura.</div>';
+        <span class="t-az ad"><button type="button" class="ghost sm" data-act="ma-edit" data-id="${esc(x.id)}">Modifica</button><button type="button" class="ghost sm danger" data-act="ma-del" data-id="${esc(x.id)}">Elimina</button></span></li>`).join('')}</ul></div>` : '';
+    }).join('') : `<div class="empty">${isAdmin() ? 'Nessuna mansione scritta. Aggiungi la prima qui sotto: per esempio la pulizia degli skimmer all\'apertura.' : 'Gli amministratori non hanno ancora scritto le mansioni.'}</div>`;
   }
-  if (!S.loaded.acquisti) return;
+}
+function renderRiservata() {
+  if (!isAdmin() || !$('#aq-list') || !S.loaded.acquisti) return;
   const anno = String(new Date().getFullYear()), f = $('#aq-filtro').value;
   const fatti = S.acquisti.filter(x => x.stato === 'acquistato' && String(x.data || '').startsWith(anno));
   const daFare = S.acquisti.filter(x => x.stato !== 'acquistato');
@@ -3063,11 +3066,11 @@ let staffSubs = false;
 function subscribeStaff() {
   if (staffSubs || !S.db) return; staffSubs = true;
   const db = S.db;
-  S.need.push('turni', 'famiglie');
+  S.need.push('turni', 'mansioni', 'famiglie');
   db.collection('turni').onSnapshot(s => { S.turni = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('turni', s); renderManSum(); renderTurni(); renderHome(); }, onDbErr);
+  db.collection('mansioni').onSnapshot(s => { S.mansioni = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('mansioni', s); renderMansioni(); }, onDbErr);
   if (isAdmin()) {
-    S.need.push('mansioni', 'acquisti');
-    db.collection('mansioni').onSnapshot(s => { S.mansioni = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('mansioni', s); renderRiservata(); }, onDbErr);
+    S.need.push('acquisti');
     db.collection('acquisti').onSnapshot(s => { S.acquisti = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('acquisti', s); renderRiservata(); }, onDbErr);
   }
   db.collection('famiglie').onSnapshot(s => { S.famiglie = s.docs.map(d => ({ id: d.id, ...d.data() })); markLoaded('famiglie', s); renderCondomini(); renderIngressi(); renderHome(); renderEsempi(); renderUtenti(); }, onDbErr);

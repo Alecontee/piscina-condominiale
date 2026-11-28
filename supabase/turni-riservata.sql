@@ -1,4 +1,4 @@
--- Piscina condominiale: turni dei bagnini e area riservata agli amministratori.
+-- Piscina condominiale: turni e mansioni dei bagnini, acquisti riservati agli amministratori.
 -- BOZZA DA RIVEDERE: non è ancora stata eseguita su Supabase.
 -- Quando il sito userà le nuove sezioni, si esegue una volta nel SQL Editor del progetto,
 -- dopo schema.sql. Ripeterla non fa danni.
@@ -9,7 +9,7 @@
 -- risponde solo a chi ha il ruolo giusto.
 --
 --   turni     operatori e amministratori leggono, solo gli amministratori scrivono
---   mansioni  solo amministratori (lettura e scrittura)
+--   mansioni  operatori e amministratori leggono, solo gli amministratori scrivono
 --   acquisti  solo amministratori (lettura e scrittura)
 --
 -- La vecchia tabella "interventi" (manutenzione straordinaria) resta com'è con i suoi dati:
@@ -50,7 +50,9 @@ end $$;
 create policy "staff legge"  on public.turni for select using (public.is_staff());
 create policy "admin scrive" on public.turni for all    using (public.is_admin()) with check (public.is_admin());
 
-create policy "solo admin" on public.mansioni for all using (public.is_admin()) with check (public.is_admin());
+create policy "staff legge"  on public.mansioni for select using (public.is_staff());
+create policy "admin scrive" on public.mansioni for all    using (public.is_admin()) with check (public.is_admin());
+
 create policy "solo admin" on public.acquisti for all using (public.is_admin()) with check (public.is_admin());
 
 grant select, insert, update, delete on public.turni, public.mansioni, public.acquisti to authenticated;
